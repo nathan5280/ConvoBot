@@ -2,6 +2,7 @@ import bpy
 import Pyro4
 import select
 from snakeshake.Env import Env
+from snakeshake.RadialEnv import RadialEnv
 
 # Make sure the server is only using one thread to not confuse Blender
 Pyro4.config.SERVERTYPE="multiplex"
@@ -19,9 +20,16 @@ class SnakeShakeFGServer(object):
     This script loads immediately when Blender starts.  It sets everything up and
     then returns control to Blender.
     '''
-    def __init__(self, modal_operator_cancel):
+    def __init__(self, modal_operator_cancel, env):
         """
         Processor that is called by Blender Modal Operator periodically.
+
+        Input:
+            - modal_opeerator_cancel: Method to call to shutdown the modal operator.
+            - env: The object to remotely
+
+        Return:
+            - None
         """
         self._daemon = Pyro4.Daemon()
 
@@ -32,7 +40,9 @@ class SnakeShakeFGServer(object):
 
         # Create the Env object that we are exposing and tell it
         # where to call if a quit request is received from the client.
-        self._env = Env(self._quit_request)
+        self._env = env
+        self._env.register_quit_handler(self._quit_request)
+        print('Remoting environment: ', type(self._env).__name__)
         uri = self._daemon.register(self._env, 'Env')
 
         # Register the server with the name server so that clients can the
@@ -103,7 +113,7 @@ class PyroModalTimerOperator(bpy.types.Operator):
         self._frequence = 1
 
         # Create the server and register the method to initiate a shutdown.
-        self._pyro_event_processor = SnakeShakeFGServer(self._cancel)
+        self._pyro_event_processor = SnakeShakeFGServer(self._cancel, RadialEnv())
 
     def modal(self, context, event):
         '''

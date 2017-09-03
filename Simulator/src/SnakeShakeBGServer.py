@@ -6,6 +6,7 @@ import select
 
 # The Class that is remotely exposed through RPC to the client outside of Blender.
 from snakeshake.Env import Env
+from snakeshake.RadialEnv import RadialEnv
 
 # Make sure the server is only using one thread to not confuse Blender
 Pyro4.config.SERVERTYPE="multiplex"
@@ -24,7 +25,7 @@ class SnakeShakeBGServer(object):
     Blender until the script exits.
     '''
 
-    def __init__(self):
+    def __init__(self, env):
         '''
         Initialize the server, create the Env.
         '''
@@ -37,7 +38,9 @@ class SnakeShakeBGServer(object):
 
         # Create the Env object that we are exposing and tell it
         # where to call if a quit request is received from the client.
-        self._env = Env(self._quit_request)
+        self._env = env
+        self._env.register_quit_handler(self._quit_request)
+        print('Remoting environment: ', type(self._env).__name__)
         uri = self._daemon.register(self._env, 'Env')
 
         # Register the server with the name server so that clients can the
@@ -76,7 +79,7 @@ class SnakeShakeBGServer(object):
 if __name__ == '__main__':
     print('Starting .......................')
     # Create the server and register with the name server.
-    s = SnakeShakeBGServer()
+    s = SnakeShakeBGServer(RadialEnv())
 
     # Start the event loop.
     s.process_events()

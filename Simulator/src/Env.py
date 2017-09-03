@@ -1,6 +1,7 @@
 # Blender API, and math helper methods
 import bpy, mathutils
 import os, math
+import time
 
 # Py Remote Object Module to support the RPC connection.
 import Pyro4
@@ -21,15 +22,14 @@ set the serializer and security notices.
 @Pyro4.expose
 @Pyro4.behavior(instance_mode="single")
 class Env(object):
-    def __init__(self, quit_request):
+    def __init__(self, auto_render=True):
         '''
         Set up the Environment.
 
         Input:
-            - quit_request: Server method to request shutdown.
+            - auto_render: Automatically render after scene change.
         '''
         print('Env: Initializing')
-        self._quit_request = quit_request
 
         # Set the defualt camera parameters
         self._cam_height = 1
@@ -37,11 +37,28 @@ class Env(object):
         self._cam_y_rotation = 0
         self._cam_z_rotation = 0
 
+        # Determine if we render each frame after a scene change or require
+        # the client to call and request the render.
+        self._auto_render = auto_render
+        self._render_filename = 'img/n.png'
+
         # Information on how images rendered to disk will be named and indexed.
         self._image_idx = 1
 
         # Get the Environmentto a known state.
         self.reset()
+
+    def register_quit_handler(self, quit_request):
+        '''
+        Register the method to call when client requests to quit.
+
+        Input:
+            - quit_request: Method to call.
+
+        Return:
+            None:
+        '''
+        self._quit_request = quit_request
 
     def ping(self, s):
         '''
@@ -60,7 +77,8 @@ class Env(object):
 
         cam_p.x, cam_p.y, cam_p.z = 2, -15, self._cam_height
         cam_r.x, cam_r.y, cam_r.z = self._cam_x_rotation, self._cam_y_rotation, self._cam_z_rotation
-        self._render()
+        if self._auto_render:
+            self.render(self._render_filename)
         return cam_p.x, cam_p.y, cam_r.z
 
     def get_camera_position(self):
@@ -98,7 +116,8 @@ class Env(object):
         cam_r.y = self._cam_y_rotation
         cam_r.z = rz
 
-        self._render()
+        if self._auto_render:
+            self.render(self._render_filename)
 
         return cam_p.x, cam_p.y, cam_r.z
 
@@ -129,7 +148,8 @@ class Env(object):
         cam_r.y = self._cam_y_rotation
         cam_r.z += drz
 
-        self._render()
+        if self._auto_render:
+            self.render(self._render_filename)
 
         return cam_p.x, cam_p.y, cam_r.z
 
@@ -165,13 +185,22 @@ class Env(object):
         # Call back to the server provided method to request it to quit.
         self._quit_request()
 
-    def _render(self):
+    def render(self, filename):
         '''
-        Render the image to disk.
+        Render the image to the specified filename
+
+        Input:
+            - filename:
+
+        Return:
+            - Time in ms to render the image
         '''
+        t0 = time.time()
         bpy.ops.render.render(use_viewport=True)
-        # bpy.context.scene.render.filepath = 'img/n{0:05d}.png'.format(self._image_idx)
-        # bpy.context.scene.render.filepath = 'img/n.png'.format(self._image_idx)
-        # self._image_idx += 1
-        bpy.context.scene.render.filepath = 'img/n.png'
+        if self._auto_render:
+            bpy.context.scene.render.filepath = self._render_filename
+        else:
+            bpy.context.scene.render.filepath = filename
+
         bpy.ops.render.render(write_still=True)
+        return time.time() - t0
