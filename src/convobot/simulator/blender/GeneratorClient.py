@@ -39,11 +39,11 @@ def main():
     scale = 1
     camera_direction = 180
     fnm = FilenameManager()
-    for radius in range(15 * scale, 16 * scale, 1):
+    for radius in range(15 * scale, 17 * scale, 1):
         for theta in range(0, 360 * scale, 45):
             t0 = time.time()
             env.set_camera_location(theta / scale, radius / scale, 180)
-            filename = fnm.label_to_radius_path('/Users/nathanatkins/datax', theta / scale, radius / scale, camera_direction)
+            filename = fnm.label_to_radius_path('/Users/nathanatkins/datax/raw', theta / scale, radius / scale, camera_direction)
             render_time = env.render(filename)
             process_time = time.time() - t0
             print('File: {}, Process Time: {:.2f}'.format(filename, process_time))
