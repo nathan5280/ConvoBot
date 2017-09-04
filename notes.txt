@@ -1,3 +1,6 @@
 RPi:
   - Access to tty: sudo chown nathan /dev/ttyUSB0  Needed for Arduino IDE
     to write program to bot.
+
+pyment
+  - pyment -w -q "'''" -o "google" <filename>
