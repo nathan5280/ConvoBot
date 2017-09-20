@@ -28,9 +28,8 @@ class ColorToGrayScale(object):
             if self._resize:
                 img.thumbnail(self._resize, Image.ANTIALIAS)
             img.save(os.path.join(dst_path, filename))
-            print('Processing: {}, {}', os.path.join(src_path, filename), os.path.join(dst_path, filename))
+            print('Converting C2G: {}, {}', os.path.join(src_path, filename), os.path.join(dst_path, filename))
 
-        print('Processing: ')
         self.tree_util.apply_files(converter, '*.png')
 
 def main():
