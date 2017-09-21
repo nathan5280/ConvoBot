@@ -26,7 +26,7 @@ class ImageToNumpy(object):
         converter.process()
         img_cnt = converter.get_count()
 
-        self._img = np.zeros([img_cnt, 28, 28], dtype=np.uint8)
+        self._img = np.zeros([img_cnt, 784], dtype=np.uint8)
         self._label = np.zeros([img_cnt, 3], dtype=np.float32)
         self._idx = 0
         self._filename_manager = FilenameManager()
@@ -37,16 +37,16 @@ class ImageToNumpy(object):
         '''
         def loader(src_path, dst_path, filename):
             img = Image.open(os.path.join(src_path, filename))
-            img_list = np.array(img).tolist()
+            img_np = np.array(img)
+
+            img_np = img_np.reshape(784,)
+            self._img[self._idx] = img_np.tolist()
+
             theta, radius, alpha = self._filename_manager.filename_to_labels(filename)
             label = [theta, radius, alpha]
 
             for i in range(len(label)):
                 self._label[self._idx][i] = label[i]
-
-            for i in range(len(img_list)):
-                for j in range(len(img_list[0])):
-                    self._img[self._idx][i][j] = img_list[i][j]
 
             self._idx += 1
             print('Storing: {}, {}', os.path.join(src_path, filename), os.path.join(dst_path, filename))
@@ -54,7 +54,7 @@ class ImageToNumpy(object):
         self.tree_util.apply_files(loader, '*.png')
 
     def get_data(self):
-        return self._label, self._img
+        return self._label, self._img.reshape(len(self._img), 28, 28)
 
 def main():
     converter = ColorToGrayScale('../Data/dataset1', './Data/dataset1/gs_28x28', (28, 28))

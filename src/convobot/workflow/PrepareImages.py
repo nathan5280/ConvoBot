@@ -1,5 +1,5 @@
 from convobot.imageprocessor.ColorToGrayScale import ColorToGrayScale
-from convobot.imageprocessor.ImageToNumpy2 import ImageToNumpy
+from convobot.imageprocessor.ImageToNumpy import ImageToNumpy
 import pickle
 import os
 import pandas as pd
