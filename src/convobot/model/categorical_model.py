@@ -4,6 +4,7 @@ import pandas as pd
 import numpy as np
 np.random.seed(123)  # for reproducibility
 
+from keras.optimizers import Adam
 from keras.models import Sequential
 from keras.layers import Dense, Dropout, Activation, Flatten
 from keras.layers import Conv2D, MaxPooling2D
@@ -21,7 +22,7 @@ import tensorflow as tf
 import pickle
 import os
 
-root_path = '../../../datax'
+root_path = '../../../dataf'
 label_file_path = os.path.join(root_path, 'gs_28x28_lable.pkl')
 image_file_path = os.path.join(root_path, 'gs_28x28_image.pkl')
 
@@ -105,15 +106,16 @@ if not resume:
     model.add(Dropout(0.5))
     model.add(Dense(label_cnt, activation='softmax'))
 
+    optimizer = Adam(lr=0.0025, beta_1=0.9, beta_2=0.999, epsilon=1e-08, decay=0.0)
     model.compile(loss='categorical_crossentropy',
-                  optimizer='adam',
+                  optimizer=optimizer,
                   metrics=['accuracy'])
 else:
     print('Loading model')
-    model = load_model('mnist_model.h5')
+    model = load_model('cat_convobot_model.h5')
 
-model.fit(X_train, y_train, batch_size=2, epochs=50, verbose=1)
-model.save('mnist_model.h5')
+model.fit(X_train, y_train, batch_size=500, epochs=10, verbose=1)
+model.save('cat_convobot_model.h5')
 
 score = model.evaluate(X_test, y_test, verbose=0)
 print('Test score:', score[0])
