@@ -1,22 +1,28 @@
 from convobot.imageprocessor.ColorToGrayScale import ColorToGrayScale
-from convobot.imageprocessor.ImageCounter import ImageCounter
-# from convobot.imageprocessor.ThetaSorter import ThetaSorter
-# from convobot.imageprocessor.FileLinker import FileLinker
+from convobot.imageprocessor.ImageToNumpy2 import ImageToNumpy
+import pickle
+import os
+import pandas as pd
 
-raw_path = '../../../datax/raw'
-processed_path = '../../../datax/gs_28x28'
+root_path = '../../../datax'
+raw_path = os.path.join(root_path, 'raw')
+processed_path = os.path.join(root_path, 'gs_28x28')
+label_file_path = os.path.join(root_path, 'gs_28x28_lable.pkl')
+image_file_path = os.path.join(root_path, 'gs_28x28_image.pkl')
 
 def main():
     converter = ColorToGrayScale(raw_path, processed_path, (28, 28))
     converter.process()
 
-    converter = ImageCounter(processed_path, processed_path)
+    converter = ImageToNumpy(processed_path, processed_path)
     converter.process()
-    print('Images Found: ', converter.get_count())
+    label, image = converter.get_data()
 
-    # sorter = ThetaSorter('../../../datax/gs_28x28', '*.png', 90, 45, 2, '{:05.1f}')
-    # linker = FileLinker('../../../datax/theta', sorter)
-    # linker.process()
+    with open(label_file_path, 'wb') as f:
+        pickle.dump(label, f)
+
+    with open(image_file_path, 'wb') as f:
+        pickle.dump(image, f)
 
 if __name__ == '__main__':
     main()

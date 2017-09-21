@@ -63,7 +63,7 @@ class FilenameManager(object):
 
         '''
         theta, radius, alpha = filename[:-len(self._extension)-1].split(self._separator)
-        return theta, radius, alpha
+        return float(theta), float(radius), float(alpha)
 
     def filename_to_theta(self, filename):
         '''
@@ -79,7 +79,7 @@ class FilenameManager(object):
 
         '''
         theta, _, _ = self.filename_to_labels(filename)
-        return theta
+        return float(theta)
 
     def filename_to_radius(self, filename):
         '''
@@ -94,7 +94,7 @@ class FilenameManager(object):
 
         '''
         _, radius, _ = self.filename_to_labels(filename)
-        return radius
+        return float(radius)
 
     def filename_to_alpha(self, filename):
         '''
@@ -109,4 +109,4 @@ class FilenameManager(object):
 
         '''
         _ ,_ , alpha = self.filename_to_labels(filename)
-        return alpha
+        return float(alpha)
