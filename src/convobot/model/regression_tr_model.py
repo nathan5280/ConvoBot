@@ -11,6 +11,7 @@ from keras.layers import Conv2D, MaxPooling2D
 from keras.utils import np_utils
 from keras.datasets import mnist
 from keras.models import load_model
+from keras.callbacks import TensorBoard
 
 from sklearn.model_selection import train_test_split
 
@@ -24,6 +25,7 @@ import os
 
 resume = True
 train = True
+model_name = 'model.h5'
 
 root_path = '../../../dataf'
 label_file_path = os.path.join(root_path, 'gs_28x28_lable.pkl')
@@ -48,15 +50,17 @@ label = label[shuffle_idx]
 # Minimally remove points between 330 and 30 degrees.  These cause problems
 # when the regressor predicts -5 for 355 and the loss function doesn't
 # know what to do with that.   Need custom loss function to address this.
-print('Pre-subset:')
-print('Image: ',image.shape)
-print('Label: ', label.shape)
+# print('Pre-subset:')
+# print('Image: ',image.shape)
+# print('Label: ', label.shape)
 
 label_df = pd.DataFrame(label)
 label_df.columns = ['Theta', 'Radius', 'Alpha']
 
-mask = (label_df.Theta >= 20) & (label_df.Theta <= 340) & \
-            (label_df.Radius >= 19) & (label_df.Radius <=25)
+theta_range = (30, 330)
+radius_range = (15, 30)
+mask = (label_df.Theta >= theta_range[0]) & (label_df.Theta <= theta_range[1]) & \
+            (label_df.Radius >= radius_range[0]) & (label_df.Radius <=radius_range[1])
 
 label = label[mask]
 image = image[mask]
@@ -67,14 +71,15 @@ print('Label: ', label.shape)
 
 # Pull out just the theta for now.
 # This will be the target values for the regression.
-theta = [label[i][0] for i in range(len(label))]
+theta_radius = label[:,:2]
+# print(theta_radius.shape)
+# print(theta_radius[:10])
 
-X_train, X_test, y_train, y_test = train_test_split(image, theta, test_size=0.33)
+X_train, X_test, y_train, y_test = train_test_split(image, theta_radius, test_size=0.33)
 
 # Convert the target arrays to np.array for keras interface
 y_train = np.array(y_train)
 y_test = np.array(y_test)
-
 
 # print('Original shape x train: ', X_train.shape)
 
@@ -116,28 +121,54 @@ if not resume:
     model.add(Flatten())
     model.add(Dense(128, activation='relu'))
     model.add(Dropout(0.25))
-    model.add(Dense(1, activation='relu'))
+    model.add(Dense(2, activation='relu'))
+else:
+    print('Loading model: ', model_name)
+    model = load_model(model_name)
 
-    optimizer = Adam(lr=0.005, beta_1=0.9,
+if train:
+    last_pred = [[0 for x in range(2)] for y in range(10)]
+    num_train_sessions = 25
+    epochs = 2
+    batch_size = 100
+    lr = 0.0025
+    print('Learning rate: ', lr)
+
+    tbCallBack = TensorBoard(log_dir='./Graph',
+                                histogram_freq=5,
+                                write_graph=True,
+                                write_images=True)
+
+    optimizer = Adam(lr=lr, beta_1=0.9,
                         beta_2=0.999, epsilon=1e-08, decay=0.0)
     model.compile(loss='mse',
                   optimizer=optimizer,
                   metrics=['mae'])
-else:
-    print('Loading model')
-    model = load_model('reg_convobot_model.h5')
 
-if train:
-    model.fit(X_train, y_train, batch_size=50, epochs=20, verbose=1)
-    model.save('reg_convobot_model.h5')
+    for i in range(num_train_sessions):
+        print('Training iteration: {}/{}/{} '.format(i+1, num_train_sessions,
+                                                num_train_sessions * epochs))
+        model.fit(X_train, y_train,
+                    batch_size=batch_size,
+                    epochs=epochs,
+                    verbose=1,
+                    callbacks=[tbCallBack])
 
-score = model.evaluate(X_test, y_test, verbose=0)
-print('Test score:', score[0])
-print('Test accuracy:', score[1]) # this is the one we care about
+        model.save(model_name)
 
-num_predictions = 10
-y = model.predict(X_test[:num_predictions], batch_size=1)
+        score = model.evaluate(X_test, y_test, verbose=0)
+        print('Test score:', score[0])
+        print('Test mean absolute error:', score[1]) # this is the one we care about
 
-print('Target \tPrediction')
-for i in range(num_predictions):
-    print('{:5.1f}\t{:5.1f}'.format(y_test[i], y.flatten()[i]))
+        num_predictions = 10
+        pred = model.predict(X_test[:num_predictions], batch_size=1)
+
+        print('   Target | Prediction | Delta')
+        print('    Theta | Radius')
+        for i in range(num_predictions):
+            print('{:5.1f}\t{:5.1f}\t{:5.1f}\t{:5.1f}\t{:5.1f}\t{:5.1f}'. \
+                format(y_test[i][0], pred[i][0], last_pred[i][0]-pred[i][0], \
+                        y_test[i][1], pred[i][1], last_pred[i][1]-pred[i][1]))
+
+            last_pred[i][0] = pred[i][0]
+            last_pred[i][1] = pred[i][1]

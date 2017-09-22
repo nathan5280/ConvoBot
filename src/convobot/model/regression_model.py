@@ -24,6 +24,7 @@ import os
 
 resume = True
 train = True
+model_name = 'model.h5'
 
 root_path = '../../../dataf'
 label_file_path = os.path.join(root_path, 'gs_28x28_lable.pkl')
@@ -125,11 +126,11 @@ if not resume:
                   metrics=['mae'])
 else:
     print('Loading model')
-    model = load_model('reg_convobot_model.h5')
+    model = load_model(model_name)
 
 if train:
     model.fit(X_train, y_train, batch_size=50, epochs=20, verbose=1)
-    model.save('reg_convobot_model.h5')
+    model.save(model_name)
 
 score = model.evaluate(X_test, y_test, verbose=0)
 print('Test score:', score[0])
