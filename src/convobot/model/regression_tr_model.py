@@ -26,10 +26,9 @@ train = True
 model_name = 'model.h5'
 
 root_path = '../../../dataf'
-label_file_path = os.path.join(root_path, 'gs_28x28_lable.pkl')
-image_file_path = os.path.join(root_path, 'gs_28x28_image.pkl')
+root_name = 'gs_28x28'
 
-data = DataWrapper(label_file_path, image_file_path,
+data = DataWrapper(root_path, root_name, resplit=False,
     validation_split=0.25, test_split=0.10)
 
 X_train, y_train = data.get_train()
@@ -89,7 +88,7 @@ if train:
     num_train_sessions = 10
     epochs = 1
     batch_size = 100
-    lr = 0.01
+    lr = 0.0001
     print('Learning rate: ', lr)
 
     tbCallBack = TensorBoard(log_dir='./Graph',
@@ -121,12 +120,12 @@ if train:
         num_predictions = 10
         pred = model.predict(X_val[:num_predictions], batch_size=1)
 
-        print('   Target | Prediction | Delta')
+        print('   Target | Prediction | Error | Delta')
         print('    Theta | Radius')
         for i in range(num_predictions):
-            print('{:5.1f}\t{:5.1f}\t{:5.1f}\t{:5.1f}\t{:5.1f}\t{:5.1f}'. \
-                format(y_val[i][0], pred[i][0], pred[i][0]-last_pred[i][0], \
-                        y_val[i][1], pred[i][1], pred[i][1]-last_pred[i][1]))
+            print('{:5.1f}\t{:5.1f}\t{:5.1f}\t{:5.1f}\t{:5.1f}\t{:5.1f}\t{:5.1f}\t{:5.1f}'. \
+                format(y_val[i][0], pred[i][0], y_val[i][0] - pred[i][0], pred[i][0]-last_pred[i][0], \
+                        y_val[i][1], pred[i][1], y_val[i][1] - pred[i][1], pred[i][1]-last_pred[i][1]))
 
             last_pred[i][0] = pred[i][0]
             last_pred[i][1] = pred[i][1]

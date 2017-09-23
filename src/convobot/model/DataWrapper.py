@@ -3,14 +3,52 @@ import numpy as np
 import os, pickle
 from sklearn.model_selection import train_test_split
 
+phase_train = 'train'
+phase_test = 'test'
+phase_val = 'val'
+dataset_image = 'image'
+dataset_label = 'label'
+pkl_ext = '.pkl'
+
 class DataWrapper(object):
-    def __init__(self, label_file_path, image_file_path, validation_split=0.25, test_split=0.10):
+    def __init__(self, path, name, resplit=False, validation_split=0.25, test_split=0.10):
+        self._image_train = None
+        self._image_test = None
+        self._image_val = None
+        self._label_train = None
+        self._label_test = None
+        self._label_val = None
+
+        self._image_train_fn = self._filename(path, name, dataset_image, phase_train)
+        self._image_test_fn = self._filename(path, name, dataset_image, phase_test)
+        self._image_val_fn = self._filename(path, name, dataset_image, phase_val)
+
+        self._label_train_fn = self._filename(path, name, dataset_label, phase_train)
+        self._label_test_fn = self._filename(path, name, dataset_label, phase_test)
+        self._label_val_fn = self._filename(path, name, dataset_label, phase_val)
+
+        # Check to see if we need to resplit either by explicit request or
+        # any of the files is missing.
+        if resplit or \
+                not os.path.exists(self._image_train_fn) or \
+                not os.path.exists(self._image_test_fn) or \
+                not os.path.exists(self._image_val_fn) or \
+                not os.path.exists(self._label_train_fn) or \
+                not os.path.exists(self._label_test_fn) or \
+                not os.path.exists(self._label_val_fn):
+            self._split(path, name, validation_split, test_split)
+        else:
+            self._load(path, name)
+
+
+    def _split(self, path, name, validation_split, test_split):
+        print('Splitting')
         # Load the data from the pickle
-        with open(image_file_path, 'rb') as f:
+        with open(os.path.join(path, '_'.join((name, dataset_image)) + pkl_ext), 'rb') as f:
             image = pickle.load(f)
 
         # Load the data from the pickle
-        with open(label_file_path, 'rb') as f:
+        with open(os.path.join(path, '_'.join((name, dataset_label)) + pkl_ext), 'rb') as f:
             label = pickle.load(f)
 
         # Shuffle things because they were probably generated in order.
@@ -35,7 +73,7 @@ class DataWrapper(object):
 
         # Separate out the areas that we aren't including in the test and validation.
         # These are points at the edges of the training area.
-        theta_range = (30, 330)
+        theta_range = (35, 325)
         radius_range = (16, 29)
         mask = (index.Theta >= theta_range[0]) & (index.Theta <= theta_range[1]) & \
                     (index.Radius >= radius_range[0]) & (index.Radius <=radius_range[1])
@@ -51,16 +89,16 @@ class DataWrapper(object):
         edge_index = index[not_mask]
 
         # Split off the validataion set.
-        X, self._X_val, y, self._y_val = train_test_split(predict_image, predict_label,
+        X, self._image_val, y, self._label_val = train_test_split(predict_image, predict_label,
                                                             test_size=validation_split)
 
         # Split off the test set.
-        X, self._X_test, y, self._y_test = train_test_split(X, y,
+        X, self._image_test, y, self._label_test = train_test_split(X, y,
                                                             test_size=test_split)
 
         # Add the reminder and the edge areas together into the train dataset.
-        self._X_train = np.concatenate((X, edge_image), axis=0)
-        self._y_train = np.concatenate((y, edge_label), axis=0)
+        self._image_train = np.concatenate((X, edge_image), axis=0)
+        self._label_train = np.concatenate((y, edge_label), axis=0)
 
         # print('Image, Label, Index: ')
         # print('All:', image.shape, label.shape, index.shape)
@@ -72,18 +110,60 @@ class DataWrapper(object):
         # print('Remainder: ', X.shape, y.shape)
         # print('Train: ', self._y_train.shape, self._X_train.shape)
 
+        with open(self._image_train_fn, 'wb') as f:
+            pickle.dump(self._image_train, f)
+
+        with open(self._image_test_fn, 'wb') as f:
+            pickle.dump(self._image_test, f)
+
+        with open(self._image_val_fn, 'wb') as f:
+            pickle.dump(self._image_val, f)
+
+        with open(self._label_train_fn, 'wb') as f:
+            pickle.dump(self._label_train, f)
+
+        with open(self._label_test_fn, 'wb') as f:
+            pickle.dump(self._label_test, f)
+
+        with open(self._label_val_fn, 'wb') as f:
+            pickle.dump(self._label_val, f)
+
+
+    def _load(self, path, name):
+        print('Loading')
+        with open(self._image_train_fn, 'rb') as f:
+            self._image_train = pickle.load(f)
+
+        with open(self._image_test_fn, 'rb') as f:
+            self._image_test = pickle.load(f)
+
+        with open(self._image_val_fn, 'rb') as f:
+            self._image_val = pickle.load(f)
+
+        with open(self._label_train_fn, 'rb') as f:
+            self._label_train = pickle.load(f)
+
+        with open(self._label_test_fn, 'rb') as f:
+            self._label_test = pickle.load(f)
+
+        with open(self._label_val_fn, 'rb') as f:
+            self._label_val = pickle.load(f)
+
+
+    def _filename(self, path, name, dataset, phase):
+        return os.path.join(path, '_'.join((name, dataset, phase)) + pkl_ext)
+
     def get_train(self):
-        return self._X_train, self._y_train
+        return self._image_train, self._label_train
 
     def get_test(self):
-        return self._X_test, self._y_test
+        return self._image_test, self._label_test
 
     def get_validation(self):
-        return self._X_val, self._y_val
+        return self._image_val, self._label_val
 
 if __name__ == '__main__':
     root_path = '../../../dataf'
-    label_file_path = os.path.join(root_path, 'gs_28x28_lable.pkl')
-    image_file_path = os.path.join(root_path, 'gs_28x28_image.pkl')
+    root_name = 'gs_28x28'
 
-    dw = DataWrapper(label_file_path, image_file_path, validation_split=0.25, test_split=0.10)
+    dw = DataWrapper(root_path, root_name, resplit=False, validation_split=0.25, test_split=0.10)
