@@ -2,7 +2,7 @@
 
 import pandas as pd
 import numpy as np
-# np.random.seed(123)  # for reproducibility
+np.random.seed(123)  # for reproducibility
 
 from keras.optimizers import Adam
 from keras.models import Sequential
@@ -12,6 +12,7 @@ from keras.utils import np_utils
 from keras.datasets import mnist
 from keras.models import load_model
 from keras.callbacks import TensorBoard
+from keras import backend as K
 
 from sklearn.model_selection import train_test_split
 
@@ -23,13 +24,16 @@ import tensorflow as tf
 import pickle
 import os
 
-resume = True
+resume = False
 train = True
-model_name = 'model.h5'
+model_name = 'model_cust_loss.h5'
 
 root_path = '../../../dataf'
 label_file_path = os.path.join(root_path, 'gs_28x28_lable.pkl')
 image_file_path = os.path.join(root_path, 'gs_28x28_image.pkl')
+
+def theta_loss(y_true, y_pred):
+    return K.mean(K.square(K.abs(K.abs(y_pred)-360) - y_true), axis=-1)
 
 # Load the data from the pickle
 with open(image_file_path, 'rb') as f:
@@ -57,8 +61,8 @@ label = label[shuffle_idx]
 label_df = pd.DataFrame(label)
 label_df.columns = ['Theta', 'Radius', 'Alpha']
 
-theta_range = (20, 340)
-radius_range = (15, 30)
+theta_range = (0, 360)
+radius_range = (19, 21)
 mask = (label_df.Theta >= theta_range[0]) & (label_df.Theta <= theta_range[1]) & \
             (label_df.Radius >= radius_range[0]) & (label_df.Radius <=radius_range[1])
 
@@ -124,24 +128,26 @@ if not resume:
     model.add(Dense(2, activation='relu'))
 else:
     print('Loading model: ', model_name)
-    model = load_model(model_name)
+    # model = load_model(model_name)
+    model = load_model('.',
+        custom_objects={'theta_loss': theta_loss})
 
 if train:
     last_pred = [[0 for x in range(2)] for y in range(10)]
-    num_train_sessions = 5
-    epochs = 10
+    num_train_sessions = 10
+    epochs = 2
     batch_size = 100
-    lr = 0.00025
+    lr = 0.01
     print('Learning rate: ', lr)
 
-    tbCallBack = TensorBoard(log_dir='./Graph',
+    tbCallBack = TensorBoard(log_dir='./GraphCustomLoss',
                                 histogram_freq=5,
                                 write_graph=True,
                                 write_images=True)
 
     optimizer = Adam(lr=lr, beta_1=0.9,
                         beta_2=0.999, epsilon=1e-08, decay=0.0)
-    model.compile(loss='mse',
+    model.compile(loss=theta_loss,
                   optimizer=optimizer,
                   metrics=['mae'])
 
