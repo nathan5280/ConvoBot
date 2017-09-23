@@ -14,14 +14,12 @@ from keras.models import load_model
 from keras.callbacks import TensorBoard
 
 from sklearn.model_selection import train_test_split
+from DataWrapper import DataWrapper
 
 import os
 # Turn off TF warnings to recommend that we should compile for SSE4.2
 os.environ['TF_CPP_MIN_LOG_LEVEL']='2'
 import tensorflow as tf
-
-import pickle
-import os
 
 resume = True
 train = True
@@ -31,73 +29,33 @@ root_path = '../../../dataf'
 label_file_path = os.path.join(root_path, 'gs_28x28_lable.pkl')
 image_file_path = os.path.join(root_path, 'gs_28x28_image.pkl')
 
-# Load the data from the pickle
-with open(image_file_path, 'rb') as f:
-    image = pickle.load(f)
+data = DataWrapper(label_file_path, image_file_path,
+    validation_split=0.25, test_split=0.10)
 
-# Load the data from the pickle
-with open(label_file_path, 'rb') as f:
-    label = pickle.load(f)
+X_train, y_train = data.get_train()
+X_test, y_test = data.get_test()
+X_val, y_val = data.get_validation()
 
-# Shuffle things because they were probably generated in order.
-shuffle_idx = np.array(range(len(image)))
-np.random.shuffle(shuffle_idx)
-
-image = image[shuffle_idx]
-label = label[shuffle_idx]
-
-# Subset the data
-# Minimally remove points between 330 and 30 degrees.  These cause problems
-# when the regressor predicts -5 for 355 and the loss function doesn't
-# know what to do with that.   Need custom loss function to address this.
-# print('Pre-subset:')
-# print('Image: ',image.shape)
-# print('Label: ', label.shape)
-
-label_df = pd.DataFrame(label)
-label_df.columns = ['Theta', 'Radius', 'Alpha']
-
-theta_range = (20, 340)
-radius_range = (15, 30)
-mask = (label_df.Theta >= theta_range[0]) & (label_df.Theta <= theta_range[1]) & \
-            (label_df.Radius >= radius_range[0]) & (label_df.Radius <=radius_range[1])
-
-label = label[mask]
-image = image[mask]
-
-print('Post-subset:')
-print('Image: ',image.shape)
-print('Label: ', label.shape)
-
-# Pull out just the theta for now.
+# Pull out just the theta and radius.
 # This will be the target values for the regression.
-theta_radius = label[:,:2]
-# print(theta_radius.shape)
-# print(theta_radius[:10])
-
-X_train, X_test, y_train, y_test = train_test_split(image, theta_radius, test_size=0.33)
-
-# Convert the target arrays to np.array for keras interface
-y_train = np.array(y_train)
-y_test = np.array(y_test)
-
-# print('Original shape x train: ', X_train.shape)
+y_train = y_train[:,:2]
+y_test = y_test[:,:2]
 
 # from matplotlib import pyplot as plt
 # plt.imshow(X_train[0])
 # plt.show()
 
+# Align with the shape that keras expects for the 2D Convolutional input layer
 X_train = X_train.reshape(X_train.shape[0], 28, 28, 1)
 X_test = X_test.reshape(X_test.shape[0], 28, 28, 1)
-# print('Reshaped x train: ', X_train.shape)
+X_val = X_val.reshape(X_val.shape[0], 28, 28, 1)
 
 X_train = X_train.astype('float32')
 X_test = X_test.astype('float32')
+X_val = X_val.astype('float32')
 X_train /= 255
 X_test /= 255
-
-# print('Original shape y train: ', y_train.shape)
-# print('Original Labels: ', y_train[:10])
+X_val /= 255
 
 if not resume:
     # Declare the model
@@ -128,10 +86,10 @@ else:
 
 if train:
     last_pred = [[0 for x in range(2)] for y in range(10)]
-    num_train_sessions = 5
-    epochs = 10
+    num_train_sessions = 10
+    epochs = 1
     batch_size = 100
-    lr = 0.00025
+    lr = 0.01
     print('Learning rate: ', lr)
 
     tbCallBack = TensorBoard(log_dir='./Graph',
@@ -161,14 +119,14 @@ if train:
         print('Test mean absolute error:', score[1]) # this is the one we care about
 
         num_predictions = 10
-        pred = model.predict(X_test[:num_predictions], batch_size=1)
+        pred = model.predict(X_val[:num_predictions], batch_size=1)
 
         print('   Target | Prediction | Delta')
         print('    Theta | Radius')
         for i in range(num_predictions):
             print('{:5.1f}\t{:5.1f}\t{:5.1f}\t{:5.1f}\t{:5.1f}\t{:5.1f}'. \
-                format(y_test[i][0], pred[i][0], last_pred[i][0]-pred[i][0], \
-                        y_test[i][1], pred[i][1], last_pred[i][1]-pred[i][1]))
+                format(y_val[i][0], pred[i][0], pred[i][0]-last_pred[i][0], \
+                        y_val[i][1], pred[i][1], pred[i][1]-last_pred[i][1]))
 
             last_pred[i][0] = pred[i][0]
             last_pred[i][1] = pred[i][1]

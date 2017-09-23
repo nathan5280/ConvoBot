@@ -4,3 +4,11 @@ RPi:
 
 pyment
   - pyment -w -q "'''" -o "google" <filename>
+
+
+tf.Print()
+x = tf.get_variable('x', [10, 5])
+x = tf.Print(x, [x])
+
+sess = tf.InteractiveSession()
+sess.run(x)
