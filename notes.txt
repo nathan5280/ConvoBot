@@ -12,3 +12,5 @@ x = tf.Print(x, [x])
 
 sess = tf.InteractiveSession()
 sess.run(x)
+
+tensorboard --logdir=<dir name>

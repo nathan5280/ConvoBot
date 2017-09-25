@@ -11,7 +11,7 @@ dataset_label = 'label'
 pkl_ext = '.pkl'
 
 class DataWrapper(object):
-    def __init__(self, path, name, resplit=False, validation_split=0.25, test_split=0.10):
+    def __init__(self, label_filename, image_filename, data_path, resplit=False, validation_split=0.25, test_split=0.10):
         self._image_train = None
         self._image_test = None
         self._image_val = None
@@ -19,13 +19,13 @@ class DataWrapper(object):
         self._label_test = None
         self._label_val = None
 
-        self._image_train_fn = self._filename(path, name, dataset_image, phase_train)
-        self._image_test_fn = self._filename(path, name, dataset_image, phase_test)
-        self._image_val_fn = self._filename(path, name, dataset_image, phase_val)
+        self._image_train_fn = self._filename(data_path, dataset_image, phase_train)
+        self._image_test_fn = self._filename(data_path, dataset_image, phase_test)
+        self._image_val_fn = self._filename(data_path, dataset_image, phase_val)
 
-        self._label_train_fn = self._filename(path, name, dataset_label, phase_train)
-        self._label_test_fn = self._filename(path, name, dataset_label, phase_test)
-        self._label_val_fn = self._filename(path, name, dataset_label, phase_val)
+        self._label_train_fn = self._filename(data_path, dataset_label, phase_train)
+        self._label_test_fn = self._filename(data_path, dataset_label, phase_test)
+        self._label_val_fn = self._filename(data_path, dataset_label, phase_val)
 
         # Check to see if we need to resplit either by explicit request or
         # any of the files is missing.
@@ -36,20 +36,21 @@ class DataWrapper(object):
                 not os.path.exists(self._label_train_fn) or \
                 not os.path.exists(self._label_test_fn) or \
                 not os.path.exists(self._label_val_fn):
-            self._split(path, name, validation_split, test_split)
+            self._split(label_filename, image_filename, validation_split, test_split)
         else:
-            self._load(path, name)
+            self._load()
 
 
-    def _split(self, path, name, validation_split, test_split):
+    def _split(self, label_path, image_path, validation_split, test_split):
         print('Splitting')
         # Load the data from the pickle
-        with open(os.path.join(path, '_'.join((name, dataset_image)) + pkl_ext), 'rb') as f:
+        # Load the data from the pickle
+        with open(label_path, 'rb') as f:
+            label = pickle.load(f)
+
+        with open(image_path, 'rb') as f:
             image = pickle.load(f)
 
-        # Load the data from the pickle
-        with open(os.path.join(path, '_'.join((name, dataset_label)) + pkl_ext), 'rb') as f:
-            label = pickle.load(f)
 
         # Shuffle things because they were probably generated in order.
         shuffle_idx = np.array(range(len(image)))
@@ -129,7 +130,7 @@ class DataWrapper(object):
             pickle.dump(self._label_val, f)
 
 
-    def _load(self, path, name):
+    def _load(self):
         print('Loading')
         with open(self._image_train_fn, 'rb') as f:
             self._image_train = pickle.load(f)
@@ -150,8 +151,8 @@ class DataWrapper(object):
             self._label_val = pickle.load(f)
 
 
-    def _filename(self, path, name, dataset, phase):
-        return os.path.join(path, '_'.join((name, dataset, phase)) + pkl_ext)
+    def _filename(self, path, dataset, phase):
+        return os.path.join(path, '_'.join((dataset, phase)) + pkl_ext)
 
     def get_train(self):
         return self._image_train, self._label_train
@@ -161,9 +162,3 @@ class DataWrapper(object):
 
     def get_validation(self):
         return self._image_val, self._label_val
-
-if __name__ == '__main__':
-    root_path = '../../../dataf'
-    root_name = 'gs_28x28'
-
-    dw = DataWrapper(root_path, root_name, resplit=False, validation_split=0.25, test_split=0.10)

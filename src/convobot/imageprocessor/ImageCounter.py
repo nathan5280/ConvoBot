@@ -25,14 +25,6 @@ class ImageCounter(object):
         '''
         def converter(src_path, dst_path, filename):
             self._count += 1
-            print('Counting: {}, {}', os.path.join(src_path, filename), os.path.join(dst_path, filename))
+            print('Counting: {}, {}'.format(os.path.join(src_path, filename), os.path.join(dst_path, filename)))
 
         self.tree_util.apply_files(converter, '*.png')
-
-def main():
-    converter = ImageCounter('../../../datax/gs_28x28', '../../../datax/gs_28x28')
-    converter.process()
-    print("Images found: ", converter.get_count())
-
-if __name__ == '__main__':
-    main()
