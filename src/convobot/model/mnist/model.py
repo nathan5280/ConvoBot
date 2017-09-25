@@ -53,11 +53,16 @@ def process(dataset_name, model_name, config_name):
     # plt.imshow(X_train[0])
     # plt.show()
 
+    if cfg['color']:
+        color_layers = 3
+    else:
+        color_layers = 1
+
     # Align with the shape that keras expects for the 2D Convolutional input layer
     img_size = cfg['image_size']
-    X_train = X_train.reshape(X_train.shape[0], img_size[0], img_size[1], 1)
-    X_test = X_test.reshape(X_test.shape[0], img_size[0], img_size[1], 1)
-    X_val = X_val.reshape(X_val.shape[0], img_size[0], img_size[1], 1)
+    X_train = X_train.reshape(X_train.shape[0], img_size[0], img_size[1], color_layers)
+    X_test = X_test.reshape(X_test.shape[0], img_size[0], img_size[1], color_layers)
+    X_val = X_val.reshape(X_val.shape[0], img_size[0], img_size[1], color_layers)
 
     X_train = X_train.astype('float32')
     X_test = X_test.astype('float32')
@@ -75,7 +80,7 @@ def process(dataset_name, model_name, config_name):
         model.add(Conv2D(num_filters1, kernel_size1,
                              padding='valid',
                              activation='relu',
-                             input_shape=(img_size[0], img_size[1],1)))
+                             input_shape=(img_size[0], img_size[1],color_layers)))
 
         num_filters2 = 32
         kernel_size2 = (1,1)
@@ -95,10 +100,10 @@ def process(dataset_name, model_name, config_name):
 
     if train:
         last_pred = [[0 for x in range(2)] for y in range(10)]
-        num_train_sessions = 100
-        epochs = 1
+        num_train_sessions = 10
+        epochs = 2
         batch_size = 100
-        lr = 0.0001
+        lr = 0.0005
         print('Learning rate: ', lr)
 
         tb_path = model_env.get_tensorboard_path(cfg)

@@ -25,9 +25,12 @@ class ColorSizeConverter(object):
         Convert Color files to Gray Scale.
         '''
         def converter(src_path, dst_path, filename):
-            img = Image.open(os.path.join(src_path, filename))
             if self._grayscale:
-                img = img.convert('L')
+                # Open and convert from RGBA to grayscale
+                img = Image.open(os.path.join(src_path, filename)).convert('L')
+            else:
+                # Open and convert from RGBA to RGB
+                img = Image.open(os.path.join(src_path, filename)).convert('RGB')
 
             if self._resize:
                 img.thumbnail(self._resize, Image.ANTIALIAS)

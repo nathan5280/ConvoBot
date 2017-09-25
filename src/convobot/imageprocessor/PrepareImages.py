@@ -42,6 +42,8 @@ def process(dataset_name, config_name):
         label, image = converter.get_data()
 
         label_file_path, image_file_path = processing_env.get_np_array_path(cfg)
+        print('Label: ', label.shape)
+        print('Image: ', image.shape)
 
         with open(label_file_path, 'wb') as f:
             pickle.dump(label, f)
