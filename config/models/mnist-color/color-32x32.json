@@ -9,7 +9,7 @@
     "split": true,
     "validation_split": 0.25,
     "test_split": 0.10,
-    "radius_trim": 0.5,
+    "radius_trim": 1.5,
     "image_set_name": "color-32x32",
     "src_array": "color-32x32",
     "image_size": [32, 32],
@@ -17,22 +17,22 @@
     "schedule": [
         {
             "name": "phase 1",
-            "sessions": 1,
-            "epochs": 2,
-            "batch_size": 100,
-            "learning_rate": 0.01
-        },
-        {
-            "name": "phase 2",
             "sessions": 2,
             "epochs": 1,
             "batch_size": 100,
             "learning_rate": 0.001
         },
         {
-            "name": "phase 3",
+            "name": "phase 2",
             "sessions": 2,
-            "epochs": 2,
+            "epochs": 1,
+            "batch_size": 100,
+            "learning_rate": 0.0005
+        },
+        {
+            "name": "phase 3",
+            "sessions": 10,
+            "epochs": 5,
             "batch_size": 100,
             "learning_rate": 0.0001
         }

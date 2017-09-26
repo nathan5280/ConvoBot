@@ -17,6 +17,7 @@ class MNISTModelBuilder(object):
             self._img_color_layers = 3
 
     def get_model(self):
+        print(self._resume, os.path.exists(self._model_path))
         if self._resume and os.path.exists(self._model_path):
             print('Loading model: ', self._model_path)
             model = load_model(self._model_path)
@@ -44,10 +45,11 @@ class MNISTModelBuilder(object):
             model.add(Flatten())
             model.add(Dense(128, activation='relu'))
             model.add(Dropout(0.25))
-            model.add(Dense(2, activation='relu'))
+            model.add(Dense(3, activation='relu'))
 
         self._model = model
         return self._model
 
     def save_model(self):
-        pass
+        print('Saving model')
+        self._model.save(self._model_path)

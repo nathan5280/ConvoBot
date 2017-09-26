@@ -3,7 +3,7 @@
     "description": "mnist baseline",
     "date": "Sun Sep 24 15:15:07 MDT 2017",
     "model_class": "mnist",
-    "resume": true,
+    "resume": false,
     "resume_phase": 2,
     "model_filename": "model.h5",
     "split": false,
@@ -19,19 +19,19 @@
             "name": "phase 1",
             "sessions": 2,
             "epochs": 1,
-            "batch_size": 1000,
-            "learning_rate": 0.01
+            "batch_size": 100,
+            "learning_rate": 0.005
         },
         {
             "name": "phase 2",
             "sessions": 2,
             "epochs": 1,
-            "batch_size": 500,
-            "learning_rate": 0.001
+            "batch_size": 100,
+            "learning_rate": 0.005
         },
         {
             "name": "phase 3",
-            "sessions": 5,
+            "sessions": 50,
             "epochs": 1,
             "batch_size": 100,
             "learning_rate": 0.0001

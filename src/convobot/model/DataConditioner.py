@@ -30,6 +30,10 @@ class DataConditioner(object):
         df = pd.DataFrame(labels, columns=self._column_names)
         return df[['Theta', 'Radius']].values
 
+    def get_theta_radius_alpha_labels(self, labels):
+        df = pd.DataFrame(labels, columns=self._column_names)
+        return df[['Theta', 'Radius', 'Alpha']].values
+
     def get_x_y_labels(self, labels):
         df = pd.DataFrame(labels, columns=self._column_names)
         return df[['X', 'Y']].values

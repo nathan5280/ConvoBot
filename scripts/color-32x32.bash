@@ -12,5 +12,5 @@ cd src
 # python convobot/imageprocessor/PrepareImages.py -d convobot -e ../config -c color-32x32
 
 # Run the model 1-run, 1-epoch on the grayscale images.
-python convobot/model/mnist/model.py -d convobot -e ../config -m mnist-color -c color-32x32
+python convobot/model/ModelRunner.py -d convobot -e ../config -m mnist-color -c color-32x32
 cd ..
