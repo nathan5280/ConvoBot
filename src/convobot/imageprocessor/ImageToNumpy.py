@@ -28,12 +28,7 @@ class ImageToNumpy(object):
 
         self._size = size
         self._grayscale = grayscale
-
-        if grayscale:
-            self._img = np.zeros([img_cnt, size[0]*size[1]], dtype=np.uint8)
-        else:
-            self._img = np.zeros([img_cnt, size[0]*size[1]*3], dtype=np.uint8)
-
+        self._img = np.zeros([img_cnt, size[0]*size[1]], dtype=np.uint8)
         self._label = np.zeros([img_cnt, 3], dtype=np.float32)
         self._idx = 0
         self._filename_manager = FilenameManager()
@@ -46,11 +41,7 @@ class ImageToNumpy(object):
             img = Image.open(os.path.join(src_path, filename))
             img_np = np.array(img)
 
-            if self._grayscale:
-                img_np = img_np.reshape(self._size[0]*self._size[1],)
-            else:
-                img_np = img_np.reshape(self._size[0]*self._size[1]*3,)
-
+            img_np = img_np.reshape(self._size[0]*self._size[1],)
             self._img[self._idx] = img_np.tolist()
 
             theta, radius, alpha = self._filename_manager.filename_to_labels(filename)
@@ -66,7 +57,4 @@ class ImageToNumpy(object):
         self.tree_util.apply_files(loader, '*.png')
 
     def get_data(self):
-        if self._grayscale:
-            return self._label, self._img.reshape(len(self._img), self._size[0], self._size[1])
-        else:
-            return self._label, self._img.reshape(len(self._img), self._size[0], self._size[1], 3)
+        return self._label, self._img.reshape(len(self._img), self._size[0], self._size[1])

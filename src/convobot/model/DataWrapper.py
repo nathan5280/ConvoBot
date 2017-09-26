@@ -51,9 +51,6 @@ class DataWrapper(object):
         with open(image_path, 'rb') as f:
             image = pickle.load(f)
 
-        # print('Loaded')
-        # print('Label: ', label.shape)
-        # print('Image: ', image.shape)
 
         # Shuffle things because they were probably generated in order.
         shuffle_idx = np.array(range(len(image)))
@@ -105,12 +102,14 @@ class DataWrapper(object):
         self._label_train = np.concatenate((y, edge_label), axis=0)
 
         # print('Image, Label, Index: ')
-        # print('All - Exclude:', image.shape, label.shape, index.shape)
+        # print('All:', image.shape, label.shape, index.shape)
         # print('Predict:', predict_image.shape, predict_label.shape, predict_index.shape)
         # print('Edge:', edge_image.shape, edge_label.shape, edge_index.shape)
-        # print('Validation: ', validation_split, self._label_val.shape, self._image_val.shape)
-        # print('Test: ', test_split, self._label_test.shape, self._image_test.shape)
-        # print('Train: ', self._label_train.shape, self._image_train.shape)
+        # print('Validation: ', validation_split, self._X_val.shape, self._y_val.shape)
+        # print('Remainder: ', X.shape, y.shape)
+        # print('Test: ', test_split, self._X_test.shape, self._y_test.shape)
+        # print('Remainder: ', X.shape, y.shape)
+        # print('Train: ', self._y_train.shape, self._X_train.shape)
 
         with open(self._image_train_fn, 'wb') as f:
             pickle.dump(self._image_train, f)
@@ -130,12 +129,6 @@ class DataWrapper(object):
         with open(self._label_val_fn, 'wb') as f:
             pickle.dump(self._label_val, f)
 
-        # print('Image Train: ', self._image_train.shape)
-        # print('Image Test: ', self._image_test.shape)
-        # print('Image Val: ', self._image_val.shape)
-        # print('Label Train: ', self._label_train.shape)
-        # print('Label Test: ', self._label_test.shape)
-        # print('Label Val: ', self._label_val.shape)
 
     def _load(self):
         print('Loading')
@@ -157,12 +150,6 @@ class DataWrapper(object):
         with open(self._label_val_fn, 'rb') as f:
             self._label_val = pickle.load(f)
 
-        print('Image Train: ', self._image_train.shape)
-        print('Image Test: ', self._image_test.shape)
-        print('Image Val: ', self._image_val.shape)
-        print('Label Train: ', self._label_train.shape)
-        print('Label Test: ', self._label_test.shape)
-        print('Label Val: ', self._label_val.shape)
 
     def _filename(self, path, dataset, phase):
         return os.path.join(path, '_'.join((dataset, phase)) + pkl_ext)
