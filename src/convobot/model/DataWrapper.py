@@ -69,13 +69,15 @@ class DataWrapper(object):
         label = label[shuffle_idx]
 
         index = pd.DataFrame(label)
-        index.columns = ['Theta', 'Radius', 'Alpha']
+        index.columns = ['Theta', 'Radius', 'Alpha', 'X', 'Y']
 
         # Remove any points we aren't including in the project
-        theta_range = (20, 340)
+        # theta_range = (20, 340)
         radius_range = (15, 30)
-        mask = (index.Theta >= theta_range[0]) & (index.Theta <= theta_range[1]) & \
-                    (index.Radius >= radius_range[0]) & (index.Radius <=radius_range[1])
+        # mask = (index.Theta >= theta_range[0]) & (index.Theta <= theta_range[1]) & \
+        #             (index.Radius >= radius_range[0]) & (index.Radius <=radius_range[1])
+
+        mask = (index.Radius >= radius_range[0]) & (index.Radius <=radius_range[1])
 
         label = label[mask]
         image = image[mask]

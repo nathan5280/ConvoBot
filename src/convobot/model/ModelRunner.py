@@ -31,7 +31,7 @@ def process(data_root, cfg_root, model_name, cfg_name):
     if cfg['color']:
         img_color_layers = 3
 
-    data_conditioner = DataConditioner(cfg['image_size'], img_color_layers, add_xy=False)
+    data_conditioner = DataConditioner(cfg['image_size'], img_color_layers)
     data_wrapper = DataWrapper(src_label_filename, src_image_filename, data_path, data_conditioner, cfg)
 
     X_train, y_train = data_wrapper.get_train()
@@ -40,10 +40,14 @@ def process(data_root, cfg_root, model_name, cfg_name):
 
     # Pull out just the theta and radius.
     # This will be the target values for the regression.
-    y_train = y_train[:,:2]
-    y_test = y_test[:,:2]
-
-    print('Image: ', X_train)
+    # y_train = y_train[:,:2]
+    # y_test = y_test[:,:2]
+    y_train = data_conditioner.get_theta_radius_labels(y_train)
+    y_test = data_conditioner.get_theta_radius_labels(y_test)
+    y_val = data_conditioner.get_theta_radius_labels(y_val)
+    # y_train = data_conditioner.get_x_y_labels(y_train)
+    # y_test = data_conditioner.get_x_y_labels(y_test)
+    # y_val = data_conditioner.get_x_y_labels(y_val)
 
     model_path = model_env.get_model_path()
     model_class = cfg['model_class']
