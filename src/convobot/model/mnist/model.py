@@ -54,9 +54,14 @@ def process(data_root, cfg_root, model_name, cfg_name):
 
     # Align with the shape that keras expects for the 2D Convolutional input layer
     img_size = cfg['image_size']
-    X_train = X_train.reshape(X_train.shape[0], img_size[0], img_size[1], 1)
-    X_test = X_test.reshape(X_test.shape[0], img_size[0], img_size[1], 1)
-    X_val = X_val.reshape(X_val.shape[0], img_size[0], img_size[1], 1)
+    img_color = cfg['color']
+    img_color_layers = 1
+    if img_color:
+        img_color_layers = 3
+
+    X_train = X_train.reshape(X_train.shape[0], img_size[0], img_size[1], img_color_layers)
+    X_test = X_test.reshape(X_test.shape[0], img_size[0], img_size[1], img_color_layers)
+    X_val = X_val.reshape(X_val.shape[0], img_size[0], img_size[1], img_color_layers)
 
     X_train = X_train.astype('float32')
     X_test = X_test.astype('float32')
@@ -74,7 +79,7 @@ def process(data_root, cfg_root, model_name, cfg_name):
         model.add(Conv2D(num_filters1, kernel_size1,
                              padding='valid',
                              activation='relu',
-                             input_shape=(img_size[0], img_size[1],1)))
+                             input_shape=(img_size[0], img_size[1], img_color_layers)))
 
         num_filters2 = 32
         kernel_size2 = (1,1)

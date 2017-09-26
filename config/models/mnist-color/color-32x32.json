@@ -1,37 +1,37 @@
 {
-    "name": "test",
-    "description": "Test set to develop pipeline",
+    "name": "color-32x32",
+    "description": "mnist baseline",
     "date": "Sun Sep 24 15:15:07 MDT 2017",
     "model_class": "mnist",
-    "resume": false,
-    "resume_phase": "2",
+    "resume": true,
+    "resume_phase": 2,
     "model_filename": "model.h5",
     "split": true,
     "validation_split": 0.25,
     "test_split": 0.10,
-    "radius_trim": 0.0,
-    "image_set_name": "test-color",
-    "src_array": "test-color",
+    "radius_trim": 0.5,
+    "image_set_name": "color-32x32",
+    "src_array": "color-32x32",
     "image_size": [32, 32],
     "color": true,
     "schedule": [
         {
             "name": "phase 1",
             "sessions": 1,
-            "epochs": 1,
+            "epochs": 2,
             "batch_size": 100,
-            "learning_rate": 0.0001
+            "learning_rate": 0.01
         },
         {
             "name": "phase 2",
             "sessions": 2,
-            "epochs": 2,
+            "epochs": 1,
             "batch_size": 100,
-            "learning_rate": 0.0001
+            "learning_rate": 0.001
         },
         {
             "name": "phase 3",
-            "sessions": 10,
+            "sessions": 2,
             "epochs": 2,
             "batch_size": 100,
             "learning_rate": 0.0001

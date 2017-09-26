@@ -1,12 +1,12 @@
 {
-    "name": "gs-64x64",
-    "description": "Convert to grayscale and 64x64",
+    "name": "color-32x32",
+    "description": "Convert to grayscale and 32x32",
     "date": "Sun Sep 24 11:50:07 MDT 2017",
     "resize": true,
     "size": [
-        64,
-        64
+        32,
+        32
     ],
-    "color": false,
+    "color": true,
     "src_dataset": "color-256x256"
 }
