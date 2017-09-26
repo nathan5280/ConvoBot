@@ -1,0 +1,39 @@
+{
+    "name": "gs-32x32",
+    "description": "mnist baseline",
+    "date": "Sun Sep 24 15:15:07 MDT 2017",
+    "model_class": "mnist",
+    "resume": false,
+    "resume_phase": 2,
+    "model_filename": "model.h5",
+    "split": true,
+    "image_set_name": "gs-32x32",
+    "src_array": "gs-32x32",
+    "image_size": [32, 32],
+    "color": false,
+    "schedule": [
+        {
+            "name": "phase 1",
+            "sessions": 10,
+            "epochs": 2,
+            "batch_size": 100,
+            "learning_rate": 0.05
+        },
+        {
+            "name": "phase 2",
+            "sessions": 10,
+            "epochs": 2,
+            "batch_size": 100,
+            "learning_rate": 0.01
+        },
+        {
+            "name": "phase 3",
+            "sessions": 10,
+            "epochs": 2,
+            "batch_size": 100,
+            "learning_rate": 0.0001
+        }
+    ],
+    "tensorboard": "graph",
+    "radius_trim": "0.5"
+}

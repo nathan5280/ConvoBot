@@ -1,0 +1,12 @@
+{
+    "name": "gs-32x32",
+    "description": "Convert to grayscale and 32x32",
+    "date": "Sun Sep 24 11:50:07 MDT 2017",
+    "resize": true,
+    "size": [
+        32,
+        32
+    ],
+    "color": false,
+    "src_dataset": "color-256x256"
+}

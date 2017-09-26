@@ -24,7 +24,7 @@ def init_blender(env, image_size):
     env.set_camera_location(0, 15, 180)
     return
 
-def process(dataset_name, config_name):
+def process(data_root, cfg_root, cfg_name):
     '''
     Connect to blender and run the simulation.
     '''
@@ -34,8 +34,8 @@ def process(dataset_name, config_name):
     env = Pyro4.Proxy("PYRONAME:Env")
 
     # load the simulation configuration from the convobot environment.
-    simulation_env = Environment(dataset_name)
-    cfg = simulation_env.get_simulation_cfg(config_name)
+    simulation_env = Environment(cfg_root, data_root)
+    cfg = simulation_env.get_simulation_cfg(cfg_name)
 
     # Initialize Blender
     init_blender(env, cfg['image_size']);
@@ -60,7 +60,7 @@ def process(dataset_name, config_name):
                 t0 = time.time()
                 env.set_camera_location(float(theta), float(radius), 180+float(round(alpha,1)))
 
-                path = simulation_env.get_simulation_output_path(cfg)
+                path = simulation_env.get_simulation_output_path()
                 filename = fnm.label_to_radius_path(path,
                             theta, radius, 180+round(alpha,1))
 
@@ -71,11 +71,12 @@ def process(dataset_name, config_name):
     # env.quit()
 
 def main(argv):
-    dataset_name = None
-    config_name = None
-    usage = 'SimulateImages.py -d <dataset_name> -c <config_name>'
+    data_root = None
+    cfg_name = None  # Name of the configuration to load
+    cfg_root = None  # Root director for the configuration files
+    usage = 'SimulateImages.py -d <data_root> -e <cfg_root> -c <cfg_name>'
     try:
-        opts, args = getopt.getopt(argv,"hd:c:",["dataset_name=","config_name="])
+        opts, args = getopt.getopt(argv,"hd:e:c:",["data_root=", "cfg_root=", "cfg_name="])
     except getopt.GetoptError:
         print(usage)
         sys.exit(2)
@@ -83,15 +84,17 @@ def main(argv):
         if opt == '-h':
             print(usage)
             sys.exit()
-        elif opt in ("-d", "--dataset_name"):
-            dataset_name = arg
-        elif opt in ("-c", "--config_name"):
-            config_name = arg
+        elif opt in ("-d", "--data_root"):
+            data_root = arg
+        elif opt in ("-e", "--cfg_root"):
+            cfg_root = arg
+        elif opt in ("-c", "--cfg_name"):
+            cfg_name = arg
 
-    if not dataset_name or not config_name:
+    if not data_root or not cfg_root or not cfg_name:
         print(usage)
     else:
-        process(dataset_name, config_name)
+        process(data_root, cfg_root, cfg_name)
 
 if __name__ == "__main__":
     main(sys.argv[1:])
