@@ -1,0 +1,12 @@
+{
+    "name": "test-gs",
+    "description": "Test image set to develop pipeline",
+    "date": "Sun Sep 24 14:30:07 MDT 2017",
+    "resize": true,
+    "size": [
+        32,
+        32
+    ],
+    "color": false,
+    "src_dataset": "test"
+}

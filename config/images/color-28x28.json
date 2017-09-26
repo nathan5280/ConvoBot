@@ -1,0 +1,12 @@
+{
+    "name": "color-28x28",
+    "description": "Resize color images to 28x28",
+    "date": "Mon Sep 25 11:49:18 MDT 2017",
+    "resize": true,
+    "size": [
+        28,
+        28
+    ],
+    "color": true,
+    "src_dataset": "color-256x256"
+}

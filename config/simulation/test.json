@@ -1,0 +1,24 @@
+{
+    "name": "test",
+    "description": "test images to develop pipeline",
+    "date": "Sun Sep 24 14:24:07 MDT 2017",
+    "image_size": [
+        64,
+        64
+    ],
+    "radius_range": {
+        "min": 15.0,
+        "max": 25.0,
+        "step": 5.0
+    },
+    "theta_range": {
+        "min": 0.0,
+        "max": 360.0,
+        "step": 15.0
+    },
+    "alpha_range": {
+        "min": -10.0,
+        "max": 10.0,
+        "step": 10.0
+    }
+}

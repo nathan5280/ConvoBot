@@ -1,0 +1,22 @@
+{
+    "name": "color-256x256",
+    "model": "mnist-gs",
+    "description": "Testing environment templates",
+    "date": "Sun Sep 24 11:50:07 MDT 2017",
+    "schedule": [
+        {
+            "phase_name": "phase 1",
+            "runs": 2,
+            "epochs": 2,
+            "learning_rate": 0.01
+        },
+        {
+            "phase_name": "phase 2",
+            "runs": 2,
+            "epochs": 2,
+            "learning_rate": 0.005
+        }
+    ],
+    "tensorboard": "graph",
+    "radius_trim": "0.5"
+}

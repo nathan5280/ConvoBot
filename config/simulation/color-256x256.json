@@ -1,0 +1,24 @@
+{
+    "name": "color-256x256",
+    "description": "Images with color and background at 256x256.",
+    "date": "Sun Sep 24 11:50:07 MDT 2017",
+    "image_size": [
+        256,
+        256
+    ],
+    "radius_range": {
+        "min": 15.0,
+        "max": 30.0,
+        "step": 0.5
+    },
+    "theta_range": {
+        "min": 0.0,
+        "max": 360.0,
+        "step": 5.0
+    },
+    "alpha_range": {
+        "min": -10.0,
+        "max": 10.0,
+        "step": 2.0
+    }
+}

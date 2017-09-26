@@ -1,0 +1,12 @@
+{
+    "name": "gs-28x28",
+    "description": "Convert to grayscale and 64x64",
+    "date": "Sun Sep 24 11:50:07 MDT 2017",
+    "resize": true,
+    "size": [
+        28,
+        28
+    ],
+    "color": false,
+    "src_dataset": "color-256x256"
+}
