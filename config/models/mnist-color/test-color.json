@@ -4,7 +4,7 @@
     "date": "Sun Sep 24 15:15:07 MDT 2017",
     "model_class": "mnist",
     "resume": false,
-    "resume_phase": "2",
+    "resume_phase": 2,
     "model_filename": "model.h5",
     "split": true,
     "validation_split": 0.25,

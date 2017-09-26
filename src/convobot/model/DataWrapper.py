@@ -11,7 +11,8 @@ dataset_label = 'label'
 pkl_ext = '.pkl'
 
 class DataWrapper(object):
-    def __init__(self, label_filename, image_filename, data_path, cfg):
+    def __init__(self, label_filename, image_filename, data_path, data_conditioner, cfg):
+        self._data_conditioner = data_conditioner
         self._split = cfg['split']
         self._validation_split = cfg['validation_split']
         self._test_split = cfg['test_split']
@@ -34,11 +35,7 @@ class DataWrapper(object):
 
         # Check to see if we need to resplit either by explicit request or
         # any of the files is missing.
-        if cfg['resume']:
-            self._load()
-            return
-            
-        if self._split or \
+        if self._split or not cfg['resume'] or \
                 not os.path.exists(self._image_train_fn) or \
                 not os.path.exists(self._image_test_fn) or \
                 not os.path.exists(self._image_val_fn) or \
@@ -57,9 +54,12 @@ class DataWrapper(object):
         with open(label_path, 'rb') as f:
             label = pickle.load(f)
 
+        label = self._data_conditioner.condition_labels(label)
+
         with open(image_path, 'rb') as f:
             image = pickle.load(f)
 
+        image = self._data_conditioner.condition_images(image)
 
         # Shuffle things because they were probably generated in order.
         shuffle_idx = np.array(range(len(image)))
@@ -111,15 +111,15 @@ class DataWrapper(object):
         self._image_train = np.concatenate((X, edge_image), axis=0)
         self._label_train = np.concatenate((y, edge_label), axis=0)
 
-        print('Image, Label, Index: ')
-        print('All:', image.shape, label.shape, index.shape)
-        print('Predict:', predict_image.shape, predict_label.shape, predict_index.shape)
-        print('Edge:', edge_image.shape, edge_label.shape, edge_index.shape)
-        print('Validation: ', self._validation_split, self._label_val.shape, self._image_val.shape)
-        print('Remainder: ', X.shape, y.shape)
-        print('Test: ', self._test_split, self._label_test.shape, self._image_test.shape)
-        print('Remainder: ', X.shape, y.shape)
-        print('Train: ', self._label_train.shape, self._image_train.shape)
+        # print('Image, Label, Index: ')
+        # print('All:', image.shape, label.shape, index.shape)
+        # print('Predict:', predict_image.shape, predict_label.shape, predict_index.shape)
+        # print('Edge:', edge_image.shape, edge_label.shape, edge_index.shape)
+        # print('Validation: ', self._validation_split, self._label_val.shape, self._image_val.shape)
+        # print('Remainder: ', X.shape, y.shape)
+        # print('Test: ', self._test_split, self._label_test.shape, self._image_test.shape)
+        # print('Remainder: ', X.shape, y.shape)
+        # print('Train: ', self._label_train.shape, self._image_train.shape)
 
         with open(self._image_train_fn, 'wb') as f:
             pickle.dump(self._image_train, f)
@@ -165,10 +165,10 @@ class DataWrapper(object):
         return os.path.join(path, '_'.join((dataset, phase)) + pkl_ext)
 
     def get_train(self):
-        return self._image_train, self._label_train
+        return self._data_conditioner.reshape_images(self._image_train), self._label_train
 
     def get_test(self):
-        return self._image_test, self._label_test
+        return self._data_conditioner.reshape_images(self._image_test), self._label_test
 
     def get_validation(self):
-        return self._image_val, self._label_val
+        return self._data_conditioner.reshape_images(self._image_val), self._label_val

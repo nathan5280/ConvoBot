@@ -75,7 +75,7 @@ class Environment(object):
 
         return self._cfg
 
-    def get_model_name(self):
+    def get_model_path(self):
         path = os.path.join(home_path, self._data_root, model_path,
                     self._model_name, self._cfg['name'], self._cfg['model_filename'])
         return path
