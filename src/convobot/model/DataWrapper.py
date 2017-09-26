@@ -11,7 +11,12 @@ dataset_label = 'label'
 pkl_ext = '.pkl'
 
 class DataWrapper(object):
-    def __init__(self, label_filename, image_filename, data_path, resplit=False, validation_split=0.25, test_split=0.10):
+    def __init__(self, label_filename, image_filename, data_path, cfg):
+        self._split = cfg['split']
+        self._validation_split = cfg['validation_split']
+        self._test_split = cfg['test_split']
+        self._radius_trim = cfg['radius_trim']
+
         self._image_train = None
         self._image_test = None
         self._image_val = None
@@ -29,19 +34,23 @@ class DataWrapper(object):
 
         # Check to see if we need to resplit either by explicit request or
         # any of the files is missing.
-        if resplit or \
+        if cfg['resume']:
+            self._load()
+            return
+            
+        if self._split or \
                 not os.path.exists(self._image_train_fn) or \
                 not os.path.exists(self._image_test_fn) or \
                 not os.path.exists(self._image_val_fn) or \
                 not os.path.exists(self._label_train_fn) or \
                 not os.path.exists(self._label_test_fn) or \
                 not os.path.exists(self._label_val_fn):
-            self._split(label_filename, image_filename, validation_split, test_split)
+            self._split_data(label_filename, image_filename)
         else:
             self._load()
 
 
-    def _split(self, label_path, image_path, validation_split, test_split):
+    def _split_data(self, label_path, image_path):
         print('Splitting')
         # Load the data from the pickle
         # Load the data from the pickle
@@ -75,7 +84,8 @@ class DataWrapper(object):
         # Separate out the areas that we aren't including in the test and validation.
         # These are points at the edges of the training area.
         theta_range = (35, 325)
-        radius_range = (16, 29)
+        radius_range = (radius_range[0] + self._radius_trim, radius_range[1] - self._radius_trim)
+        print('Radius range: ', radius_range)
         mask = (index.Theta >= theta_range[0]) & (index.Theta <= theta_range[1]) & \
                     (index.Radius >= radius_range[0]) & (index.Radius <=radius_range[1])
         not_mask = [not m for m in mask]
@@ -91,25 +101,25 @@ class DataWrapper(object):
 
         # Split off the validataion set.
         X, self._image_val, y, self._label_val = train_test_split(predict_image, predict_label,
-                                                            test_size=validation_split)
+                                                            test_size=self._validation_split)
 
         # Split off the test set.
         X, self._image_test, y, self._label_test = train_test_split(X, y,
-                                                            test_size=test_split)
+                                                            test_size=self._test_split)
 
         # Add the reminder and the edge areas together into the train dataset.
         self._image_train = np.concatenate((X, edge_image), axis=0)
         self._label_train = np.concatenate((y, edge_label), axis=0)
 
-        # print('Image, Label, Index: ')
-        # print('All:', image.shape, label.shape, index.shape)
-        # print('Predict:', predict_image.shape, predict_label.shape, predict_index.shape)
-        # print('Edge:', edge_image.shape, edge_label.shape, edge_index.shape)
-        # print('Validation: ', validation_split, self._X_val.shape, self._y_val.shape)
-        # print('Remainder: ', X.shape, y.shape)
-        # print('Test: ', test_split, self._X_test.shape, self._y_test.shape)
-        # print('Remainder: ', X.shape, y.shape)
-        # print('Train: ', self._y_train.shape, self._X_train.shape)
+        print('Image, Label, Index: ')
+        print('All:', image.shape, label.shape, index.shape)
+        print('Predict:', predict_image.shape, predict_label.shape, predict_index.shape)
+        print('Edge:', edge_image.shape, edge_label.shape, edge_index.shape)
+        print('Validation: ', self._validation_split, self._label_val.shape, self._image_val.shape)
+        print('Remainder: ', X.shape, y.shape)
+        print('Test: ', self._test_split, self._label_test.shape, self._image_test.shape)
+        print('Remainder: ', X.shape, y.shape)
+        print('Train: ', self._label_train.shape, self._image_train.shape)
 
         with open(self._image_train_fn, 'wb') as f:
             pickle.dump(self._image_train, f)

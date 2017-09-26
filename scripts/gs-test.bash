@@ -5,8 +5,8 @@
 # ./scripts/snake-shake-background.bash
 
 cd src
-Create the images in blender
-# python convobot/simulator/blender/SimulateImages.py -d convobot -e ../config -c test
+# Create the images in blender
+python convobot/simulator/blender/SimulateImages.py -d convobot -e ../config -c test
 
 # Convert the images to 28x28 grayscale
 python convobot/imageprocessor/PrepareImages.py -d convobot -e ../config -c test-gs

@@ -34,11 +34,10 @@ def process(data_root, cfg_root, model_name, cfg_name):
     model_name = model_env.get_model_name()
     print(model_name)
 
-    split = cfg['split']
     src_label_filename, src_image_filename, data_path = \
         model_env.get_model_data_path()
-    data = DataWrapper(src_label_filename, src_image_filename, data_path,
-        resplit=split, validation_split=0.25, test_split=0.10)
+    data = DataWrapper(src_label_filename, src_image_filename, data_path, cfg)
+        # resplit=split, validation_split=0.25, test_split=0.10)
 
     X_train, y_train = data.get_train()
     X_test, y_test = data.get_test()
@@ -95,51 +94,68 @@ def process(data_root, cfg_root, model_name, cfg_name):
 
     if train:
         last_pred = [[0 for x in range(2)] for y in range(10)]
-        num_train_sessions = 2
-        epochs = 2
-        batch_size = 100
-        lr = 0.001
-        print('Learning rate: ', lr)
 
-        tb_path = model_env.get_tensorboard_path()
-        tbCallBack = TensorBoard(log_dir=tb_path,
-                                    histogram_freq=5,
-                                    write_graph=True,
-                                    write_images=True)
+        # Check to see where to restart if resuming.
+        start_phase = 0
+        if cfg['resume']:
+            start_phase = cfg['resume_phase']
+            print('Resuming at phase: ', start_phase)
 
-        optimizer = Adam(lr=lr, beta_1=0.9,
-                            beta_2=0.999, epsilon=1e-08, decay=0.0)
-        model.compile(loss='mse',
-                      optimizer=optimizer,
-                      metrics=['mae'])
+        schedule = cfg['schedule']
 
-        for i in range(num_train_sessions):
-            print('Training iteration: {}/{}/{} '.format(i+1, num_train_sessions,
-                                                    num_train_sessions * epochs))
-            model.fit(X_train, y_train,
-                        batch_size=batch_size,
-                        epochs=epochs,
-                        verbose=1,
-                        callbacks=[tbCallBack])
+        for phase in range(start_phase, len(schedule)):
+            phase_cfg = schedule[phase]
 
-            model.save(model_name)
+            sessions = phase_cfg['sessions']
+            epochs = phase_cfg['epochs']
+            batch_size = phase_cfg['batch_size']
+            lr = phase_cfg['learning_rate']
 
-            score = model.evaluate(X_test, y_test, verbose=0)
-            print('Test score:', score[0])
-            print('Test mean absolute error:', score[1]) # this is the one we care about
 
-            num_predictions = 10
-            pred = model.predict(X_val[:num_predictions], batch_size=1)
+            print('Phase {}: {}/{}'.format(phase_cfg['name'], phase, len(schedule)))
+            print('Sessions: {}, Epochs: {}, Batch Size: {}, Learning Rate: {}'
+                        .format(sessions, epochs, batch_size, lr))
 
-            print('   Target | Prediction | Error | Delta')
-            print('    Theta | Radius')
-            for i in range(num_predictions):
-                print('{:5.1f}\t{:5.1f}\t{:5.1f}\t{:5.1f}\t{:5.1f}\t{:5.1f}\t{:5.1f}\t{:5.1f}'. \
-                    format(y_val[i][0], pred[i][0], y_val[i][0] - pred[i][0], pred[i][0]-last_pred[i][0], \
-                            y_val[i][1], pred[i][1], y_val[i][1] - pred[i][1], pred[i][1]-last_pred[i][1]))
+            print('Learning rate: ', lr)
 
-                last_pred[i][0] = pred[i][0]
-                last_pred[i][1] = pred[i][1]
+            tb_path = model_env.get_tensorboard_path()
+            tbCallBack = TensorBoard(log_dir=tb_path,
+                                        histogram_freq=5,
+                                        write_graph=True,
+                                        write_images=True)
+
+            optimizer = Adam(lr=lr, beta_1=0.9,
+                                beta_2=0.999, epsilon=1e-08, decay=0.0)
+            model.compile(loss='mse',
+                          optimizer=optimizer,
+                          metrics=['mae'])
+
+            for i in range(sessions):
+                print('Training iteration: {}/{}/{} '.format(i+1, sessions, sessions * epochs))
+                model.fit(X_train, y_train,
+                            batch_size=batch_size,
+                            epochs=epochs,
+                            verbose=1,
+                            callbacks=[tbCallBack])
+
+                model.save(model_name)
+
+                score = model.evaluate(X_test, y_test, verbose=0)
+                print('Test score:', score[0])
+                print('Test mean absolute error:', score[1]) # this is the one we care about
+
+                num_predictions = min(10, len(X_val))
+                pred = model.predict(X_val[:num_predictions], batch_size=1)
+
+                print('   Target | Prediction | Error | Delta')
+                print('    Theta | Radius')
+                for i in range(num_predictions):
+                    print('{:5.1f}\t{:5.1f}\t{:5.1f}\t{:5.1f}\t{:5.1f}\t{:5.1f}\t{:5.1f}\t{:5.1f}'. \
+                        format(y_val[i][0], pred[i][0], y_val[i][0] - pred[i][0], pred[i][0]-last_pred[i][0], \
+                                y_val[i][1], pred[i][1], y_val[i][1] - pred[i][1], pred[i][1]-last_pred[i][1]))
+
+                    last_pred[i][0] = pred[i][0]
+                    last_pred[i][1] = pred[i][1]
 
 
 def main(argv):

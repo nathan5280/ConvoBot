@@ -14,7 +14,7 @@
     "theta_range": {
         "min": 0.0,
         "max": 360.0,
-        "step": 45.0
+        "step": 15.0
     },
     "alpha_range": {
         "min": -10.0,
