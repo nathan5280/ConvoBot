@@ -94,5 +94,10 @@ By extension you can easily see how we can create very realistic images through 
 First, I'd like to tip my hat to the unbelievable images above.  There is an unbelievable level of skill and time invested to create those images.  That said, I'm just a beginner with Blender.  It took me a while to just get the two simple blocks in my simulation.  In fact that took longer than building the [SnakeShake](https://github.com/nathan5280/SnakeShake) remote procedure call integration built to drive Blender remotely with Python.
 <p align=“center”>
 <img alt="ConvoBot Target" src="documentation/images/Target.png" width='600'>
-<sub><b>Figure 3: </b>ConvoBot Target</sub>
+<sub><b>Figure 5: </b>ConvoBot Target</sub>
+</p>
+
+<p align=“center”>
+<img alt="Theta" src="images/theta.gif" width=250>  
+<sub> <b> Figure 6: </b> Theta </sub>
 </p>
