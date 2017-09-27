@@ -78,14 +78,14 @@ Let's pretend that we want to develop a fruit classifier that can look at an ima
 <p align=“center”>
 <img alt="Labeling a Fruit Basket" src="documentation/images/Fruit-Basket.png" width='1000'>
 <sub><b>Figure 3: </b>Elements for Neural Network Success.
-_[Credit to the creator](https://blenderartists.org/forum/showthread.php?437913-He-loves-me)_
+[Credit to the creator](https://blenderartists.org/forum/showthread.php?437913-He-loves-me)
 </sub>
 </p>
 The good news is that that isn't a real picture of a fruit basket.   It is a high-definition rendering of a fruit basket from [Blender](https://www.blender.org/) an industry leading animation studio.  The artist knows what everything is in the basket and where it is.  It isn't too hard to work from there to a fully labeled fruit basket.  Infact it isn't hard to generate 1000's of unique fruit baskets.
 <p align=“center”>
 <img alt="Other rendered examples" src="documentation/images/Render-Examples.png" width='1000'>
 <sub><b>Figure 4: </b>Simulation rendered examples Success.
-_[Credit to the creator](https://blenderartists.org/forum/showthread.php?438043-Challenge-743-Voting-CLOSED)_
+[Credit to the creator](https://blenderartists.org/forum/showthread.php?438043-Challenge-743-Voting-CLOSED)
 </sub>
 </p>
 By extension you can easily see how we can create very realistic images through simulation.  We also have the ability to merge real 2D-images, simulated 3D-environments and other information gathered from different databases.
