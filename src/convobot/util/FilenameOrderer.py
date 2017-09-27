@@ -17,6 +17,7 @@ def process(root_path, src_path, dest_path):
         src_file = os.path.join(src_full_path, fn[0])
         dest_file = os.path.join(dest_full_path, '{0:03d}'.format(i) + '.png')
         shutil.copyfile(src_file, dest_file)
+        print('Copy: {}, {}'.format(src_file, dest_file))
 
 def main(argv):
     src_path = None
@@ -24,7 +25,6 @@ def main(argv):
     usage = 'FilenameOrderer.py -s <source_path> -d <desitnation_path>'
     try:
         opts, args = getopt.getopt(argv,"hs:d:",["source_path=", "destination_path="])
-        print(opts, args)
     except getopt.GetoptError:
         print(usage)
         sys.exit(2)
