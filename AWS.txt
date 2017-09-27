@@ -1,0 +1,35 @@
+EC2 Instance:
+
+- Default everything when creating instance.
+- Download keypair to ~/.ssh
+- Add host to .ssh/config
+- chmod 400 keypair.pem files
+- ssh to host
+
+Blender Install
+- download blender
+- sftp to aws
+- bzip2 -d <filename>.bz2
+- tar -xvf <filename>.tar
+- sudo cp ~/blender /usr/lib/blender -r
+
+Other dependencies
+  sudo apt-get install libglu1
+  sudo apt-get install libxi6
+  sudo apt-get install libfontconfig1 libxrender1
+
+Pyro installed
+- pip install pyro4
+
+- Blender directory
+    copy Pyro4 from user location to blender.
+    /home/ubuntu/anaconda3/lib/python3.6/site-packages/Pyro4
+    /usr/lib/blender/2.79/python/lib/python3.5/site-packages/Pyro4
+
+- serpent
+    copy serpent from user location to blender
+    /home/ubuntu/anaconda3/lib/python3.6/site-packages/serpent.py
+    /usr/lib/blender/2.79/python/lib/python3.5/site-packages/serpent.py
+
+- SnakeShake
+    Copy Env
