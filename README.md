@@ -96,8 +96,8 @@ First, I'd like to tip my hat to the unbelievable images above.  There is an unb
 <img alt="ConvoBot Target" src="documentation/images/Target.png" width='600'>
 <sub><b>Figure 5: </b>ConvoBot Target</sub>
 </p>
-
+-------------------------------------
 <p align=“center”>
-<img alt="Theta" src="images/theta.gif" width=250>  
+<img alt="Theta" src="documentation/images/theta.gif" width=250>  
 <sub> <b> Figure 6: </b> Theta </sub>
 </p>
