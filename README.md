@@ -12,6 +12,7 @@ ConvoBot brings together a number of related areas of interest for me in Robotic
    * [Limiting Factors](limiting-factors)
    * [Exploring Model and Feature Space](exploring-model-and-feature-space)
 3. [Labeling](labeling)
+4. [ConvoBot Simulation](convobot-simulation)
 
 ## Overview
 ConvoBot will be equipped with a fixed camera facing forward.  Based on the images captured and the well know red and blue target blocks, the CNN should be able to predict the location of ConvoBot.  Position is defined by:
@@ -21,8 +22,8 @@ ConvoBot will be equipped with a fixed camera facing forward.  Based on the imag
 
 <p align=“center”>
 <img alt="ConvoBot environment and location parameters." src="documentation/images/ConvoBot-Location.png" width='600'>
-</p>
 <sub><b>Figure 2: </b>Environment and location parameters.</sub>
+</p>
 
 ## Convolutional Neural Networks
 Convolutional Neural Networks (CNN) are a powerful machine learning tool that has become very powerful and popular in the last decade.  Highly visible research combine with increases in computer power, labeled datasets, prize based competitions are all driving exponential growth in CNN research and applications. CNN are widely used in some of these fields:
@@ -54,9 +55,8 @@ Successful NN projects are dependent on three key capabilities.
 
 <p align=“center”>
 <img alt="Elements for Neural Network Success" src="documentation/images/NN-Success.png" width='600'>
-</p>
 <sub><b>Figure 3: </b>Elements for Neural Network Success.</sub>
-
+</p>
 Through the use of simulations, we are able to generate new and interesting labeled datasets to train NN.  Simulations do have their limitations, but they do have their uses, particularly in the individual education and learning environments.
 
 #### limitations
@@ -75,21 +75,24 @@ Through the use of simulations, we are able to generate new and interesting labe
 Labeling images is time consuming and error prone.  There are any number of war stories of researchers spending significant time labeling images just so they can complete a project.  It is so important that there are event online programs where you can contract people to label images for you.
 
 Let's pretend that we want to develop a fruit classifier that can look at an image and tell us how many of what fruit are in the basket.  It is pretty easy for us to look at the basket and see some bananas, oranges, strawberry, watermelon, apple and peaches.  No problem that only takes a second or two - but wait, you need to identify the outline and attach the label to the regions.  Now picture doing that on 1000, 10,000 or a million images!  It make your mouse hand ache just thinking about it.
-
 <p align=“center”>
 <img alt="Labeling a Fruit Basket" src="documentation/images/Fruit-Basket.png" width='1000'>
-</p>
 <sub><b>Figure 3: </b>Elements for Neural Network Success.
 _[Credit to the creator](https://blenderartists.org/forum/showthread.php?437913-He-loves-me)_
 </sub>
-
+</p>
 The good news is that that isn't a real picture of a fruit basket.   It is a high-definition rendering of a fruit basket from [Blender](https://www.blender.org/) an industry leading animation studio.  The artist knows what everything is in the basket and where it is.  It isn't too hard to work from there to a fully labeled fruit basket.  Infact it isn't hard to generate 1000's of unique fruit baskets.
-
 <p align=“center”>
 <img alt="Other rendered examples" src="documentation/images/Render-Examples.png" width='1000'>
-</p>
 <sub><b>Figure 4: </b>Simulation rendered examples Success.
 _[Credit to the creator](https://blenderartists.org/forum/showthread.php?438043-Challenge-743-Voting-CLOSED)_
 </sub>
-
+</p>
 By extension you can easily see how we can create very realistic images through simulation.  We also have the ability to merge real 2D-images, simulated 3D-environments and other information gathered from different databases.
+
+## ConvoBot Simulation
+First, I'd like to tip my hat to the unbelievable images above.  There is an unbelievable level of skill and time invested to create those images.  That said, I'm just a beginner with Blender.  It took me a while to just get the two simple blocks in my simulation.  In fact that took longer than building the [SnakeShake](https://github.com/nathan5280/SnakeShake) remote procedure call integration built to drive Blender remotely with Python.
+<p align=“center”>
+<img alt="ConvoBot Target" src="documentation/images/Target.png" width='600'>
+<sub><b>Figure 3: </b>ConvoBot Target</sub>
+</p>
