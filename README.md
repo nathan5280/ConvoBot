@@ -9,6 +9,9 @@ ConvoBot brings together a number of related areas of interest for me in Robotic
 ## Table of Contents
 1. [Overview](#overview)
 2. [Convolutional Neural Networks](#convolutional-neural-networks)
+   * [Limiting Factors](limiting-factors)
+   * [Exploring Model and Feature Space](exploring-model-and-feature-space)
+3. [Labeling](labeling)
 
 ## Overview
 ConvoBot will be equipped with a fixed camera facing forward.  Based on the images captured and the well know red and blue target blocks, the CNN should be able to predict the location of ConvoBot.  Position is defined by:
@@ -30,3 +33,63 @@ Convolutional Neural Networks (CNN) are a powerful machine learning tool that ha
 * <b>Finance, Fraud Detection</b>
 * <b>Astronomy</b>
 * <b>Robotics</b>
+
+### Limiting Factors
+One of the big constraints that is impacting Neural Network (NN) research and development is access to very-large labeled datasets _(10's of millions)_ .  NN are not designed and coded like traditional software solutions for a specific problem.  The are designed with some general guiding principles and then learn the details through training with the large labeled datasets.  Access to large labeled datasets may be difficult to acquire or costly to create. This is particularly the case with image data the domain of CNN.  
+
+Researchers and developers have a number of tricks of their sleeves to extend existing datasets, but there are limits on how far we can push the flip, rotate, crop, translate methods.
+
+### Exploring Model and Feature Space
+Given a labeled dataset we can perform a number of search techniques to find the best combination of NN layer design, and hyper-parameters to tune the networks for best performance with validation and future data.  These techniques are reasonably well understood, but may be costly to compute over many runs on the training data.
+
+In an effort to address the shortage of labeled image datasets simulations are being used an increasing number of situations.  Simulated datasets can help address:
+* No labeled data for a particular domain
+* In ability to capture a labeled dataset do to cost or risk
+* Explore model characteristics under varying input data
+
+Successful NN projects are dependent on three key capabilities.
+* Powerful, flexible and accessible tools and frameworks
+* Large labeled datasets
+* Individuals with the right skills and knowledge
+
+<p align=“center”>
+<img alt="Elements for Neural Network Success" src="documentation/images/NN-Success.png" width='600'>
+</p>
+<sub><b>Figure 3: </b>Elements for Neural Network Success.</sub>
+
+Through the use of simulations, we are able to generate new and interesting labeled datasets to train NN.  Simulations do have their limitations, but they do have their uses, particularly in the individual education and learning environments.
+
+#### limitations
+* Fidelity with the real world
+  * Artifacts in images
+  * Level of details
+
+#### Opportunities
+* Lighting
+* Fill in gaps / extend in real world datasets
+* Explore robustness of trained NN
+* Rapid prototyping and testing
+* Avoid physical world development before proof of concept with simulation
+
+## Labeling
+Labeling images is time consuming and error prone.  There are any number of war stories of researchers spending significant time labeling images just so they can complete a project.  It is so important that there are event online programs where you can contract people to label images for you.
+
+Let's pretend that we want to develop a fruit classifier that can look at an image and tell us how many of what fruit are in the basket.  It is pretty easy for us to look at the basket and see some bananas, oranges, strawberry, watermelon, apple and peaches.  No problem that only takes a second or two - but wait, you need to identify the outline and attach the label to the regions.  Now picture doing that on 1000, 10,000 or a million images!  It make your mouse hand ache just thinking about it.
+
+<p align=“center”>
+<img alt="Labeling a Fruit Basket" src="documentation/images/Fruit-Basket.png" width='1000'>
+</p>
+<sub><b>Figure 3: </b>Elements for Neural Network Success.
+_[Credit to the creator](https://blenderartists.org/forum/showthread.php?437913-He-loves-me)_
+</sub>
+
+The good news is that that isn't a real picture of a fruit basket.   It is a high-definition rendering of a fruit basket from [Blender](https://www.blender.org/) an industry leading animation studio.  The artist knows what everything is in the basket and where it is.  It isn't too hard to work from there to a fully labeled fruit basket.  Infact it isn't hard to generate 1000's of unique fruit baskets.
+
+<p align=“center”>
+<img alt="Other rendered examples" src="documentation/images/Render-Examples.png" width='1000'>
+</p>
+<sub><b>Figure 4: </b>Simulation rendered examples Success.
+_[Credit to the creator](https://blenderartists.org/forum/showthread.php?438043-Challenge-743-Voting-CLOSED)_
+</sub>
+
+By extension you can easily see how we can create very realistic images through simulation.  We also have the ability to merge real 2D-images, simulated 3D-environments and other information gathered from different databases.
