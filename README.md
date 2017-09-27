@@ -1,2 +1,5 @@
-# ConvoBot
-Robot positioning system based on convolutional networks.
+# Convolutional Neural Network + Robotics = ConvoBot
+ConvoBot brings together a number of related areas of interest for me in Robotics _(Hobby)_; engineering, software development _(Work Experience)_; solving problems using data _(Data Science)_.  The overarching goal of the project is to enable autonomous location and control of a robot relative to it's environment using Convolutional Neural Networks.  My Capstone work during the Galvanize Data Science Immersive Program provided an opportunity to get the Data Science side of the project kicked off.  It also opened up a very interesting opportunity to explore how simulated environments can be used to explore feature space, better understand the dynamics of neural networks, and decouple knowledge and skills learning from the dynamics and slow pace of the physical world.
+
+<img alt="Hierarchy of topics in scope for ConvoBot and focus on Simulated Labeled Data." src="documentation/images/Overview.png" width='600'>
+<sub><b>Figure 1: </b>Hierarchy of topics in scope for ConvoBot.</sub>
