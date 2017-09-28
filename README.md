@@ -102,11 +102,11 @@ First, I'd like to tip my hat to the unbelievable images above.  There is an unb
 <p align=“center”>
 <img height="128" width="128" alt="Theta" src="documentation/images/theta.gif">  
 </p>
-<sub> <b> Figure 6: </b> Radius </sub>
+<sub> <b> Figure 6: </b> Theta </sub>
 <p align=“center”>
 <img height="128" width="128" alt="Radius" src="documentation/images/radius.gif">  
 </p>
-<sub> <b> Figure 7: </b> Theta </sub>
+<sub> <b> Figure 7: </b> Radius </sub>
 <p align=“center”>
 <img height="128" width="128" alt="Alpha" src="documentation/images/alpha.gif">  
 </p>
