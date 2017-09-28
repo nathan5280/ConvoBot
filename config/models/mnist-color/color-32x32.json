@@ -3,7 +3,7 @@
     "description": "mnist baseline",
     "date": "Sun Sep 24 15:15:07 MDT 2017",
     "model_class": "mnist",
-    "resume": false,
+    "resume": true,
     "resume_phase": 2,
     "model_filename": "model.h5",
     "split": true,
@@ -32,7 +32,7 @@
         {
             "name": "phase 3",
             "sessions": 10,
-            "epochs": 5,
+            "epochs": 10,
             "batch_size": 100,
             "learning_rate": 0.0001
         }
