@@ -97,14 +97,14 @@ First, I'd like to tip my hat to the unbelievable images above.  There is an unb
 <sub><b>Figure 5: </b>ConvoBot Target</sub>
 </p>
 <p align=“center”>
-<img height="128" width="128" alt="Theta" src="documentation/images/theta.gif" width=250>  
+<img height="128" width="128" alt="Theta" src="documentation/images/theta.gif">  
 </p>
 <sub> <b> Figure 6: </b> Radius </sub>
 <p align=“center”>
-<img height="128" width="128" alt="Radius" src="documentation/images/radius.gif" width=250>  
+<img height="128" width="128" alt="Radius" src="documentation/images/radius.gif">  
 </p>
-<sub> <b> Figure 7: </b> Radius </sub>
+<sub> <b> Figure 7: </b> Theta </sub>
 <p align=“center”>
-<img height="128" width="128" alt="Alpha" src="documentation/images/alpha.gif" width=250>  
+<img height="128" width="128" alt="Alpha" src="documentation/images/alpha.gif">  
 </p>
 <sub> <b> Figure 8: </b> Alpha </sub>
