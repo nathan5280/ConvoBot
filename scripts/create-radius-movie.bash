@@ -5,7 +5,7 @@
 rm $HOME/Projects/ConvoBot/documentation/images/radius.gif
 rm $HOME/convobot/movies/radius/*.png
 
-python -m convobot.simulator.blender.SimulateImages -d convobot -e config -c movie-radius
+python simulate_images.py -d convobot -e config -c movie-radius
 rm -r $HOME/convobot/simulation/movie-radius/collection/*
 find $HOME/convobot/simulation/movie-radius -mindepth 2 -type f -print -exec mv {} $HOME/convobot/simulation/movie-radius/collection \;
 python index_files.py -s convobot/simulation/movie-radius/collection -d convobot/movies/radius -a True

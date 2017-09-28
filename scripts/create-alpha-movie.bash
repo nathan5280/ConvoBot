@@ -5,7 +5,7 @@
 rm $HOME/Projects/ConvoBot/documentation/images/alpha.gif
 rm $HOME/convobot/movies/alpha/*.png
 
-python -m convobot.simulator.blender.SimulateImages -d convobot -e config -c movie-alpha
+python simulate_images.py -d convobot -e config -c movie-alpha
 rm -r $HOME/convobot/simulation/movie-alpha/collection/*
 find $HOME/convobot/simulation/movie-alpha -mindepth 2 -type f -print -exec mv {} $HOME/convobot/simulation/movie-alpha/collection \;
 python index_files.py -s convobot/simulation/movie-alpha/collection -d convobot/movies/alpha -a True

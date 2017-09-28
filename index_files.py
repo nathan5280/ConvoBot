@@ -1,5 +1,5 @@
 import sys, getopt, os
-import convobot.util.FilenameIndexer as x
+from convobot.util.FilenameIndexer import FilenameIndexer
 
 def main(argv):
     src_path = None
@@ -27,7 +27,7 @@ def main(argv):
         print(usage)
     else:
         root_path = os.environ['HOME']
-        indexer = x.FilenameIndexer(root_path, src_path, dest_path)
+        indexer = FilenameIndexer(root_path, src_path, dest_path)
         indexer.process(ascending)
 
 if __name__ == "__main__":
