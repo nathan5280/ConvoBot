@@ -31,7 +31,7 @@
         },
         {
             "name": "phase 3",
-            "sessions": 10,
+            "sessions": 50,
             "epochs": 10,
             "batch_size": 100,
             "learning_rate": 0.0001
