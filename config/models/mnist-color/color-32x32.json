@@ -3,7 +3,7 @@
     "description": "mnist baseline",
     "date": "Sun Sep 24 15:15:07 MDT 2017",
     "model_class": "mnist",
-    "resume": true,
+    "resume": false,
     "resume_phase": 2,
     "model_filename": "model.h5",
     "split": true,

@@ -77,7 +77,7 @@ class DataWrapper(object):
         # mask = (index.Theta >= theta_range[0]) & (index.Theta <= theta_range[1]) & \
         #             (index.Radius >= radius_range[0]) & (index.Radius <=radius_range[1])
 
-        mask = (index.Radius >= radius_range[0]) & (index.Radius <=radius_range[1])
+        mask = np.array((index.Radius >= radius_range[0]) & (index.Radius <=radius_range[1]), dtype=bool)
 
         label = label[mask]
         image = image[mask]
@@ -90,7 +90,7 @@ class DataWrapper(object):
         print('Radius range: ', radius_range)
         mask = (index.Theta >= theta_range[0]) & (index.Theta <= theta_range[1]) & \
                     (index.Radius >= radius_range[0]) & (index.Radius <=radius_range[1])
-        not_mask = [not m for m in mask]
+        not_mask = np.array([not m for m in mask], dtype=bool)
 
         predict_label = label[mask]
         predict_image = image[mask]
