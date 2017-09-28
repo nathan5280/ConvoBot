@@ -13,6 +13,9 @@ ConvoBot brings together a number of related areas of interest for me in Robotic
    * [Exploring Model and Feature Space](exploring-model-and-feature-space)
 3. [Labeling](labeling)
 4. [ConvoBot Simulation](convobot-simulation)
+5. [Simulation Examples](simulation-examples)
+  * [Stereoscopic Vision](stereoscopic-vision)
+
 
 ## Overview
 ConvoBot will be equipped with a fixed camera facing forward.  Based on the images captured and the well know red and blue target blocks, the CNN should be able to predict the location of ConvoBot.  Position is defined by:
@@ -93,7 +96,7 @@ By extension you can easily see how we can create very realistic images through 
 ## ConvoBot Simulation
 First, I'd like to tip my hat to the unbelievable images above.  There is an unbelievable level of skill and time invested to create those images.  That said, I'm just a beginner with Blender.  It took me a while to just get the two simple blocks in my simulation.  In fact that took longer than building the [SnakeShake](https://github.com/nathan5280/SnakeShake) remote procedure call integration built to drive Blender remotely with Python.
 <p align=“center”>
-<img alt="ConvoBot Target" src="documentation/images/Target.png" width='600'>
+<img alt="ConvoBot Target" src="documentation/images/Target.png" width='300'>
 <sub><b>Figure 5: </b>ConvoBot Target</sub>
 </p>
 <p align=“center”>
@@ -108,3 +111,24 @@ First, I'd like to tip my hat to the unbelievable images above.  There is an unb
 <img height="128" width="128" alt="Alpha" src="documentation/images/alpha.gif">  
 </p>
 <sub> <b> Figure 8: </b> Alpha </sub>
+
+## Simulation Examples
+### Steroscopic Vision
+ConvoBot does pretty good with predicting Theta, but struggles with the Radial distance.  This isn't a big surprise as we struggle with depth perception when we close one eye.  What if ConvoBot had two eyes?  In the real world there isn't a concept of stereoscopic ImageNet? We can try and recreate it from 2D images, but it always suffers from skew and other artifacts that just don't make sense in the real world.  In the simulated world this is no problem.  We can create images with any number of different spacings for the "eyes".
+
+<p align=“center”>
+<img alt="Left" src="documentation/images/left.png">  
+<img alt="Right" src="documentation/images/right.png">  
+</p>
+<sub> <b> Figure 8: </b> Left and right images as seen from each "eye". </sub>
+
+<p align=“center”>
+<img alt="Stereoscopic image for CNN" src="documentation/images/stack2.png">  
+</p>
+<sub> <b> Figure 9: </b> One possible input to the CNN from stereoscopic images. </sub>
+
+Maybe something a bit more abstract with the delta between the left and right images.
+<p align=“center”>
+<img alt="Stereoscopic (delta) image for CNN" src="documentation/images/gray-delta.png">  
+</p>
+<sub> <b> Figure 10: </b> A gray-scale delta of left and right as possible input to the CNN from stereoscopic images. </sub>
