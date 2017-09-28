@@ -109,7 +109,7 @@ class ModelRunner(object):
 
             tb_path = model_env.get_tensorboard_path()
             tbCallBack = TensorBoard(log_dir=tb_path,
-                                        histogram_freq=5,
+                                        histogram_freq=0,
                                         write_graph=True,
                                         write_images=True)
 
