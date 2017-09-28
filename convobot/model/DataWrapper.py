@@ -88,8 +88,8 @@ class DataWrapper(object):
         theta_range = (35, 325)
         radius_range = (radius_range[0] + self._radius_trim, radius_range[1] - self._radius_trim)
         print('Radius range: ', radius_range)
-        mask = (index.Theta >= theta_range[0]) & (index.Theta <= theta_range[1]) & \
-                    (index.Radius >= radius_range[0]) & (index.Radius <=radius_range[1])
+        mask = np.array((index.Theta >= theta_range[0]) & (index.Theta <= theta_range[1]) & \
+                    (index.Radius >= radius_range[0]) & (index.Radius <=radius_range[1]), dtype=bool)
         not_mask = np.array([not m for m in mask], dtype=bool)
 
         predict_label = label[mask]
