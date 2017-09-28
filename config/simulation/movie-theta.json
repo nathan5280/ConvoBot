@@ -3,22 +3,18 @@
     "description": "Images for theta movie",
     "date": "Wed Sep 27 10:15:22 MDT 2017",
     "image_size": [
-        1024,
-        1024
+        512,
+        512
     ],
     "radius_range": {
-        "min": 20.0,
-        "max": 21.0,
-        "step": 1.0
+        "fixed": 20
     },
     "theta_range": {
         "min": 0.0,
         "max": 360.0,
-        "step": 5.0
+        "step": 0.5
     },
     "alpha_range": {
-        "min": 0.0,
-        "max": 0.1,
-        "step": 1.0
+        "fixed": 0
     }
 }

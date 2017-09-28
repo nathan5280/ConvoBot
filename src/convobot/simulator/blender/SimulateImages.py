@@ -43,20 +43,46 @@ def process(data_root, cfg_root, cfg_name):
     # Grid search the envrionment to create the images.
     camera_direction = 180
     fnm = FilenameManager()
-    for radius in np.arange(cfg['radius_range']['min'],
-                            cfg['radius_range']['max'] + cfg['radius_range']['step'],
-                            cfg['radius_range']['step']):
 
-        # Play with the alph angle to adjust for the larger change in image Location
-        # of the target the farther we are away from it.
-        alpha_min = cfg['alpha_range']['min'] * cfg['radius_range']['min'] / radius
-        alpha_max = (cfg['alpha_range']['max'] + cfg['alpha_range']['step']) * \
-                        cfg['radius_range']['min'] / radius
-        for alpha in np.arange(alpha_min, alpha_max, cfg['alpha_range']['step']):
+    # set the range as fixed value or the dynamically created range.
+    if 'fixed' in cfg['radius_range']:
+        radius_range = range(cfg['radius_range']['fixed'], cfg['radius_range']['fixed']+1, 2)
+        radius_min = cfg['radius_range']['fixed']
+        radius_max = cfg['radius_range']['fixed']
+    else:
+        radius_range = np.arange(cfg['radius_range']['min'],
+                                cfg['radius_range']['max'] + cfg['radius_range']['step'],
+                                cfg['radius_range']['step'])
+        radius_min = cfg['radius_range']['min']
+        radius_max = cfg['radius_range']['max']
 
-            for theta in np.arange(cfg['theta_range']['min'],
-                                    cfg['theta_range']['max'] + cfg['theta_range']['step'],
-                                    cfg['theta_range']['step']):
+    for radius in radius_range:
+
+
+        # set the ranges as a fixed value or the dynamically created range.
+        if 'fixed' in cfg['alpha_range']:
+            alpha_range = range(cfg['alpha_range']['fixed'],cfg['alpha_range']['fixed']+1,2)
+        else:
+            # Play with the alph angle to adjust for the larger change in image Location
+            # of the target the farther we are away from it.
+
+
+            alpha_min = cfg['alpha_range']['min'] * radius_min / radius
+            alpha_max = (cfg['alpha_range']['max'] + cfg['alpha_range']['step']) * \
+                            radius_min / radius
+            alpha_range = np.arange(alpha_min, alpha_max, cfg['alpha_range']['step'])
+
+        for alpha in alpha_range:
+
+            # set the range as fixed value or the dynamically created range.
+            if 'fixed' in cfg['theta_range']:
+                theta_range = range(cfg['theta_range']['fixed'],cfg['theta_range']['fixed']+1,2)
+            else:
+                theta_range = np.arange(cfg['theta_range']['min'],
+                                        cfg['theta_range']['max'] + cfg['theta_range']['step'],
+                                        cfg['theta_range']['step'])
+
+            for theta in theta_range:
                 t0 = time.time()
                 env.set_camera_location(float(theta), float(radius), 180+float(round(alpha,1)))
 

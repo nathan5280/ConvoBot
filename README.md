@@ -98,6 +98,14 @@ First, I'd like to tip my hat to the unbelievable images above.  There is an unb
 </p>
 -------------------------------------
 <p align=“center”>
-<img alt="Theta" src="documentation/images/theta.gif" width=250>  
-<sub> <b> Figure 6: </b> Theta </sub>
+<img height="128" width="128" alt="Theta" src="documentation/images/theta.gif" width=250>  
 </p>
+<sub> <b> Figure 6: </b> Radius </sub>
+<p align=“center”>
+<img height="128" width="128" alt="Radius" src="documentation/images/radius.gif" width=250>  
+</p>
+<sub> <b> Figure 7: </b> Radius </sub>
+<p align=“center”>
+<img height="128" width="128" alt="Alpha" src="documentation/images/alpha.gif" width=250>  
+</p>
+<sub> <b> Figure 8: </b> Alpha </sub>

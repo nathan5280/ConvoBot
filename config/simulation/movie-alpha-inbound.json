@@ -1,0 +1,20 @@
+{
+    "name": "movie-alpha",
+    "description": "Images for alpha movie inbound",
+    "date": "Wed Sep 27 18:32:08 MDT 2017",
+    "image_size": [
+        512,
+        512
+    ],
+    "radius_range": {
+      "fixed": 15
+    },
+    "theta_range": {
+      "fixed": 45
+    },
+    "alpha_range": {
+      "min": 20.0,
+      "max": -20.0,
+      "step": -1
+    }
+}

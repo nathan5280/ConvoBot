@@ -1,0 +1,20 @@
+{
+    "name": "movie-radius",
+    "description": "Images for radius movie outbound",
+    "date": "Wed Sep 27 18:32:08 MDT 2017",
+    "image_size": [
+        512,
+        512
+    ],
+    "radius_range": {
+        "min": 15.0,
+        "max": 30.0,
+        "step": 0.1
+    },
+    "theta_range": {
+      "fixed": 45
+    },
+    "alpha_range": {
+        "fixed": 0
+    }
+}
