@@ -1,8 +1,8 @@
 {
-    "name": "color-32x32",
-    "description": "mnist baseline",
-    "date": "Sun Sep 24 15:15:07 MDT 2017",
-    "model_class": "mnist",
+    "name": "model1",
+    "description": "ConvoBot baseline",
+    "date": "Fri Sep 29 12:33:06 MDT 2017",
+    "model_class": "convobot1",
     "resume": false,
     "resume_phase": 2,
     "model_filename": "model.h5",
