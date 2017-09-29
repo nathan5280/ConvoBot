@@ -15,6 +15,7 @@ class ImageCounter(object):
         '''
         self.tree_util = TreeUtil(src_root, dst_root)
         self._count = 0
+        print('Preparing to count')
 
     def get_count(self):
         return self._count
@@ -25,6 +26,6 @@ class ImageCounter(object):
         '''
         def converter(src_path, dst_path, filename):
             self._count += 1
-            print('Counting: {}, {}'.format(os.path.join(src_path, filename), os.path.join(dst_path, filename)))
+            # print('Counting: {}, {}'.format(os.path.join(src_path, filename), os.path.join(dst_path, filename)))
 
         self.tree_util.apply_files(converter, '*.png')

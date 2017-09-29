@@ -111,6 +111,10 @@ First, I'd like to tip my hat to the unbelievable images above.  There is an unb
 <img height="128" width="128" alt="Alpha" src="documentation/images/alpha.gif">  
 </p>
 <sub> <b> Figure 8: </b> Alpha </sub>
+<p align=“center”>
+<img height="700" width="700" alt="Radius and Theta Error" src="documentation/images/RT-Error.png">  
+</p>
+<sub> <b> Figure 8: </b> Alpha </sub>
 
 ## Simulation Examples
 ### Steroscopic Vision

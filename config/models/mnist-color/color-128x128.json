@@ -1,5 +1,5 @@
 {
-    "name": "color-32x32",
+    "name": "color-128x128",
     "description": "mnist baseline",
     "date": "Sun Sep 24 15:15:07 MDT 2017",
     "model_class": "mnist",
@@ -12,9 +12,9 @@
     "validation_split": 0.25,
     "test_split": 0.10,
     "radius_trim": 1.5,
-    "image_set_name": "color-32x32",
-    "src_array": "color-32x32",
-    "image_size": [32, 32],
+    "image_set_name": "color-128x128",
+    "src_array": "color-128x128",
+    "image_size": [128, 128],
     "color": true,
     "schedule": [
         {
@@ -33,7 +33,7 @@
         },
         {
             "name": "phase 3",
-            "sessions": 50,
+            "sessions": 100,
             "epochs": 10,
             "batch_size": 100,
             "learning_rate": 0.00025

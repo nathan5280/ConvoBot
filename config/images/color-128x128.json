@@ -1,11 +1,11 @@
 {
-    "name": "color-32x32",
-    "description": "Convert to color and 32x32",
+    "name": "color-128x128",
+    "description": "Convert to color and 128x128",
     "date": "Sun Sep 24 11:50:07 MDT 2017",
     "resize": true,
     "size": [
-        32,
-        32
+        128,
+        128
     ],
     "color": true,
     "src_dataset": "color-256x256"

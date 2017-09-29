@@ -7,6 +7,7 @@ home_path = os.environ['HOME']
 sim_path = 'simulation'
 image_path = 'images'
 model_path = 'models'
+result_path = 'results'
 file_ext = '.json'
 label_filename = 'label.pkl'
 image_filename = 'image.pkl'
@@ -79,6 +80,11 @@ class Environment(object):
         path = os.path.join(home_path, self._data_root, model_path,
                     self._model_name, self._cfg['name'], self._cfg['model_filename'])
         return path
+
+    def get_result_path(self):
+        filename = os.path.join(home_path, self._data_root, result_path,
+                    self._model_name, self._cfg['name'], self._cfg['prediction_filename'])
+        return filename
 
     def get_model_data_path(self):
         img_set_name = self._cfg['image_set_name']

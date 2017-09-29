@@ -37,6 +37,7 @@ class ImageToNumpy(object):
         self._label = np.zeros([img_cnt, 3], dtype=np.float32)
         self._idx = 0
         self._filename_manager = FilenameManager()
+        print('Preparing to store labels and images.')
 
     def process(self):
         '''
@@ -56,13 +57,13 @@ class ImageToNumpy(object):
                 self._label[self._idx][i] = label[i]
 
             self._idx += 1
-            print('Storing: {}, {}'.format(os.path.join(src_path, filename),
-                            os.path.join(dest_path, filename)))
+            # print('Storing: {}, {}'.format(os.path.join(src_path, filename),
+            #                 os.path.join(dest_path, filename)))
 
         self.tree_util.apply_files(loader, '*.png')
 
     def get_data(self):
         if self._grayscale:
-            return self._label, self._img.reshape(len(self._img), self._size[0], self._size[1])
+            return self._label, self._img.reshape(len(self._img), self._size[0], self._size[1], 1)
         else:
             return self._label, self._img.reshape(len(self._img), self._size[0], self._size[1], self._color_layers)

@@ -19,6 +19,7 @@ class ColorSizeConverter(object):
         self.tree_util = TreeUtil(src_root, dst_root)
         self._resize = resize
         self._grayscale = grayscale
+        print('Preparing to convert color/grayscale')
 
     def process(self):
         '''
@@ -36,6 +37,6 @@ class ColorSizeConverter(object):
                 img.thumbnail(self._resize, Image.ANTIALIAS)
 
             img.save(os.path.join(dst_path, filename))
-            print('Converting: {}, {}'.format(os.path.join(src_path, filename), os.path.join(dst_path, filename)))
+            # print('Converting: {}, {}'.format(os.path.join(src_path, filename), os.path.join(dst_path, filename)))
 
         self.tree_util.apply_files(converter, '*.png')

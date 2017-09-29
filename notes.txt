@@ -14,3 +14,11 @@ sess = tf.InteractiveSession()
 sess.run(x)
 
 tensorboard --logdir=<dir name>
+
+
+TTD:
+1) Clean up pkl vs np
+2) Clean up Run model constructor / process
+3) New model
+4) Stereoscopic images
+5) logging

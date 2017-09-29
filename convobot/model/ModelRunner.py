@@ -11,6 +11,7 @@ from keras.callbacks import TensorBoard
 from convobot.model.DataWrapper import DataWrapper
 from convobot.model.DataConditioner import DataConditioner
 from convobot.model.MNISTModelBuilder import MNISTModelBuilder
+from convobot.model.ConvoBotModelBuilder import ConvoBotModelBuilder
 from convobot.workflow.Environment import Environment
 
 # Turn off TF warnings to recommend that we should compile for SSE4.2
@@ -18,7 +19,7 @@ os.environ['TF_CPP_MIN_LOG_LEVEL']='2'
 import tensorflow as tf
 
 # np.random.seed(123)  # for reproducibility
-model_builders = {'mnist': MNISTModelBuilder}
+model_builders = {'mnist': MNISTModelBuilder, 'convobot1':ConvoBotModelBuilder}
 
 class ModelRunner(object):
     def print_stats(self, num_pred, val, pred, last_pred):
@@ -42,6 +43,7 @@ class ModelRunner(object):
 
     def process(self, data_root, cfg_root, model_name, cfg_name):
         model_env = Environment(cfg_root, data_root)
+        print(model_name, cfg_name)
         cfg = model_env.get_model_cfg(model_name, cfg_name)
 
         src_label_filename, src_image_filename, data_path = \
