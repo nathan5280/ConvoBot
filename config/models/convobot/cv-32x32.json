@@ -3,7 +3,7 @@
     "description": "ConvoBot baseline",
     "date": "Fri Sep 29 12:33:06 MDT 2017",
     "model_class": "convobot1",
-    "resume": false,
+    "resume": true,
     "resume_phase": 2,
     "model_filename": "model.h5",
     "prediction_filename": "prediction.csv",
@@ -29,14 +29,14 @@
             "sessions": 2,
             "epochs": 1,
             "batch_size": 100,
-            "learning_rate": 0.0005
+            "learning_rate": 0.001
         },
         {
             "name": "phase 3",
             "sessions": 50,
             "epochs": 10,
             "batch_size": 100,
-            "learning_rate": 0.00025
+            "learning_rate": 0.001
         }
     ],
     "tensorboard": "graph"
