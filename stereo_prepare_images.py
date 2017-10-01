@@ -1,16 +1,11 @@
 import os, sys, getopt
-# import Pyro4
-# import time
-# import numpy as np
-# from convobot.util.FilenameManager import FilenameManager
-# from convobot.workflow.Environment import Environment
-from convobot.simulator.blender.Simulator import Simulator
+from convobot.imageprocessor.StereoPrepareImages import StereoPrepareImages
 
 def main(argv):
     data_root = None
     cfg_name = None  # Name of the configuration to load
     cfg_root = None  # Root director for the configuration files
-    usage = 'SimulateImages.py -d <data_root> -e <cfg_root> -c <cfg_name>'
+    usage = 'PrepareImages.py -d <data_root> -e <cfg_root> -c <cfg_name>'
     try:
         opts, args = getopt.getopt(argv,"hd:e:c:",["data_root=", "cfg_root=", "cfg_name="])
     except getopt.GetoptError:
@@ -30,8 +25,8 @@ def main(argv):
     if not data_root or not cfg_root or not cfg_name:
         print(usage)
     else:
-        simulator = Simulator()
-        simulator.process(data_root, cfg_root, cfg_name)
+        processor = StereoPrepareImages()
+        processor.process(data_root, cfg_root, cfg_name)
 
 if __name__ == "__main__":
     main(sys.argv[1:])

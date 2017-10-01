@@ -22,3 +22,5 @@ TTD:
 3) New model
 4) Stereoscopic images
 5) logging
+6) Single config for full process
+7) Separate Simulator and Animator

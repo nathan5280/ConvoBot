@@ -2,9 +2,11 @@ import numpy as np
 import pandas as pd
 
 class DataConditioner(object):
-    def __init__(self, img_size, color_layers):
-        self._img_size = img_size
-        self._img_color_layers = color_layers
+    def __init__(self, cfg_mgr):
+        self._cfg_mgr = cfg_mgr
+        self._cfg = self._cfg_mgr.get_cfg()['Model']
+        self._img_size = self._cfg_mgr.get_cfg()['Environment']['ImageSize']
+        self._channels = self._cfg_mgr.get_cfg()['Environment']['Channels']
         self._column_names = ['Theta', 'Radius', 'Alpha']
 
     def condition_labels(self, labels):
@@ -23,7 +25,7 @@ class DataConditioner(object):
 
     def reshape_images(self, images):
         images = images.reshape(images.shape[0], self._img_size[0],
-                                self._img_size[1], self._img_color_layers)
+                                self._img_size[1], self._channels)
         return images
 
     def get_theta_radius_labels(self, labels):

@@ -18,7 +18,7 @@ class FilenameManager(object):
           filename: The encoded filename.
 
         '''
-        return '{:05.1f}{}{:04.1f}{}{:03.0f}.{}'\
+        return '{:05.1f}{}{:04.1f}{}{:04.1f}.{}'\
                 .format(theta, self._separator, radius, self._separator, alpha, self._extension)
 
     def label_to_path(self, path, theta, radius, alpha):

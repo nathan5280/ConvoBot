@@ -1,24 +1,25 @@
-# https://elitedatascience.com/keras-tutorial-deep-learning-in-python
-
 import os
 from keras.models import Sequential
 from keras.layers import Dense, Dropout, Activation, Flatten
 from keras.layers.normalization import BatchNormalization
 from keras.layers import Conv2D, MaxPooling2D
 from keras.models import load_model
+from convobot.model.Model import Model
 
-class ConvoBotModelBuilder(object):
-    def __init__(self, model_path, cfg):
-        self._model_path = model_path
-        self._resume = cfg['resume']
-        self._img_size = cfg['image_size']
-        self._img_color = cfg['color']
-        self._img_color_layers = 1
-        if self._img_color:
-            self._img_color_layers = 3
+class ConvoBotModel(Model):
+    def __init__(self, cfg_mgr, verbose=False):
+        super(ConvoBotModel, self).__init__(cfg_mgr, verbose)
+
+        self._img_size = self._cfg_mgr.get_cfg()['Environment']['ImageSize']
+        self._channels = self._cfg_mgr.get_cfg()['Environment']['Channels']
+        self._resume = self._model_cfg['Resume']
+        self._model_path = self._cfg_mgr.get_absolute_path(
+                        os.path.join(self._output_path, self._model_cfg['ModelFilename']))
+
+        if self._verbose:
+            print('Preparing to load model: ', self._model_path)
 
     def get_model(self):
-        print(self._resume, os.path.exists(self._model_path))
         if self._resume and os.path.exists(self._model_path):
             print('Loading model: ', self._model_path)
             model = load_model(self._model_path)
@@ -27,17 +28,16 @@ class ConvoBotModelBuilder(object):
             # Declare the model
             model = Sequential()
 
-            num_filters1 = 32
+            num_filters1 = 16
             kernel_size1 = (8,8)
             model.add(Conv2D(num_filters1, kernel_size1,
-                                 padding='valid',
-                                 input_shape=(self._img_size[0], self._img_size[1],
-                                                self._img_color_layers),
-                                 data_format="channels_last"))
+                            padding='valid',
+                            input_shape=(self._img_size[0], self._img_size[1], self._channels),
+                            data_format="channels_last"))
             model.add(BatchNormalization())
             model.add(Activation('relu'))
 
-            num_filters2 = 64
+            num_filters2 = 32
             kernel_size2 = (2,2)
             model.add(Conv2D(num_filters2, kernel_size2,
                                  padding='valid'))
@@ -50,8 +50,10 @@ class ConvoBotModelBuilder(object):
             model.add(Flatten())
             model.add(Activation('relu'))
 
-            model.add(Dense(64))
+            model.add(Dense(256))
+            model.add(Dropout(0.25))
             model.add(Activation('relu'))
+            
             model.add(Dense(3))
             model.add(Activation('relu'))
 

@@ -1,5 +1,3 @@
-# https://elitedatascience.com/keras-tutorial-deep-learning-in-python
-
 import pandas as pd
 import numpy as np
 import os
@@ -10,19 +8,20 @@ from keras.callbacks import TensorBoard
 
 from convobot.model.DataWrapper import DataWrapper
 from convobot.model.DataConditioner import DataConditioner
-from convobot.model.MNISTModelBuilder import MNISTModelBuilder
-from convobot.model.ConvoBotModelBuilder import ConvoBotModelBuilder
-from convobot.workflow.Environment import Environment
 
 # Turn off TF warnings to recommend that we should compile for SSE4.2
 os.environ['TF_CPP_MIN_LOG_LEVEL']='2'
 import tensorflow as tf
 
 # np.random.seed(123)  # for reproducibility
-model_builders = {'mnist': MNISTModelBuilder, 'convobot1':ConvoBotModelBuilder}
 
 class ModelRunner(object):
-    def print_stats(self, num_pred, val, pred, last_pred):
+    def __init__(self, cfg_mgr, model_builder):
+        self._cfg_mgr = cfg_mgr
+        self._model_builder = model_builder
+        self._cfg = cfg_mgr.get_cfg()['Model']
+
+    def _print_stats(self, num_pred, val, pred, last_pred):
         last_pred = np.array(last_pred)
 
         max_row = 'Max:'
@@ -41,46 +40,19 @@ class ModelRunner(object):
         print(mean_row)
 
 
-    def process(self, data_root, cfg_root, model_name, cfg_name):
-        model_env = Environment(cfg_root, data_root)
-        print(model_name, cfg_name)
-        cfg = model_env.get_model_cfg(model_name, cfg_name)
-
-        src_label_filename, src_image_filename, data_path = \
-            model_env.get_model_data_path()
-
-        img_color_layers = 1
-        if cfg['color']:
-            img_color_layers = 3
-
-        data_conditioner = DataConditioner(cfg['image_size'], img_color_layers)
-        data_wrapper = DataWrapper(src_label_filename, src_image_filename, data_path, data_conditioner, cfg)
+    def process(self):
+        data_conditioner = DataConditioner(self._cfg_mgr)
+        data_wrapper = DataWrapper(self._cfg_mgr, data_conditioner)
 
         X_train, y_train = data_wrapper.get_train()
         X_test, y_test = data_wrapper.get_test()
         X_val, y_val = data_wrapper.get_validation()
 
-        # Pull out just the theta and radius.
-        # This will be the target values for the regression.
-        # y_train = y_train[:,:2]
-        # y_test = y_test[:,:2]
-
-        # y_train = data_conditioner.get_theta_radius_labels(y_train)
-        # y_test = data_conditioner.get_theta_radius_labels(y_test)
-        # y_val = data_conditioner.get_theta_radius_labels(y_val)
-
         y_train = data_conditioner.get_theta_radius_alpha_labels(y_train)
         y_test = data_conditioner.get_theta_radius_alpha_labels(y_test)
         y_val = data_conditioner.get_theta_radius_alpha_labels(y_val)
 
-        # y_train = data_conditioner.get_x_y_labels(y_train)
-        # y_test = data_conditioner.get_x_y_labels(y_test)
-        # y_val = data_conditioner.get_x_y_labels(y_val)
-
-        model_path = model_env.get_model_path()
-        model_class = cfg['model_class']
-        model_builder = model_builders[model_class](model_path, cfg)
-        model = model_builder.get_model()
+        model = self._model_builder.get_model()
 
         num_predictions = min(10, len(X_val))
 
@@ -89,27 +61,28 @@ class ModelRunner(object):
 
         # Check to see where to restart if resuming.
         start_phase = 0
-        if cfg['resume']:
-            start_phase = cfg['resume_phase']
+        if self._cfg['Resume']:
+            start_phase = self._cfg['ResumePhase']
             print('Resuming at phase: ', start_phase)
 
-        schedule = cfg['schedule']
+        schedule = self._cfg['Schedule']
+
 
         for phase in range(start_phase, len(schedule)):
             phase_cfg = schedule[phase]
 
-            sessions = phase_cfg['sessions']
-            epochs = phase_cfg['epochs']
-            batch_size = phase_cfg['batch_size']
-            lr = phase_cfg['learning_rate']
+            sessions = phase_cfg['Sessions']
+            epochs = phase_cfg['Epochs']
+            batch_size = phase_cfg['BatchSize']
+            lr = phase_cfg['LearningRate']
 
-            print('Phase {}: {}/{}'.format(phase_cfg['name'], phase + 1, len(schedule)))
+            print('Phase {}: {}/{}'.format(phase_cfg['Name'], phase + 1, len(schedule)))
             print('Sessions: {}, Epochs: {}, Batch Size: {}, Learning Rate: {}'
                         .format(sessions, epochs, batch_size, lr))
 
             print('Learning rate: ', lr)
 
-            tb_path = model_env.get_tensorboard_path()
+            tb_path =  self._cfg_mgr.get_absolute_path(self._cfg['TensorBoardPath'])
             tbCallBack = TensorBoard(log_dir=tb_path,
                                         histogram_freq=0,
                                         write_graph=True,
@@ -129,7 +102,7 @@ class ModelRunner(object):
                             verbose=1,
                             callbacks=[tbCallBack])
 
-                model_builder.save_model()
+                self._model_builder.save_model()
 
                 score = model.evaluate(X_test, y_test, verbose=0)
                 print('Test score:', score[0])
@@ -152,7 +125,7 @@ class ModelRunner(object):
                     alpha = fmt.format(y_val[i][2], pred[i][2], y_val[i][2] - pred[i][2], pred[i][2]-last_pred[i][2])
                     print('{}\t{}\t{}'.format(theta, radius, alpha))
 
-                self.print_stats(num_predictions, y_val, pred, last_pred)
+                self._print_stats(num_predictions, y_val, pred, last_pred)
 
                 for i in range(num_predictions):
                     last_pred[i][0] = pred[i][0]

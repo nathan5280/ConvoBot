@@ -157,6 +157,7 @@ class Env(object):
         Returns:
 
         '''
+        print('Setting camera height: ', height)
         self._cam_loc_height = height
 
     def set_camera_focal_length(self, focal_length):
@@ -195,7 +196,7 @@ class Env(object):
 
         cam_p = cam.location
         cam_p.x = x
-        cam_p.y = y + 1         # Alignment offset to adjust for the center of the different sized cubes.
+        cam_p.y = y
         cam_p.z = self._cam_loc_height
 
         cam_r = cam.rotation_euler

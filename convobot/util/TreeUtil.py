@@ -23,7 +23,6 @@ class TreeUtil(object):
         else:
             os.makedirs(dst_root)
 
-
     def _traverse_dir(self):
         '''
         Traverse the directory tree using os.walk.
@@ -83,6 +82,7 @@ class TreeUtil(object):
             new_path = os.path.join(self._dst_root, rel_path)
             if not os.path.exists(new_path):
                 os.makedirs(new_path)
+                
         self.apply_dir(create_dir)
 
 

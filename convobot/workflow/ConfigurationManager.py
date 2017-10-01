@@ -9,22 +9,20 @@ image_path = 'images'
 model_path = 'models'
 result_path = 'results'
 file_ext = '.json'
-label_filename = 'label.pkl'
-image_filename = 'image.pkl'
+label_filename = 'label'
+image_filename = 'image'
 
-class Environment(object):
-    def __init__(self, cfg_root, data_root, verbose=True):
+class ConfigurationManager(object):
+    def __init__(self, cfg_root, data_root, config_name, verbose=True):
         self._data_root = data_root
         self._cfg_root = cfg_root
-        self._cfg = None
         self._verbose = verbose
 
-    def get_cfg(self, config_name):
         path = os.path.join(self._cfg_root, config_name) + file_ext
 
         if self._verbose:
             print('Loading configuration: ', path)
-            
+
         with open(path, 'r') as f:
             self._cfg = json.load(f)
 
@@ -32,13 +30,34 @@ class Environment(object):
             print('Simulation Configuration:')
             print(json.dumps(self._cfg, indent=4))
 
+
+    def get_cfg(self):
         return self._cfg
-    #
-    # def get_simulation_output_path(self):
-    #     name = self._cfg['name']
-    #     path = os.path.join(home_path, self._data_root, sim_path, name)
-    #     return path
-    #
+
+
+    def get_simulation_image_path(self, stereo=None):
+        image_dir_name = self._cfg['Simulation']['OutputDirName']
+        if not stereo:
+            path = os.path.join(home_path, self._data_root, image_dir_name)
+            return path
+        elif stereo=='Left':
+            path = os.path.join(home_path, self._data_root, image_dir_name, 'left')
+            return path
+        elif stereo=='Right':
+            path = os.path.join(home_path, self._data_root, image_dir_name)
+            return path
+
+    def get_absolute_path(self, relative_path):
+        path = os.path.join(home_path, self._data_root, relative_path)
+        return path
+
+    def get_np_array_path(self, relative_path):
+        dest_path = os.path.join(home_path, self._data_root, relative_path)
+        label_file_path = os.path.join(dest_path, label_filename)
+        image_file_path = os.path.join(dest_path, image_filename)
+        return label_file_path, image_file_path
+
+
     # def get_processing_cfg(self, config_name):
     #     path = os.path.join(self._cfg_root, image_path, config_name) + file_ext
     #     with open(path, 'r') as f:
@@ -71,12 +90,6 @@ class Environment(object):
     #
     #     return src_l_path, src_r_path, dest_path
     #
-    # def get_np_array_path(self):
-    #     name = self._cfg['name']
-    #     dest_path = os.path.join(home_path, self._data_root, image_path, name)
-    #     label_file_path = os.path.join(dest_path, label_filename)
-    #     image_file_path = os.path.join(dest_path, image_filename)
-    #     return label_file_path, image_file_path
     #
     # def get_model_cfg(self, model_name, config_name):
     #     self._model_name = model_name

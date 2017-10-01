@@ -1,0 +1,28 @@
+{
+    "name": "stereo-l-256x256",
+    "description": "Images with color and background at 256x256.",
+    "date": "Sun Sep 24 11:50:07 MDT 2017",
+    "image_size": [
+        256,
+        256
+    ],
+    "radius_range": {
+        "min": 15.0,
+        "max": 16.0,
+        "step": 2
+    },
+    "theta_range": {
+        "min": 0.0,
+        "max": 360.0,
+        "step": 270.0
+    },
+    "alpha_range": {
+        "min": -10.0,
+        "max": 10.0,
+        "step": 10.0
+    },
+    "stereo": {
+      "offset": 2.0,
+      "positive": false
+    }
+}

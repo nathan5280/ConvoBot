@@ -11,12 +11,16 @@ dataset_label = 'label'
 pkl_ext = '.pkl'
 
 class DataWrapper(object):
-    def __init__(self, label_filename, image_filename, data_path, data_conditioner, cfg):
+    def __init__(self, cfg_mgr, data_conditioner):
+        self._cfg_mgr = cfg_mgr
+        self._cfg = cfg_mgr.get_cfg()['Model']
         self._data_conditioner = data_conditioner
-        self._split = cfg['split']
-        self._validation_split = cfg['validation_split']
-        self._test_split = cfg['test_split']
-        self._radius_trim = cfg['radius_trim']
+        self._split = self._cfg['Split']
+        self._validation_split = self._cfg['ValidationSplit']
+        self._test_split = self._cfg['TestSplit']
+
+        src_label_filename = self._cfg_mgr.get_absolute_path(self._cfg['Data']['Label'])
+        src_image_filename = self._cfg_mgr.get_absolute_path(self._cfg['Data']['Image'])
 
         self._image_train = None
         self._image_test = None
@@ -25,13 +29,15 @@ class DataWrapper(object):
         self._label_test = None
         self._label_val = None
 
-        self._image_train_fn = self._filename(data_path, dataset_image, phase_train)
-        self._image_test_fn = self._filename(data_path, dataset_image, phase_test)
-        self._image_val_fn = self._filename(data_path, dataset_image, phase_val)
+        self._output_dir_name = self._cfg['OutputDirName']
 
-        self._label_train_fn = self._filename(data_path, dataset_label, phase_train)
-        self._label_test_fn = self._filename(data_path, dataset_label, phase_test)
-        self._label_val_fn = self._filename(data_path, dataset_label, phase_val)
+        self._image_train_fn = self._filename(self._output_dir_name, dataset_image, phase_train)
+        self._image_test_fn = self._filename(self._output_dir_name, dataset_image, phase_test)
+        self._image_val_fn = self._filename(self._output_dir_name, dataset_image, phase_val)
+
+        self._label_train_fn = self._filename(self._output_dir_name, dataset_label, phase_train)
+        self._label_test_fn = self._filename(self._output_dir_name, dataset_label, phase_test)
+        self._label_val_fn = self._filename(self._output_dir_name, dataset_label, phase_val)
 
         # Check to see if we need to resplit either by explicit request or
         # any of the files is missing.
@@ -42,7 +48,7 @@ class DataWrapper(object):
                 not os.path.exists(self._label_train_fn) or \
                 not os.path.exists(self._label_test_fn) or \
                 not os.path.exists(self._label_val_fn):
-            self._split_data(label_filename, image_filename)
+            self._split_data(src_label_filename, src_image_filename)
         else:
             self._load()
 
@@ -51,14 +57,10 @@ class DataWrapper(object):
         print('Splitting')
         # Load the data from the pickle
         # Load the data from the pickle
-        with open(label_path, 'rb') as f:
-            label = pickle.load(f)
-
+        label = np.load(label_path)
         label = self._data_conditioner.condition_labels(label)
 
-        with open(image_path, 'rb') as f:
-            image = pickle.load(f)
-
+        image = np.load(image_path)
         image = self._data_conditioner.condition_images(image)
 
         # Shuffle things because they were probably generated in order.
@@ -85,8 +87,9 @@ class DataWrapper(object):
 
         # Separate out the areas that we aren't including in the test and validation.
         # These are points at the edges of the training area.
-        theta_range = (35, 325)
-        radius_range = (radius_range[0] + self._radius_trim, radius_range[1] - self._radius_trim)
+        theta_range = (30, 330)
+        radius_trim = 0
+        radius_range = (radius_range[0] + radius_trim, radius_range[1] - radius_trim)
         print('Radius range: ', radius_range)
         mask = np.array((index.Theta >= theta_range[0]) & (index.Theta <= theta_range[1]) & \
                     (index.Radius >= radius_range[0]) & (index.Radius <=radius_range[1]), dtype=bool)
@@ -123,48 +126,28 @@ class DataWrapper(object):
         # print('Remainder: ', X.shape, y.shape)
         # print('Train: ', self._label_train.shape, self._image_train.shape)
 
-        with open(self._image_train_fn, 'wb') as f:
-            pickle.dump(self._image_train, f)
+        np.save(self._image_train_fn, self._image_train, allow_pickle=False)
+        np.save(self._image_test_fn, self._image_test, allow_pickle=False)
+        np.save(self._image_val_fn, self._image_val, allow_pickle=False)
 
-        with open(self._image_test_fn, 'wb') as f:
-            pickle.dump(self._image_test, f)
-
-        with open(self._image_val_fn, 'wb') as f:
-            pickle.dump(self._image_val, f)
-
-        with open(self._label_train_fn, 'wb') as f:
-            pickle.dump(self._label_train, f)
-
-        with open(self._label_test_fn, 'wb') as f:
-            pickle.dump(self._label_test, f)
-
-        with open(self._label_val_fn, 'wb') as f:
-            pickle.dump(self._label_val, f)
+        np.save(self._label_train_fn, self._label_train, allow_pickle=False)
+        np.save(self._label_test_fn, self._label_test, allow_pickle=False)
+        np.save(self._label_val_fn, self._label_val, allow_pickle=False)
 
 
     def _load(self):
         print('Loading')
-        with open(self._image_train_fn, 'rb') as f:
-            self._image_train = pickle.load(f)
+        np.load(self._image_train_fn)
+        np.load(self._image_test_fn)
+        np.load(self._image_val_fn)
 
-        with open(self._image_test_fn, 'rb') as f:
-            self._image_test = pickle.load(f)
-
-        with open(self._image_val_fn, 'rb') as f:
-            self._image_val = pickle.load(f)
-
-        with open(self._label_train_fn, 'rb') as f:
-            self._label_train = pickle.load(f)
-
-        with open(self._label_test_fn, 'rb') as f:
-            self._label_test = pickle.load(f)
-
-        with open(self._label_val_fn, 'rb') as f:
-            self._label_val = pickle.load(f)
+        np.load(self._label_train_fn)
+        np.load(self._label_test_fn)
+        np.load(self._label_val_fn)
 
 
     def _filename(self, path, dataset, phase):
-        return os.path.join(path, '_'.join((dataset, phase)) + pkl_ext)
+        return self._cfg_mgr.get_absolute_path(os.path.join(path, '_'.join((dataset, phase))))
 
     def get_train(self):
         return self._data_conditioner.reshape_images(self._image_train), self._label_train
