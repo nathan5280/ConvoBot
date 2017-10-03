@@ -7,12 +7,17 @@ from keras.models import load_model
 from convobot.model.Model import Model
 
 class ConvoBotModel(Model):
-    def __init__(self, cfg_mgr, verbose=False):
+    def __init__(self, cfg_mgr, predict=False, verbose=False):
         super(ConvoBotModel, self).__init__(cfg_mgr, verbose)
 
         self._img_size = self._cfg_mgr.get_cfg()['Environment']['ImageSize']
         self._channels = self._cfg_mgr.get_cfg()['Environment']['Channels']
-        self._resume = self._model_cfg['Resume']
+
+        if predict:
+            self._resume = True
+        else:
+            self._resume = self._model_cfg['Resume']
+
         self._model_path = self._cfg_mgr.get_absolute_path(
                         os.path.join(self._output_path, self._model_cfg['ModelFilename']))
 
@@ -53,7 +58,7 @@ class ConvoBotModel(Model):
             model.add(Dense(256))
             model.add(Dropout(0.25))
             model.add(Activation('relu'))
-            
+
             model.add(Dense(3))
             model.add(Activation('relu'))
 

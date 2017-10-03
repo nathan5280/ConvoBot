@@ -8,7 +8,6 @@ phase_test = 'test'
 phase_val = 'val'
 dataset_image = 'image'
 dataset_label = 'label'
-pkl_ext = '.pkl'
 
 class DataWrapper(object):
     def __init__(self, cfg_mgr, data_conditioner):
@@ -137,13 +136,24 @@ class DataWrapper(object):
 
     def _load(self):
         print('Loading')
-        np.load(self._image_train_fn)
-        np.load(self._image_test_fn)
-        np.load(self._image_val_fn)
+        ext = '.npy'
+        self._image_train = np.load(self._image_train_fn + ext)
+        print(self._image_train.shape)
 
-        np.load(self._label_train_fn)
-        np.load(self._label_test_fn)
-        np.load(self._label_val_fn)
+        self._image_test = np.load(self._image_test_fn + ext)
+        print(self._image_test.shape)
+
+        self._image_val = np.load(self._image_val_fn + ext)
+        print(self._image_val.shape)
+
+        self._label_train = np.load(self._label_train_fn + ext)
+        print(self._label_train.shape)
+
+        self._label_test = np.load(self._label_test_fn + ext)
+        print(self._label_test.shape)
+
+        self._label_val = np.load(self._label_val_fn + ext)
+        print(self._label_val.shape)
 
 
     def _filename(self, path, dataset, phase):

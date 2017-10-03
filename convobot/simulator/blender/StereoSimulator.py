@@ -1,5 +1,5 @@
 # import os, sys, getopt
-import time, sys
+import time, sys, os
 import numpy as np
 from convobot.workflow.ConfigurationManager import ConfigurationManager
 from convobot.util.FilenameManager import FilenameManager
@@ -11,6 +11,7 @@ from convobot.simulator.blender.Simulator import Simulator
 class StereoSimulator(Simulator):
     def __init__(self, cfg_mgr, verbose=False):
         super(StereoSimulator, self).__init__(cfg_mgr, verbose)
+        print('StereoSimulator')
 
     def process(self):
         '''
@@ -65,18 +66,22 @@ class StereoSimulator(Simulator):
                     t0 = time.time()
 
                     # Right Image
-                    self._blender_env.set_camera_location \
-                            (float(theta) + omega, float(radius), 180+float(round(alpha - omega,1)))
                     path = self._cfg_mgr.get_simulation_image_path(stereo='Right')
                     filename = fnm.label_to_radius_path(path, theta, radius, 180+round(alpha,1))
-                    render_time = self._blender_env.render(filename)
+
+                    if not os.path.exists(filename) or os.stat(filename).st_size == 0:
+                        self._blender_env.set_camera_location \
+                                (float(theta) + omega, float(radius), 180+float(round(alpha - omega,1)))
+                        render_time = self._blender_env.render(filename)
 
                     # Left Image
-                    self._blender_env.set_camera_location \
-                            (float(theta) - omega, float(radius), 180+float(round(alpha + omega,1)))
                     path = self._cfg_mgr.get_simulation_image_path(stereo='Left')
                     filename = fnm.label_to_radius_path(path, theta, radius, 180+round(alpha,1))
-                    render_time = self._blender_env.render(filename)
+
+                    if not os.path.exists(filename) or os.stat(filename).st_size == 0:
+                        self._blender_env.set_camera_location \
+                                (float(theta) - omega, float(radius), 180+float(round(alpha + omega,1)))
+                        render_time = self._blender_env.render(filename)
 
                     process_time = time.time() - t0
                     filename_parts = filename.split('/')

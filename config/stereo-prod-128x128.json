@@ -16,7 +16,7 @@
             "Range": {
                 "Min": 15.0,
                 "Max": 30.0,
-                "Step": 1
+                "Step": 0.8
             }
         },
         "Theta": {

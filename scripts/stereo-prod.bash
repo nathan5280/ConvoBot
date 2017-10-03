@@ -5,6 +5,6 @@
 # ./scripts/snake-shake-background.bash
 
 # Create the images in blender
-python simulate.py -d stereo-prod-data -e config -c stereo-prod-128x128
-
-python transform.py -d stereo-prod-data -e config -c stereo-prod-128x128
+python simulate.py -d mono-prod-64x64-data -e config -c mono-prod-64x64
+python transform.py -d mono-prod-64x64-data -e config -c mono-prod-64x64
+# python train.py -d mono-prod-data -e config -c mono-prod-64x64

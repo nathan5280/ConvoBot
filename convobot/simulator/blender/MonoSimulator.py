@@ -1,5 +1,5 @@
 # import os, sys, getopt
-import time, sys
+import time, sys, os
 import numpy as np
 from convobot.workflow.ConfigurationManager import ConfigurationManager
 from convobot.util.FilenameManager import FilenameManager
@@ -57,16 +57,14 @@ class MonoSimulator(Simulator):
                 for theta in theta_range:
                     t0 = time.time()
 
-                    self._blender_env.set_camera_location(float(theta),
-                                            float(radius), 180+float(round(alpha,1)))
-                    # self._blender_env.set_camera_location(0, 15, 180)
-                    # exit()
-
                     path = self._cfg_mgr.get_simulation_image_path()
                     filename = fnm.label_to_radius_path(path, theta, radius, 180+round(alpha,1))
 
-                    render_time = self._blender_env.render(filename)
-                    process_time = time.time() - t0
+                    if not os.path.exists(filename) or os.stat(filename).st_size == 0:
+                        self._blender_env.set_camera_location(float(theta),
+                                                float(radius), 180+float(round(alpha,1)))
+                        render_time = self._blender_env.render(filename)
 
+                    process_time = time.time() - t0
                     filename_parts = filename.split('/')
                     print('File: {}, Process Time: {:.2f}'.format(filename_parts[-1], process_time))
