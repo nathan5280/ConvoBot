@@ -111,10 +111,6 @@ First, I'd like to tip my hat to the unbelievable images above.  There is an unb
 <img height="128" width="128" alt="Alpha" src="documentation/images/alpha.gif">  
 </p>
 <sub> <b> Figure 8: </b> Alpha </sub>
-<p align=“center”>
-<img height="700" width="700" alt="Radius and Theta Error" src="documentation/images/RT-Error.png">  
-</p>
-<sub> <b> Figure 8: </b> Alpha </sub>
 
 ## Simulation Examples
 ### Steroscopic Vision
@@ -124,15 +120,16 @@ ConvoBot does pretty good with predicting Theta, but struggles with the Radial d
 <img alt="Left" src="documentation/images/left.png">  
 <img alt="Right" src="documentation/images/right.png">  
 </p>
-<sub> <b> Figure 8: </b> Left and right images as seen from each "eye". </sub>
+<sub> <b> Figure 9: </b> Left and right images as seen from each "eye". </sub>
 
 <p align=“center”>
 <img alt="Stereoscopic image for CNN" src="documentation/images/stack2.png">  
 </p>
-<sub> <b> Figure 9: </b> One possible input to the CNN from stereoscopic images. </sub>
+<sub> <b> Figure 10: </b> One possible input to the CNN from stereoscopic images. </sub>
 
-Maybe something a bit more abstract with the delta between the left and right images.
+
+## Error Plots
 <p align=“center”>
-<img alt="Stereoscopic (delta) image for CNN" src="documentation/images/gray-delta.png">  
+<img alt="Error" src="documentation/images/3-quiver.png">  
 </p>
-<sub> <b> Figure 10: </b> A gray-scale delta of left and right as possible input to the CNN from stereoscopic images. </sub>
+<sub> <b> Figure 11: </b>Error plots for Radius and Theta.  Arrow Tail=Actual, Tip=Predicted Location.</sub>
