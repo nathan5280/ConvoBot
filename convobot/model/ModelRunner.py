@@ -16,10 +16,11 @@ import tensorflow as tf
 # np.random.seed(123)  # for reproducibility
 
 class ModelRunner(object):
-    def __init__(self, cfg_mgr, model_builder):
+    def __init__(self, cfg_mgr, model_builder, predictor=None):
         self._cfg_mgr = cfg_mgr
         self._model_builder = model_builder
         self._cfg = cfg_mgr.get_cfg()['Model']
+        self._predictor=predictor
 
     def _print_stats(self, num_pred, val, pred, last_pred):
         last_pred = np.array(last_pred)
@@ -67,6 +68,7 @@ class ModelRunner(object):
 
         schedule = self._cfg['Schedule']
 
+        incremental_sessions_run = 0
 
         for phase in range(start_phase, len(schedule)):
             phase_cfg = schedule[phase]
@@ -131,3 +133,11 @@ class ModelRunner(object):
                     last_pred[i][0] = pred[i][0]
                     last_pred[i][1] = pred[i][1]
                     last_pred[i][2] = pred[i][2]
+
+                print('Sessions run:', incremental_sessions_run)
+                if incremental_sessions_run == 0:
+                    incremental_sessions_run = 5
+                    if self._predictor:
+                        self._predictor.process(model, X_val, y_val)
+
+                incremental_sessions_run -= 1

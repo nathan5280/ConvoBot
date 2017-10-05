@@ -25,7 +25,8 @@ class ConvoBotModel(Model):
             print('Preparing to load model: ', self._model_path)
 
     def get_model(self):
-        if self._resume and os.path.exists(self._model_path):
+        # Change resume functionality to just be dependent on if the file exists.
+        if os.path.exists(self._model_path):
             print('Loading model: ', self._model_path)
             model = load_model(self._model_path)
         else:

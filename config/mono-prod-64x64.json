@@ -60,7 +60,7 @@
         "Data": {
             "Label": "prepared-images/64x64/label.npy",
             "Image": "prepared-images/64x64/image.npy",
-            "Results": "results/mono-predictions-64x64.csv"
+            "Results": "predictions.csv"
         },
         "ResumePhase": 2,
         "Split": true,
@@ -72,18 +72,18 @@
                 "Sessions": 5,
                 "Epochs": 2,
                 "BatchSize": 100,
-                "LearningRate": 0.005
+                "LearningRate": 0.001
             },
             {
                 "Name": "phase 2",
                 "Sessions": 5,
                 "Epochs": 2,
                 "BatchSize": 100,
-                "LearningRate": 0.0025
+                "LearningRate": 0.001
             },
             {
                 "Name": "phase 3",
-                "Sessions": 50,
+                "Sessions": 500,
                 "Epochs": 10,
                 "BatchSize": 100,
                 "LearningRate": 0.001

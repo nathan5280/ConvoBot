@@ -8,6 +8,7 @@ phase_test = 'test'
 phase_val = 'val'
 dataset_image = 'image'
 dataset_label = 'label'
+ext = '.npy'
 
 class DataWrapper(object):
     def __init__(self, cfg_mgr, data_conditioner):
@@ -30,18 +31,16 @@ class DataWrapper(object):
 
         self._output_dir_name = self._cfg['OutputDirName']
 
-        self._image_train_fn = self._filename(self._output_dir_name, dataset_image, phase_train)
-        self._image_test_fn = self._filename(self._output_dir_name, dataset_image, phase_test)
-        self._image_val_fn = self._filename(self._output_dir_name, dataset_image, phase_val)
+        self._image_train_fn = self._filename(self._output_dir_name, dataset_image, phase_train) + ext
+        self._image_test_fn = self._filename(self._output_dir_name, dataset_image, phase_test) + ext
+        self._image_val_fn = self._filename(self._output_dir_name, dataset_image, phase_val) + ext
 
-        self._label_train_fn = self._filename(self._output_dir_name, dataset_label, phase_train)
-        self._label_test_fn = self._filename(self._output_dir_name, dataset_label, phase_test)
-        self._label_val_fn = self._filename(self._output_dir_name, dataset_label, phase_val)
+        self._label_train_fn = self._filename(self._output_dir_name, dataset_label, phase_train) + ext
+        self._label_test_fn = self._filename(self._output_dir_name, dataset_label, phase_test) + ext
+        self._label_val_fn = self._filename(self._output_dir_name, dataset_label, phase_val) + ext
 
-        # Check to see if we need to resplit either by explicit request or
-        # any of the files is missing.
-        if self._split or not cfg['resume'] or \
-                not os.path.exists(self._image_train_fn) or \
+        # Change functionality to split or load based on whether or not the files can be found.
+        if not os.path.exists(self._image_train_fn) or \
                 not os.path.exists(self._image_test_fn) or \
                 not os.path.exists(self._image_val_fn) or \
                 not os.path.exists(self._label_train_fn) or \
@@ -53,7 +52,7 @@ class DataWrapper(object):
 
 
     def _split_data(self, label_path, image_path):
-        print('Splitting')
+        print('Splitting dataset (Train, Test, Validation)')
         # Load the data from the pickle
         # Load the data from the pickle
         label = np.load(label_path)
@@ -135,25 +134,24 @@ class DataWrapper(object):
 
 
     def _load(self):
-        print('Loading')
-        ext = '.npy'
-        self._image_train = np.load(self._image_train_fn + ext)
-        print(self._image_train.shape)
+        print('Loading existing split data (Train, Test, Validation)')
+        self._image_train = np.load(self._image_train_fn)
+        print('Train images: ', self._image_train.shape)
 
-        self._image_test = np.load(self._image_test_fn + ext)
-        print(self._image_test.shape)
+        self._image_test = np.load(self._image_test_fn)
+        print('Test images: ', self._image_test.shape)
 
-        self._image_val = np.load(self._image_val_fn + ext)
-        print(self._image_val.shape)
+        self._image_val = np.load(self._image_val_fn)
+        print('Validation images: ', self._image_val.shape)
 
-        self._label_train = np.load(self._label_train_fn + ext)
-        print(self._label_train.shape)
+        self._label_train = np.load(self._label_train_fn)
+        print('Train labels: ', self._label_train.shape)
 
-        self._label_test = np.load(self._label_test_fn + ext)
-        print(self._label_test.shape)
+        self._label_test = np.load(self._label_test_fn)
+        print('Test labels: ', self._label_test.shape)
 
-        self._label_val = np.load(self._label_val_fn + ext)
-        print(self._label_val.shape)
+        self._label_val = np.load(self._label_val_fn)
+        print('Validation images: ', self._label_val.shape)
 
 
     def _filename(self, path, dataset, phase):

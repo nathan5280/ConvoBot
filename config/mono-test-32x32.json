@@ -59,7 +59,8 @@
         "Resume": true,
         "Data": {
             "Label": "prepared-images/test-32x32/label.npy",
-            "Image": "prepared-images/test-32x32/image.npy"
+            "Image": "prepared-images/test-32x32/image.npy",
+            "Results": "predictions.csv"
         },
         "ResumePhase": 2,
         "Split": true,

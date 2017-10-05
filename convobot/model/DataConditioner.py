@@ -7,12 +7,17 @@ class DataConditioner(object):
         self._cfg = self._cfg_mgr.get_cfg()['Model']
         self._img_size = self._cfg_mgr.get_cfg()['Environment']['ImageSize']
         self._channels = self._cfg_mgr.get_cfg()['Environment']['Channels']
-        self._column_names = ['Theta', 'Radius', 'Alpha']
+
+    def _get_dataframe(self, array):
+        if array.shape[1] == 3:
+            column_names = ['Theta', 'Radius', 'Alpha']
+        else:
+            column_names = ['Theta', 'Radius', 'Alpha', 'X', 'Y']
+        return pd.DataFrame(array, columns=column_names)
 
     def condition_labels(self, labels):
         print('Condition labels')
-        df = pd.DataFrame(labels)
-        df.columns = self._column_names
+        df = self._get_dataframe(labels)
         df['X'] = df.Radius * np.cos(df.Theta/180 * np.pi)
         df['Y'] = df.Radius * np.sin(df.Theta/180 * np.pi)
         self._column_names = df.columns
@@ -29,13 +34,13 @@ class DataConditioner(object):
         return images
 
     def get_theta_radius_labels(self, labels):
-        df = pd.DataFrame(labels, columns=self._column_names)
+        df = self._get_dataframe(labels)
         return df[['Theta', 'Radius']].values
 
     def get_theta_radius_alpha_labels(self, labels):
-        df = pd.DataFrame(labels, columns=self._column_names)
+        df = self._get_dataframe(labels)
         return df[['Theta', 'Radius', 'Alpha']].values
 
     def get_x_y_labels(self, labels):
-        df = pd.DataFrame(labels, columns=self._column_names)
+        df = self._get_dataframe(labels)
         return df[['X', 'Y']].values

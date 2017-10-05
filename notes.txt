@@ -15,6 +15,12 @@ sess.run(x)
 
 tensorboard --logdir=<dir name>
 
+AWS:
+1) sudo apt-get update
+2) sudo apt-get upgrade
+3) sudo apt-get install cuda
+
+
 
 TTD:
 1) Clean up pkl vs np
@@ -24,3 +30,61 @@ TTD:
 5) logging
 6) Single config for full process
 7) Separate Simulator and Animator
+
+Chunk up files:
+split -b 1000000000 image.npy
+cat part1 >> x
+cat part2 >> x
+
+Presentation TTD:
+
+A) Code
+  1) Update simulation movies (512x512)
+  2) Quiver Plots
+      Time series over training
+      Add X-Y axis and circles
+
+B) Blender (512x512)
+  1) Arena
+  2) Stereo L, R, Stacked
+  3) Lighting Examples
+  4) Satellite Google Earth
+
+C) Pictures / Movies
+  1) ConvoBot moving
+  2) ConvoBot still
+
+D) Images
+  1) Blender Fruit Basket
+  2) Blender Labeled Fruit Basket
+  3) Other Blender Examples
+
+E) Flow Charts
+  1) Day in the life w/o Simulation
+  2) Day in the life w/ Simulation
+
+F) Project Lifecycle
+
+G) Tech Stack
+  1) Simulation
+    i) Blender
+    ii) Python
+    iii) Pyro
+  2) Data Science
+    i) Keras
+    ii) TensorFlow
+    iii) Matplotlib
+    iv) AWS
+  3) Robotics
+    i) MBOT Ranger
+    ii) Sketch
+    iii) C++
+    iv) RPi
+
+H) Results
+  Error information
+
+I) Future Steps
+  1) Categorical prediction
+  2) Explore different Keras / TensorFlow models
+  3) Robot Navigation

@@ -29,6 +29,7 @@ def main(argv):
         # load the simulation configuration from the convobot environment.
         cfg_mgr = ConfigurationManager(cfg_root, data_root, cfg_name, verbose=True)
         simulator = SimulatorLoader(cfg_mgr, verbose=True).get_simulator()
+        print(type(simulator))
         simulator.process()
 
 if __name__ == "__main__":

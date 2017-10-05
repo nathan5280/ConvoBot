@@ -2,6 +2,7 @@ import os, sys, getopt
 from convobot.workflow.ConfigurationManager import ConfigurationManager
 from convobot.model.ModelBuilderLoader import ModelBuilderLoader
 from convobot.model.ModelRunner import ModelRunner
+from convobot.report.InlinePredictor import InlinePredictor
 
 def main(argv):
     data_root = None
@@ -31,7 +32,8 @@ def main(argv):
         cfg_mgr = ConfigurationManager(cfg_root, data_root, cfg_name, verbose=True)
         model_loader = ModelBuilderLoader(cfg_mgr, verbose=True)
         model_builder = model_loader.get_model_builder()
-        model_runner = ModelRunner(cfg_mgr, model_builder)
+        predictor = InlinePredictor(cfg_mgr)
+        model_runner = ModelRunner(cfg_mgr, model_builder, predictor=predictor)
         model_runner.process()
 
 

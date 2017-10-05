@@ -4,7 +4,7 @@
 
 import pandas as pd
 import numpy as np
-import os
+import os, time
 
 from keras.optimizers import Adam
 from keras.utils import np_utils
@@ -22,28 +22,20 @@ import tensorflow as tf
 # np.random.seed(123)  # for reproducibility
 model_builders = {'mnist': MNISTModelBuilder}
 
-class Predictor(object):
-    def __init__(self, cfg_mgr, model_builder):
+class InlinePredictor(object):
+    def __init__(self, cfg_mgr):
         self._cfg_mgr = cfg_mgr
-        self._model_builder = model_builder
         self._cfg = cfg_mgr.get_cfg()['Model']
 
-    def process(self):
-        data_conditioner = DataConditioner(self._cfg_mgr)
-        data_wrapper = DataWrapper(self._cfg_mgr, data_conditioner)
-
-        X_val, y_val = data_wrapper.get_validation()
-        y_val = data_conditioner.get_theta_radius_alpha_labels(y_val)
-
-        model = self._model_builder.get_model()
-
+    def process(self, model, X_val, y_val):
         score = model.evaluate(X_val, y_val, verbose=0)
         print('Test score:', score[0])
         print('Test mean absolute error:', score[1]) # this is the one we care about
 
         pred = model.predict(X_val, batch_size=1)
 
-        results_filename = self._cfg_mgr.get_absolute_path(self._cfg['Data']['Results'])
+        results_filename = str(round(time.time()))+ '_' + self._cfg['Data']['Results']
+        results_filename = self._cfg_mgr.get_absolute_path(os.path.join('results', results_filename))
 
         val_df = pd.DataFrame(y_val)
         pred_df = pd.DataFrame(pred)

@@ -37,8 +37,8 @@ def add_quiver_plot(ax, df):
 def main():
     # fig, ax = plt.subplots(1,2)
     fig, ax = plt.subplots(1,1)
-
-    filename = '/Users/nathanatkins/mono-prod-64x64-data/results/mono-predictions-64x64.csv'
+    filename = '/Users/nathanatkins/mono-test-data/results/1507049446_predictions.csv'
+    # filename = '/Users/nathanatkins/mono-prod-64x64-data/results/mono-predictions-64x64.csv'
     df = pd.read_csv(filename)
     print(df.columns)
     # add_quiver_plot(ax[0], df)
@@ -49,8 +49,8 @@ def main():
     # add_quiver_plot(ax[1], df)
 
     print('Plotting')
-    # plt.show()
-    plt.savefig('RT-Error.png')
+    plt.show()
+    # plt.savefig('RT-Error.png')
 
 
 if __name__ == '__main__':

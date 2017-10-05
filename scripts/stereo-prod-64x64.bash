@@ -6,5 +6,5 @@
 
 # Create the images in blender
 # python simulate.py -d stereo-prod-64x64-data -e config -c stereo-prod-64x64
-python transform.py -d stereo-prod-64x64-data -e config -c stereo-prod-64x64
-# python train.py -d stereo-prod-64x64-data -e config -c stereo-prod-64x64
+# python transform.py -d stereo-prod-64x64-data -e config -c stereo-prod-64x64
+python train.py -d stereo-prod-64x64-data -e config -c stereo-prod-64x64
