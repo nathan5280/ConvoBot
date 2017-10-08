@@ -1,3 +1,25 @@
+The objective of the ConvoBot project was to train a convolutional neural
+network in a virtual world, and then use that network to control a robot in the
+real world.  By leveraging the virtual world, the project was able to overcome
+a common network training problem of a lack of labeled images and also explore
+how changes in the features in the simulated world impacted different network
+models.s
+
+As an example I was able to explore how having stereoscopic images would impact
+the networks ability to accurately predict the robots position.  Our own life
+experience and intuition suggests that stereoscopic images would produce better
+results.  The outcome of the experiment showed no significant improvement in the
+predicted position.  Through simulation and 2-days of coding and training I was
+able to determine that building out stereoscopic  hardware wasn't worth the
+effort or I need to build a different network model.  This type of rapid
+prototyping and experimentation in both feature and model space isn't possible
+without the use of simulation.
+
+To reinforce the value of this project tonight, listen to how many times you
+hear someone say if I only had more LABELED DATA, I could have done X.
+
+
+
 RPi:
   - Access to tty: sudo chown nathan /dev/ttyUSB0  Needed for Arduino IDE
     to write program to bot.
@@ -59,32 +81,5 @@ D) Images
   2) Blender Labeled Fruit Basket
   3) Other Blender Examples
 
-E) Flow Charts
-  1) Day in the life w/o Simulation
-  2) Day in the life w/ Simulation
-
-F) Project Lifecycle
-
-G) Tech Stack
-  1) Simulation
-    i) Blender
-    ii) Python
-    iii) Pyro
-  2) Data Science
-    i) Keras
-    ii) TensorFlow
-    iii) Matplotlib
-    iv) AWS
-  3) Robotics
-    i) MBOT Ranger
-    ii) Sketch
-    iii) C++
-    iv) RPi
-
 H) Results
   Error information
-
-I) Future Steps
-  1) Categorical prediction
-  2) Explore different Keras / TensorFlow models
-  3) Robot Navigation
