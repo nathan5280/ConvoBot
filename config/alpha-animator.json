@@ -1,0 +1,32 @@
+{
+    "Global": {
+        "Description": "Simulate the images to animate alpha",
+        "Date": "Fri Oct  6 17:58:51 MDT 2017",
+        "Image": {
+          "Size": [
+              512,
+              512
+          ],
+          "Channels": 3
+        }
+    },
+    "Simulate": {
+        "ClassName": "animation-simulator",
+        "MovieName": "alpha-view.gif",
+        "Reverse": true,
+        "CameraHeight": 2,
+        "Radius": {
+            "Fixed": 15.0
+        },
+        "Theta": {
+            "Fixed": 45.0
+        },
+        "Alpha": {
+            "Range": {
+                "Min": -10.0,
+                "Max": 10.0,
+                "Step": 0.2
+            }
+        }
+    }
+}

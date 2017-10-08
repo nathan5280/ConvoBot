@@ -1,0 +1,58 @@
+{
+    "Global": {
+        "Description": "Convobot Test",
+        "Date": "Fri Oct  6 17:58:51 MDT 2017",
+        "Image": {
+          "Size": [
+              32,
+              32
+          ],
+          "Channels": 3
+        }
+    },
+    "Simulate": {
+        "Name": "mono-simulator",
+        "CameraHeight": 5,
+        "StereoOffset": 3,
+        "Radius": {
+            "Range": {
+                "Min": 15.0,
+                "Max": 30.0,
+                "Step": 1
+            }
+        },
+        "Theta": {
+            "Range": {
+                "Min": 0.0,
+                "Max": 360.0,
+                "Step": 10
+            }
+        },
+        "Alpha": {
+            "Range": {
+                "Min": -10.0,
+                "Max": 10.0,
+                "Step": 5,
+                "MinFactor": 1,
+                "MaxFactor": 1
+            }
+        }
+    },
+    "Manipulate": {
+        "Name": "numpy-manipulator"
+    },
+    "Train": {
+        "Model": {
+            "Name": "convobot1"
+        },
+        "Trainer": {
+            "Name": "tracking-trainer",
+            "ValidationSplit": 0.25,
+            "TestSplit": 0.1,
+            "Sessions": 2,
+            "Epochs": 2,
+            "BatchSize": 100,
+            "LearningRate": 0.001
+        }
+    }
+}

@@ -1,0 +1,57 @@
+{
+    "Global": {
+        "Description": "Convobot Production with Capstone Model (ConvoBot1Model)",
+        "Date": "Fri Oct  6 17:58:51 MDT 2017",
+        "Image": {
+          "Size": [
+              64,
+              64
+          ],
+          "Channels": 3
+        }
+    },
+    "Simulate": {
+        "Name": "mono-simulator",
+        "CameraHeight": 5,
+        "Radius": {
+            "Range": {
+                "Min": 15.0,
+                "Max": 30.0,
+                "Step": 0.2
+            }
+        },
+        "Theta": {
+            "Range": {
+                "Min": 0.0,
+                "Max": 360.0,
+                "Step": 1
+            }
+        },
+        "Alpha": {
+            "Range": {
+                "Min": -10.0,
+                "Max": 10.0,
+                "Step": 1,
+                "MinFactor": 1,
+                "MaxFactor": 1
+            }
+        }
+    },
+    "Manipulate": {
+        "Name": "numpy-manipulator"
+    },
+    "Train": {
+        "Model": {
+            "Name": "convobot2"
+        },
+        "Trainer": {
+            "Name": "tracking-trainer",
+            "ValidationSplit": 0.25,
+            "TestSplit": 0.1,
+            "Sessions": 2,
+            "Epochs": 2,
+            "BatchSize": 100,
+            "LearningRate": 0.001
+        }
+    }
+}
