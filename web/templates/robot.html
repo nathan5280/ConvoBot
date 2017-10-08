@@ -1,0 +1,39 @@
+<html lang="en">
+  <head>
+    <title>ConvoBot</title>
+    <meta charset="utf-8">
+    <meta name="author" content="Nathan Atkins">
+    <meta name="description" content="ConvoBot - Convolutional Neural Network meets M-Bot Ranger">
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+    <link rel="stylesheet" type="text/css" href="../static/css/style.css">
+    <link rel="icon" href="image/favicon.ico" type="image/x-icon">
+  </head>
+
+ <body>
+    <nav id = "nav1">
+      <ul class = "inline1">
+        <li><a href="/">Home</a></li>
+        <li><a href="simulation">Simulation</a></li>
+        <li><a href="error">Error</a></li>
+        <li class = "active"><a href="robot">Robot</a></li>
+        <li><a href="stereoscopic">Stereoscopic Vision</a></li>
+        <li><a href="blender">Blender</a></li>
+      </ul>
+    </nav>
+    <div class = "mainDiv">
+      <h1>Robot</h1>
+
+      <p align="center">
+        <h2>mBot-Ranger</h2>
+        <img width="768" src="{{url_for('static', filename='images/blender-ui.png')}}" />
+      </p>
+      <p align="center">
+        <h2>ConvoBot on the Move</h2>
+        <img width="768" src="{{url_for('static', filename='images/blender-ui.png')}}" />
+        Video of ConvoBot being manually controlled.  I haven't completed the navigation
+        controller yet as I got distracted with exploring the data science aspects
+        of the steroscopic vision.
+      </p>
+    </div>
+  </body>
+</html>

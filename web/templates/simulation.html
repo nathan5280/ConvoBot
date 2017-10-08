@@ -1,0 +1,64 @@
+<html lang="en">
+  <head>
+    <title>ConvoBot</title>
+    <meta charset="utf-8">
+    <meta name="author" content="Nathan Atkins">
+    <meta name="description" content="ConvoBot - Convolutional Neural Network meets M-Bot Ranger">
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+    <link rel="stylesheet" type="text/css" href="../static/css/style.css">
+    <link rel="icon" href="image/favicon.ico" type="image/x-icon">
+  </head>
+
+ <body>
+    <nav id = "nav1">
+      <ul class = "inline1">
+        <li><a href="/">Home</a></li>
+        <li class = "active"><a href="simulation">Simulation</a></li>
+        <li><a href="error">Error</a></li>
+        <li><a href="robot">Robot</a></li>
+        <li><a href="stereoscopic">Stereoscopic Vision</a></li>
+        <li><a href="blender">Blender</a></li>
+      </ul>
+    </nav>
+    <div class = "mainDiv">
+      <h1>Simulated Robot View</h1>
+
+      <table align=“center”>
+        <tr>
+          <th>Theta</th>
+          <th>Radius</th>
+          <th>Alpha</th>
+        </tr>
+        <tr>
+          <td>
+            <img height="256" width="256" src="{{url_for('static', filename='images/theta.gif')}}" />
+          </td>
+          <td>
+            <img height="256" width="256" src="{{url_for('static', filename='images/radius.gif')}}" />
+          </td>
+          <td>
+            <img height="256" width="256" src="{{url_for('static', filename='images/alpha.gif')}}" />
+          </td>
+        </tr>
+      </table>
+      <p align="center">
+        <h2>Blender User Interface</h2>
+        <img width="768" src="{{url_for('static', filename='images/blender-ui.png')}}" />
+      </p>
+      <h2>Actual Training Images (64x64 pixels)</h2>
+      <table align=“center”>
+        <tr>
+          <td>
+            <img height="256" width="256" src="{{url_for('static', filename='images/000.0_17.0_180.0.png')}}" />
+          </td>
+          <td>
+            <img height="256" width="256" src="{{url_for('static', filename='images/045.0_17.0_180.0.png')}}" />
+          </td>
+          <td>
+            <img height="256" width="256" src="{{url_for('static', filename='images/135.0_17.0_180.0.png')}}" />
+          </td>
+        </tr>
+      </table>
+    </div>
+  </body>
+</html>

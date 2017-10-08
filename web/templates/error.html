@@ -1,0 +1,41 @@
+<html lang="en">
+  <head>
+    <title>ConvoBot</title>
+    <meta charset="utf-8">
+    <meta name="author" content="Nathan Atkins">
+    <meta name="description" content="ConvoBot - Convolutional Neural Network meets M-Bot Ranger">
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+    <link rel="stylesheet" type="text/css" href="../static/css/style.css">
+    <link rel="icon" href="image/favicon.ico" type="image/x-icon">
+  </head>
+
+ <body>
+    <nav id = "nav1">
+      <ul class = "inline1">
+        <li><a href="/">Home</a></li>
+        <li><a href="simulation">Simulation</a></li>
+        <li class = "active"><a href="error">Error</a></li>
+        <li><a href="robot">Robot</a></li>
+        <li><a href="stereoscopic">Stereoscopic Vision</a></li>
+        <li><a href="blender">Blender</a></li>
+      </ul>
+    </nav>
+    <div class = "mainDiv">
+      <h1>Position Prediction Errors</h1>
+      <h2>Positioning Environment</h2>
+      <p align="center">
+        <img width="50%" src="{{url_for('static', filename='images/target-navigation.png')}}" />
+      </p>
+      <h2>Prediction Error Distributions</h2>
+      <p align="center">
+            <img width="40%" src="{{url_for('static', filename='images/Histogram-Error.png')}}" />
+            <img width="40%" src="{{url_for('static', filename='images/Quiver-Error.png')}}" />
+      </p>
+      <h2>Timelapse of Prediction Error During Training</h2>
+      <p align="center">
+            <img width="40%" src="{{url_for('static', filename='images/Histogram-Error.png')}}" />
+            <b>Add gif of training error.</b>
+      </p>
+    </div>
+  </body>
+</html>

@@ -1,0 +1,42 @@
+<html lang="en">
+  <head>
+    <title>ConvoBot</title>
+    <meta charset="utf-8">
+    <meta name="author" content="Nathan Atkins">
+    <meta name="description" content="ConvoBot - Convolutional Neural Network meets M-Bot Ranger">
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+    <link rel="stylesheet" type="text/css" href="../static/css/style.css">
+    <link rel="icon" href="image/favicon.ico" type="image/x-icon">
+  </head>
+
+ <body>
+    <nav id = "nav1">
+      <ul class = "inline1">
+        <li class = "active"><a href="/">Home</a></li>
+        <li><a href="simulation">Simulation</a></li>
+        <li><a href="error">Error</a></li>
+        <li><a href="robot">Robot</a></li>
+        <li><a href="stereoscopic">Stereoscopic Vision</a></li>
+        <li><a href="blender">Blender</a></li>
+      </ul>
+    </nav>
+    <div class = "mainDiv">
+      <h1>Overview</h1>
+      <img width="100%" src="{{url_for('static', filename='images/header.jpg')}}" />
+      <br>
+      <p>
+      <b>Provide navigational robot control in the real world using a
+      convolutional neural network trained in a simulated virtual enviornment.</b>
+    </p>
+      <p>
+      Simulated environment was rendered in Blender a leading open source animation studio.
+      120,000 64x64 pixel RGB images were rendered of the simple 3 block enviornment to
+      train the CNN.
+      </p>
+      <p>
+      The Robot is a mBot Ranger.  The mBot Ranger uses a Arduino Mega 2560 micro controller.
+      This is suplemented with a Raspberry Pi 3 and Raspberry Camera.
+    </p>
+    </div>
+  </body>
+</html>

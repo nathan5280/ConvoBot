@@ -1,0 +1,105 @@
+/* CSS FOR THE NAVIGATION BAR */
+
+nav{
+  position:fixed;
+  width:100%;
+  z-index: 5;
+}
+
+nav > ul {
+    list-style-type: none;
+    margin: 0;
+    padding: 0;
+    overflow: hidden;
+    background-color: #000000;
+    font-size:20px;
+}
+
+nav > ul > li {
+    float: left;
+}
+
+nav > ul > li > a {
+    border-right: 1px solid #ffffff;
+    color: white;
+    display: block;
+    padding: 14px 16px;
+    text-align: center;
+    text-decoration: none;
+}
+
+nav > ul > li > a:hover{
+  background-color: #DDDDDD;
+  color: #000000;
+}
+
+.active {
+    background-color: #666666;
+    text-decoration: underline #ffffff;
+}
+
+.active:hover{
+  text-decoration-color: #000000;
+}
+
+/** end navigation **/
+
+body {
+  height: 100%;
+  width: 100%;
+  overflow: auto;
+  margin: 0px;
+  /*background: url(../../data/image/mbot-ranger.png);*/
+  background-color: DimGray;
+  background-size:100% 110%;
+  background-repeat: no-repeat;
+  z-index: 0;
+}
+
+.mainDiv{
+  position:relative;
+  left:10%;
+  width:80%;
+  /*background-color:#000000;*/
+  opacity:.9;
+  color:#ffffff;
+  top:10%;
+  padding-top: 15px;
+}
+
+.mainDiv > h1{
+  font-size:40px;
+  text-align: center;
+  padding:10px;
+
+}
+
+.mainDiv > p{
+  margin-bottom: 20px;
+}
+
+.mainDiv > div {
+    /*background-color: #111111;*/
+    left: 3%;
+    margin: 20px 0;
+    opacity: 1;
+    padding: 3px 2%;
+    position: inherit;
+    width: 90%;
+}
+
+.mainDiv > div > p {
+  left:2%;
+  position:inherit;
+  width:96%;
+  font-size: 18px;
+}
+
+.mainDiv > table > tbody > tr > th {
+  color:#ffffff;
+  font-size: 25px;
+}
+
+.mainDiv a{
+  /*color:#ffffff;*/
+}
