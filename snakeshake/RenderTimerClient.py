@@ -9,21 +9,24 @@ Simple client to drive the camera around in the Blender simulated environment.
 '''
 
 def deg_2_rad(d):
-    '''
-    Convert between degrees and radians.
-
+    '''Convert between degrees and radians.
+    
     Input:
         d: Degrees to convert
-
+    
     Output:
         Radian representation of the input
+
+    Args:
+      d: 
+
+    Returns:
+
     '''
     return d/360*2*math.pi
 
 def main():
-    '''
-    Simple client to measure how fast Blender can render at different resolutions.
-    '''
+    '''Simple client to measure how fast Blender can render at different resolutions.'''
     # Connect to the Snake Shake Server running in Blender.  See Readme
     # for the steps to get this up and running.
     sys.excepthook = Pyro4.util.excepthook

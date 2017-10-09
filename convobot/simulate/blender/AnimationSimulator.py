@@ -10,11 +10,32 @@ logger = logging.getLogger(__name__)
 # TODO: Put the abstract method Render in this class to make sure subclasses implement it.
 
 class AnimationSimulator(Simulator):
+    '''
+    Drive the simulation where only one of the 3 features varies and convert the
+    still images to a gif.  If the configuration specifies that the image sequence
+    needs to run forward and backwards (reverse) then read all the images back in
+    and copy them out in reverse order.
+
+    The images are named with a monotonically increasing id starting a 000 to
+    support ffmpeg.
+    '''
     def __init__(self, cfg_mgr):
         logger.debug('Initializing')
         super(AnimationSimulator, self).__init__(cfg_mgr)
 
     def _make_movie(self, tmp_dir_path, index):
+        '''
+
+        Args:
+          tmp_dir_path: The location to store the images as they are created
+                        in preparation for running ffmpeg.
+          index: The index of the last file that was generated on the forward
+                        pass.  This is used to start the indexing of the
+                        reverse pass.
+
+        Returns:  None
+
+        '''
         # If the movied plays forward and backwards then make copies of the
         # forward frames in reverse order with continuing indexes.
         if self._cfg['Reverse']:
@@ -30,13 +51,7 @@ class AnimationSimulator(Simulator):
         src_file_pattern = os.path.join(tmp_dir_path, '%03d.png')
         dst_file_path = os.path.join(tmp_dir_path, '{}'.format(self._cfg['MovieName']))
 
-        # for mpeg
-        # cmd_arr = ['ffmpeg', '-r', '15', '-f', 'image2',
-        #             '-s', '512x512', '-i', src_file_pattern,
-        #             '-vcodec', 'libx264', '-crf', '15', '-pix_fmt',
-        #             'yuv420p', dst_file_path]
-
-        # for gif
+        # Run ffmpeg to convert the still png files to a movie.
         cmd_arr = ['ffmpeg', '-i', src_file_pattern, dst_file_path]
         subprocess.run(cmd_arr)
 
@@ -47,6 +62,19 @@ class AnimationSimulator(Simulator):
 
 
     def process(self):
+        '''
+        Simulate the images where two features are held constant and the
+        third is varied.  This is the current configuration.  This could be
+        combined with the LoopingSimulator as the functionality has a fair
+        amount of overlap.
+
+        Write the images to files in a tree where images are in directories
+        based on the Radius feature.  Use FilenameManager to convert from
+        Radius, Theta, Alpha to a unique filename.
+
+        Use the 'Fixed' configuration format to specify which features should
+        be held constant.
+        '''
         logging.debug('Processing')
 
         # Generate a sequence of images in the temporary directory.
@@ -55,7 +83,8 @@ class AnimationSimulator(Simulator):
         tmp_dir_path = self._cfg_mgr.initialize_temporary_dir_path()
         index = 0
 
-        # set the range as fixed value or the dynamically created range.
+        # Based on the configuraiton either generate a Range or Fixed set of
+        # indexes for the simulation.
         if 'Range' in self._cfg['Radius']:
             radius_cfg = self._cfg['Radius']['Range']
             radius_range = np.arange(radius_cfg['Min'],
@@ -103,4 +132,6 @@ class AnimationSimulator(Simulator):
 
                     index += 1
 
+        # Create the movie from the rendered images.  If reverse is specified
+        # let the make_movie method handle the duplication of the images.
         self._make_movie(tmp_dir_path, index)

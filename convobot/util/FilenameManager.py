@@ -55,42 +55,36 @@ class FilenameManager(object):
         '''Decode the labels from the filename.
 
         Args:
-          filename:
-                The filename to decode
+          filename: The filename to decode
 
         Returns:
-          theta, radius, alpha:
+          theta, radius, alpha: 
 
         '''
         theta, radius, alpha = filename[:-len(self._extension)-1].split(self._separator)
         return float(theta), float(radius), float(alpha)
 
     def filename_to_theta(self, filename):
-        '''
-        Decode theta from filename
+        '''Decode theta from filename
 
         Args:
-          filename:
-                The filename to decode
+          filename: The filename to decode
 
         Returns:
-            theta:
-                The angle from X-axis
+          theta: The angle from X-axis
 
         '''
         theta, _, _ = self.filename_to_labels(filename)
         return float(theta)
 
     def filename_to_radius(self, filename):
-        '''
-        Decode the radius from the filename
+        '''Decode the radius from the filename
 
         Args:
-          filename:
-                The filename to decode
+          filename: 
+
         Returns:
-            radius:
-                The radius
+          radius: The radius
 
         '''
         _, radius, _ = self.filename_to_labels(filename)
@@ -100,12 +94,10 @@ class FilenameManager(object):
         '''
 
         Args:
-          filename:
-                The filename to decode
+          filename: The filename to decode
 
         Returns:
-            alpha:
-                The camera angle relative to theta
+          alpha: The camera angle relative to theta
 
         '''
         _ ,_ , alpha = self.filename_to_labels(filename)

@@ -18,6 +18,8 @@ logger = logging.getLogger(__name__)
 class Env(object):
     '''
     Radial Environment to support generation of images for ConvoBot.
+    This is the object that is running in Blender and Pyro creates the
+    http RPC to expose this interface as a local object.
     '''
     def __init__(self):
         logger.debug('xInitializing Blender environment')
@@ -42,8 +44,7 @@ class Env(object):
         '''
 
         Args:
-          quit_request:
-                Function to call in SnakeShake server when client requests quit.
+          quit_request: Function to call in SnakeShake server when client requests quit.
 
         Returns:
 
@@ -51,94 +52,70 @@ class Env(object):
         self._quit_request = quit_request
 
     def get_env_name(self):
-        '''
-        Name of the environment that SnakeShake is loading and remoting.
-        '''
+        '''Name of the environment that SnakeShake is loading and remoting.'''
         return 'RadialEnv'
 
     def _deg_2_rad(self, d):
-        '''
-        Convert degrees to radians.
+        '''Convert degrees to radians.
 
         Args:
-          d:
-                Degree value to convert.
+          d: Degree value to convert.
 
         Returns:
-                Radian representation of d.
+          : Radian representation of d.
 
         '''
         return d/180*math.pi
 
     def _rad_2_deg(self, r):
-        '''
-        Convert radians to degrees.
+        '''Convert radians to degrees.
 
         Args:
-          r:
-                Radian value to convert.
+          r: Radian value to convert.
 
         Returns:
-                Degree represenation of r.
+          : Degree represenation of r.
 
         '''
         return r*180/math.pi
 
     def _radial_2_cartesian(self, theta, radius):
-        '''
-        Convert radial coordinates to cartesian coordianates.
+        '''Convert radial coordinates to cartesian coordianates.
 
         Args:
-          theta:
-                The angle from X-axis.
-          radius:
-                The distance from the origin.
+          theta: The angle from X-axis.
+          radius: The distance from the origin.
 
         Returns:
-                Cartesian X, Y representation of (theta, radius)
+          : Cartesian X, Y representation of (theta, radius)
 
         '''
         x = math.cos(self._deg_2_rad(theta)) * radius
         y = math.sin(self._deg_2_rad(theta)) * radius
         return x, y
 
-    # def _cartesian_2_radial(self, cartesian):
-    #     '''
-    #     Convert cartesian coordianates to radial coordinates. Angles are specified in degrees.
-    #
-    #     Input:
-    #         tuple(x, y)
-    #
-    #     Return:
-    #         tuple(theta, radius)
-    #     '''
-    #     theta = self._rad_2_deg(atan(cartesian[1] /  cartesian[0]))
-    #     radius = (cartesian[0] ** 2 + cartesian[1] ** 2) ** 0.5
-    #     return (theta, radius)
-
     def ping(self, s):
-        '''
-        Ping request to make sure the server is running.
+        '''Ping request to make sure the server is running.
 
         Args:
-          s:
-                Ping string that is returned to the client.
+          s: Ping string that is returned to the client.
 
         Returns:
-                string s.
+          : string s.
 
         '''
         logging.info('Env: Ping',s)
         return s
 
     def reset(self):
-        '''
-        Reset the blender environment to some known state.  All of this should
+        '''Reset the blender environment to some known state.  All of this should
         be overridden by the client with they initialize the environment.
 
         Args:
 
-        Return:
+        Returns:
+
+
         '''
         # This will all get replaced when we get the methods to create and
         # configure the Env from imported objects.
@@ -152,12 +129,10 @@ class Env(object):
         return cam_p.x, cam_p.y, cam_r.z
 
     def set_camera_height(self, height):
-        '''
-        Set the height of the camera above the X, Y plane.
+        '''Set the height of the camera above the X, Y plane.
 
         Args:
-          height:
-                Height in inches
+          height: Height in inches
 
         Returns:
 
@@ -166,12 +141,10 @@ class Env(object):
         self._cam_loc_height = height
 
     def set_camera_focal_length(self, focal_length):
-        '''
-        Set the focal length of the camera.  This works just like a real camera.
+        '''Set the focal length of the camera.  This works just like a real camera.
 
         Args:
-          focal_length:
-                Focal length in mm
+          focal_length: Focal length in mm
 
         Returns:
 
@@ -180,16 +153,12 @@ class Env(object):
         bpy.data.cameras['Camera'].lens = self._cam_focal_length
 
     def set_camera_location(self, theta, radius, alpha):
-        '''
-        Set the camera location in radial coordinates.
+        '''Set the camera location in radial coordinates.
 
         Args:
-          theta:
-                The angle from X-axis
-          radius:
-                The distance from the center of the scene
-          alpha:
-                The direction of the camera relative to the radial line along theta.
+          theta: The angle from X-axis
+          radius: The distance from the center of the scene
+          alpha: The direction of the camera relative to the radial line along theta.
 
         Returns:
 
@@ -211,27 +180,23 @@ class Env(object):
 
 
     def get_render_resolution(self):
-        '''
-        Query the blender for the current render resolution.
+        '''Query the blender for the current render resolution.
 
         Args:
 
         Returns:
-            x_resolution, y_resolution: Current render resolution.
+          x_resolution, y_resolution: Current render resolution.
 
         '''
         return bpy.data.scenes["Scene"].render.resolution_x, \
                 bpy.data.scenes["Scene"].render.resolution_y
 
     def set_render_resolution(self, new_x_resolution, new_y_resolution):
-        '''
-        Set the render resolution in blender.
+        '''Set the render resolution in blender.
 
         Args:
-          new_x_resolution:
-                x resolution for rendered images.
-          new_y_resolution:
-                y resolution for rendered images.
+          new_x_resolution: x resolution for rendered images.
+          new_y_resolution: y resolution for rendered images.
 
         Returns:
 
@@ -240,20 +205,16 @@ class Env(object):
         bpy.data.scenes["Scene"].render.resolution_y = new_y_resolution
 
     def quit(self):
-        '''
-        Request that the blender environment and SnakeShake servers shutdown.
-        '''
+        '''Request that the blender environment and SnakeShake servers shutdown.'''
         logger.debug('Quitting Blender')
         # Call back to the server provided method to request it to quit.
         self._quit_request()
 
     def render(self, filename):
-        '''
-        Render the scene to the specified filename.
+        '''Render the scene to the specified filename.
 
         Args:
-          filename:
-                Name and location to render the file.
+          filename: Name and location to render the file.
 
         Returns:
 

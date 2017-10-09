@@ -2,9 +2,7 @@ import os, fnmatch
 from shutil import copyfile
 
 class TreeUtil(object):
-    '''
-    Recursively apply method to directory trees of files.
-    '''
+    '''Recursively apply method to directory trees of files.'''
     def __init__(self, src_root, dst_root):
         '''
         Create the TreeUtil with the source and target directories where it will
@@ -24,34 +22,44 @@ class TreeUtil(object):
             os.makedirs(dst_root)
 
     def _traverse_dir(self):
-        '''
-        Traverse the directory tree using os.walk.
-        '''
+        '''Traverse the directory tree using os.walk.'''
         for os_entry in os.walk(self._src_root):
             # Add logic here if we want to be selective about which directories.
             yield os_entry
 
 
     def apply_dir(self, funct):
-        '''
-        Apply the function to the directory tree.  Function will be called with:
+        '''Apply the function to the directory tree.  Function will be called with:
             src_path
             dst_paty
             filename
-
+        
         Input:
             funct: function to apply to all directories in the tree.
+
+        Args:
+          funct: 
+
+        Returns:
+
         '''
         [funct(os_entry[0]) for os_entry in self._traverse_dir()]
 
 
     def apply_files(self, funct, pattern='*', copy_dir=True):
-        '''
-        Apply the function to the all files that match the pattern.
-
+        '''Apply the function to the all files that match the pattern.
+        
         Input:
             funct: function to apply to matching files.
             pattern: pattern to mach the files against.
+
+        Args:
+          funct: 
+          pattern:  (Default value = '*')
+          copy_dir:  (Default value = True)
+
+        Returns:
+
         '''
         # Duplicate the directory structure so the files have a place to go.
         if copy_dir:
@@ -68,13 +76,16 @@ class TreeUtil(object):
 
 
     def dup_tree(self):
-        '''
-        Duplicate the directory tree.
-        '''
+        '''Duplicate the directory tree.'''
         def create_dir(dir):
-            '''
-            Helper method to crete the directories in the target tree if they
+            '''Helper method to crete the directories in the target tree if they
             don't already exist.
+
+            Args:
+              dir: 
+
+            Returns:
+
             '''
             # Get the path to create by removing the src_root from the path and
             # then adding it back onto the dst_root.
@@ -87,21 +98,34 @@ class TreeUtil(object):
 
 
     def copy_files(self, fn_pattern):
-        '''
-        Copy all the files that
-
+        '''Copy all the files that
+        
         Input:
             fn_pattern: The glob like pattern for the files to copy.
+
+        Args:
+          fn_pattern: 
+
+        Returns:
+
         '''
         def copy_file(src_path, dst_path, filename):
-            '''
-            Helper method to copy the files that match the pattern.
+            '''Helper method to copy the files that match the pattern.
+
+            Args:
+              src_path: 
+              dst_path: 
+              filename: 
+
+            Returns:
+
             '''
             copyfile(os.path.join(src_path, filename), os.path.join(dst_path, filename))
 
         self.apply_files(copy_file, '*.png')
 
 def main():
+    ''' '''
     tree = TreeUtil('../Data/gen', './junk')
     # tree.dup_tree();
     tree.copy_files('*.png')

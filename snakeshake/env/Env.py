@@ -23,12 +23,16 @@ set the serializer and security notices.
 @Pyro4.behavior(instance_mode="single")
 class Env(object):
     def __init__(self, auto_render=True):
-        '''
-        Set up the Environment.
-
+    '''Set up the Environment.
+    
         Input:
             - auto_render: Automatically render after scene change.
-        '''
+
+    Args:
+
+    Returns:
+
+    '''
         print('Env: Initializing')
 
         # Set the defualt camera parameters
@@ -49,28 +53,38 @@ class Env(object):
         self.reset()
 
     def register_quit_handler(self, quit_request):
-        '''
-        Register the method to call when client requests to quit.
-
+        '''Register the method to call when client requests to quit.
+        
         Input:
             - quit_request: Method to call.
 
-        Return:
-            None:
+        Args:
+          quit_request: 
+
+        Returns:
+          None:
+
         '''
         self._quit_request = quit_request
 
     def get_env_name(self):
+        ''' '''
         return 'BaseEnv'
 
     def ping(self, s):
-        '''
-        Respond to ping request from client to verify the Env is running.
+        '''Respond to ping request from client to verify the Env is running.
+
+        Args:
+          s: 
+
+        Returns:
+
         '''
         print('Env: Ping',s)
         return s
 
     def reset(self):
+        ''' '''
         # This will all get replaced when we get the methods to create and
         # configure the Env from imported objects.
         print('Env: Resetting Camera')
@@ -85,25 +99,28 @@ class Env(object):
         return cam_p.x, cam_p.y, cam_r.z
 
     def get_camera_position(self):
-        '''
-        Get the x, y, z location of the camera.
-        '''
+        '''Get the x, y, z location of the camera.'''
         cam = bpy.data.objects['Camera']
         cam_p = cam.location
         cam_r = cam.rotation_euler
         return cam_p.x, cam_p.y, cam_r.z
 
     def set_camera(self, x, y, rz):
-        '''
-        Set the camera at the specificed location and rotation in the XY plane.
-
+        '''Set the camera at the specificed location and rotation in the XY plane.
+        
         Input:
             - x: X location
             - y: Y location
             - rz: Rotation about the Z-axis
 
-        Return:
-            - x, y, rz: the new position of the camera.
+        Args:
+          x: 
+          y: 
+          rz: 
+
+        Returns:
+          - x, y, rz: the new position of the camera.
+
         '''
         print('Env: Move dx={}, dy={}, rz={}'.format(x,y,rz))
 
@@ -125,16 +142,22 @@ class Env(object):
         return cam_p.x, cam_p.y, cam_r.z
 
     def move_camera(self, dx, dy, drz):
-        '''
-        Move the camera by the delta position and rotation in the
+        '''Move the camera by the delta position and rotation in the
         XY plane.
-
+        
         Input:
             - dx: Change along the X-axis
             - dy: Change along the Y-axis
             - drz: Change in rotation about the Z-axis
-        Return:
-            - x, y, rz: the new position of the camera.
+
+        Args:
+          dx: 
+          dy: 
+          drz: 
+
+        Returns:
+          - x, y, rz: the new position of the camera.
+
         '''
 
         print('Env: Move dx={}, dy={}, rz={}'.format(dx,dy,drz))
@@ -157,46 +180,57 @@ class Env(object):
         return cam_p.x, cam_p.y, cam_r.z
 
     def get_render_resolution(self):
-        '''
-        Get the current render resolution settings.
-
+        '''Get the current render resolution settings.
+        
         Input:
-
+        
         Output:
             - x resolution
             - y resolution
+
+        Args:
+
+        Returns:
+
         '''
         return bpy.data.scenes["Scene"].render.resolution_x, \
                 bpy.data.scenes["Scene"].render.resolution_y
 
     def set_render_resolution(self, new_x_resolution, new_y_resolution):
-        '''
-        Set the render resolution
-
+        '''Set the render resolution
+        
         Input:
             - new_x_resolution:
             - new_y_resolution:
+
+        Args:
+          new_x_resolution: 
+          new_y_resolution: 
+
+        Returns:
+
         '''
         bpy.data.scenes["Scene"].render.resolution_x = new_x_resolution
         bpy.data.scenes["Scene"].render.resolution_y = new_y_resolution
 
     def quit(self):
-        '''
-        Request to shutdown the Env.
-        '''
+        '''Request to shutdown the Env.'''
         print('Env: Quitting')
         # Call back to the server provided method to request it to quit.
         self._quit_request()
 
     def render(self, filename):
-        '''
-        Render the image to the specified filename
-
+        '''Render the image to the specified filename
+        
         Input:
             - filename:
 
-        Return:
-            - Time in ms to render the image
+        Args:
+          filename: 
+
+        Returns:
+          - Time in ms to render the image
+
         '''
         t0 = time.time()
         bpy.ops.render.render(use_viewport=True)

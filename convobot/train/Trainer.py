@@ -1,4 +1,5 @@
-import logging, json
+import logging
+import json
 
 logger = logging.getLogger(__name__)
 
@@ -6,8 +7,18 @@ logger = logging.getLogger(__name__)
 # TODO: Consider moving the SimulatorLoaer functionality in to this class as
 # static class method.
 
+
 class Trainer(object):
+    '''
+    Base class for trainers.  Provide access to the configuration information.
+    '''
+
     def __init__(self, cfg_mgr):
+        '''
+        Args:
+            cfg_mgr: Global configuration manager.
+        '''
+        
         logger.debug('Initializing')
         self._cfg_mgr = cfg_mgr
         self._cfg = self._cfg_mgr.get_train_cfg()

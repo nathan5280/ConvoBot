@@ -8,6 +8,8 @@ class CmdLineCfgMgr(object):
         '''
         Build the commandline argument parser for the convobot applications.
 
+        Args:
+            argv: The commandline arguments to parse.
         '''
         logger.debug('Parsing command line arguments: %s', argv)
 
@@ -30,6 +32,7 @@ class CmdLineCfgMgr(object):
         parser.add_argument('-t', dest='RunTrain', action='store_true', default=False,
                                 help='Specify if the training stage should be run.')
 
+        # TODO: Implement this and connect it to the QuiverError reporting class.
         parser.add_argument('-r', dest='RunReport', action='store_true', default=False,
                                 help='Specify if the reportin stage should be run.')
 
@@ -42,6 +45,11 @@ class CmdLineCfgMgr(object):
 
 
     def get_cfg_dict(self):
+        '''
+        Get the commandline arguements as a dictionary.
+
+        Returns: dictionary of commandline arguments
+        '''
         return vars(self._cfg)
 
 if __name__ == '__main__':

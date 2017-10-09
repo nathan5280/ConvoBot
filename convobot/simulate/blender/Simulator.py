@@ -11,6 +11,9 @@ logger = logging.getLogger(__name__)
 # static class method.
 
 class Simulator(object):
+    '''
+    Connect to the Env running in Blender's python environment
+    '''
     def __init__(self, cfg_mgr):
         logger.debug('Initializing')
         self._cfg_mgr = cfg_mgr
@@ -26,7 +29,8 @@ class Simulator(object):
 
         self._image_size = self._cfg['Image']['Size']
 
-        # Grid search the envrionment to create the images.
+        # Get the Blender environment to some known state based on the
+        # Simulation configuration.
         camera_direction = 180
         self._blender_env.set_render_resolution(self._image_size[0], self._image_size[1])
         self._blender_env.set_camera_height(self._cfg['CameraHeight'])

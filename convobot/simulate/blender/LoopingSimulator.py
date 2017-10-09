@@ -8,8 +8,13 @@ logger = logging.getLogger(__name__)
 
 # TODO: Make this an abstract base class
 # TODO: Put the abstract method Render in this class to make sure subclasses implement it.
+# TODO: Consider consilidating this with the AnnimationSimulator class.
 
 class LoopingSimulator(Simulator):
+    '''
+    Core method for simulating images based on the configuration.  This class
+    assumes that all features are varying.
+    '''
     def __init__(self, cfg_mgr):
         logger.debug('Initializing')
         super(LoopingSimulator, self).__init__(cfg_mgr)
@@ -18,7 +23,15 @@ class LoopingSimulator(Simulator):
 
 
     def process(self):
+        '''
+        Iterate over all the ranges for Radius, Theta, Alpha and render the images.
+        If the image already exists skip the rendering cycle.  This allows the creation
+        of a dataset at a course level and then additional passes to fill in the
+        points with finer divisions.
+        '''
         logging.debug('Processing')
+
+        # Get the configurations for each feature.
         radius_cfg = self._cfg['Radius']['Range']
         alpha_cfg = self._cfg['Alpha']['Range']
         theta_cfg = self._cfg['Theta']['Range']
@@ -35,18 +48,16 @@ class LoopingSimulator(Simulator):
 
         for radius in radius_range:
             # Decay the alpha linearly by the radius with a slope of decay
+            # TODO: Remove this as it doesn't agree with the images from the
+            # physical camera and makes it hard for the CNN to learn the radius
+            # parameter.
             alpha_range_adj_factor =  b0 + b1 * radius
             alpha_adj_step = alpha_cfg['Step'] * alpha_range_adj_factor
-
 
             # Assume centered range. Scale relative to zero
             alpha_min = alpha_cfg['Min'] * alpha_range_adj_factor
             alpha_max = (alpha_cfg['Max']  + alpha_adj_step) * alpha_range_adj_factor
             alpha_range = np.arange(alpha_min, alpha_max, alpha_adj_step)
-
-            # print('{:3.1f}\t{:3.1f}\t{:3.1f}\t{:3.1f}\t{}'\
-            #         .format(radius, alpha_range_adj_factor, alpha_min, alpha_max, alpha_adj_step))
-
 
             for alpha in alpha_range:
                 theta_range = np.arange(theta_cfg['Min'],

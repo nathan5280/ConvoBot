@@ -17,22 +17,22 @@
         "Radius": {
             "Range": {
                 "Min": 15.0,
-                "Max": 30.0,
-                "Step": 1
+                "Max": 25.0,
+                "Step": 10
             }
         },
         "Theta": {
             "Range": {
                 "Min": 0.0,
                 "Max": 360.0,
-                "Step": 10
+                "Step": 30
             }
         },
         "Alpha": {
             "Range": {
                 "Min": -10.0,
                 "Max": 10.0,
-                "Step": 5,
+                "Step": 10,
                 "MinFactor": 1,
                 "MaxFactor": 1
             }

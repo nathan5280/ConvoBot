@@ -12,17 +12,21 @@ from snakeshake.Env import Env
 Pyro4.config.SERVERTYPE="multiplex"
 
 class SnakeShakeBGServer(object):
-    '''
-    Pyro4 server implementation that runs in a background Blender environment.
+    '''Pyro4 server implementation that runs in a background Blender environment.
     The server waits on the socket for client requests and delegates them to
     the Env.
-
+    
     The client/environment can request that the Server stop through the
     quit_request() method.
-
+    
     Note that this script loads immediately within the Blender Python environment
     and has total control of the environment.  Control is not passed back to
     Blender until the script exits.
+
+    Args:
+
+    Returns:
+
     '''
 
     def __init__(self, env):
@@ -49,26 +53,26 @@ class SnakeShakeBGServer(object):
         ns.register('Env', uri)
 
     def process_events(self):
-        '''
-        Start the server event loop.  Run until quit_request is called.
-        '''
+        '''Start the server event loop.  Run until quit_request is called.'''
         while not self._quit:
             s,_,_ = select.select(self._daemon.sockets,[],[], self._socket_wait)
             self._daemon.events(s)
 
     def _quit_request(self):
-        '''
-        Request he server to quit at its next available opportunity.  This
+        '''Request he server to quit at its next available opportunity.  This
         opportunity is when it is processing the next request or when the sockets
         times out.
+
+        Args:
+
+        Returns:
+
         '''
         print('SnakeShakeServer: Quit request')
         self._quit = True
 
     def shutdown(self):
-        '''
-        Finish shutting down the server.
-        '''
+        '''Finish shutting down the server.'''
         # Unregister the server so that the name server doesn't hand out dead connections.
         self._daemon.unregister(self._env)
         self._daemon.close()

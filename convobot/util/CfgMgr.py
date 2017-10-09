@@ -2,8 +2,27 @@ import json, os, logging, shutil
 
 logger = logging.getLogger(__name__)
 
+# TODO: Research how configurations like this are generally handled in python.
+# It would be good to provide a more OO interface to this other than a bunch
+# of dictionaries.  The dictionaries are nice because it is easy to add
+# new parameters and not have to go back and touch every dependent file, but
+# it sure is loosy goosy!
+
 class CfgMgr(object):
+    '''
+    Manage the configuration parameters stored in the json file.  The configuration
+    parameters are broken down into major sections based on the stages of the
+    application.
+    '''
     def __init__(self, cmd_line_cfg):
+        '''
+        Process the command line arguments and load the json configuration.  Verify
+        that at least all the required sections are there.
+
+        Args:
+            cmd_line_cfg: The dictionary of command line arguments.
+        '''
+
         logger.debug('Initializing configuration, cmd_line_cfg %s', cmd_line_cfg)
         self._cmd_line_cfg = cmd_line_cfg
 
@@ -52,6 +71,9 @@ class CfgMgr(object):
                 exit()
 
     def _get_simulate_dir_path(self):
+        '''
+        Get the dir path for any files that the simulation phase accesses or stores.
+        '''
         dir_path = os.path.join(self._cmd_line_cfg['DataDirPath'], 'simulate')
 
         # Make sure the path exists
@@ -62,6 +84,10 @@ class CfgMgr(object):
         return dir_path
 
     def get_simulate_cfg(self):
+        '''
+        Get the configuration for the simulate stage.  Populate any global
+        information that needs to be shared with the simulate stage.
+        '''
         # Copy any global information required for simulation to the simulate config.
         self._simulate_cfg['Image'] = self._global_cfg['Image']
 
@@ -81,6 +107,9 @@ class CfgMgr(object):
         return self._simulate_cfg
 
     def _get_manipulate_dir_path(self):
+        '''
+        Get the dir path for any files that the manipulate phase accesses or stores.
+        '''
         dir_path = os.path.join(self._cmd_line_cfg['DataDirPath'], 'manipulate')
 
         # Make sure the path exists
@@ -91,6 +120,10 @@ class CfgMgr(object):
         return dir_path
 
     def get_manipulate_cfg(self):
+        '''
+        Get the configuration for the manipulate stage.  Populate any global
+        information that needs to be shared with the simulate stage.
+        '''
         # Copy any global information required for simulation to the manipulate config.
         self._manipulate_cfg['Image'] = self._global_cfg['Image']
 
@@ -103,6 +136,9 @@ class CfgMgr(object):
         return self._manipulate_cfg
 
     def _get_train_dir_path(self):
+        '''
+        Get the dir path for any files that the train phase accesses or stores.
+        '''
         dir_path = os.path.join(self._cmd_line_cfg['DataDirPath'], 'train')
 
         # Make sure the path exists
@@ -113,6 +149,10 @@ class CfgMgr(object):
         return dir_path
 
     def get_train_cfg(self):
+        '''
+        Get the configuration for the train stage.  Populate any global
+        information that needs to be shared with the simulate stage.
+        '''
         # Copy any global information required for simulation to the manipulate config.
         self._train_cfg['Image'] = self._global_cfg['Image']
 
@@ -135,6 +175,11 @@ class CfgMgr(object):
         return self._train_cfg
 
     def initialize_temporary_dir_path(self):
+        '''
+        Create a temporary director and make sure it is empty.  This is used
+        by steps in stages that need to store information and then process it
+        into a more perminate location.
+        '''
         tmp_dir_path = os.path.join(self._cmd_line_cfg['DataDirPath'], 'tmp')
         if os.path.exists(tmp_dir_path):
             shutil.rmtree(tmp_dir_path)
@@ -143,6 +188,16 @@ class CfgMgr(object):
         return tmp_dir_path
 
     def insure_dir_path(self, file_path):
+        '''
+        Make sure that a directory exists to store the file.  If the directory
+        doesn't exist, create it.
+
+        Args:
+          file_path:  The file path to insure exists.
+
+        Returns: None
+
+        '''
         # split off the filename and work with the absolute path.
         dir_path = os.path.split(file_path)[0]
 

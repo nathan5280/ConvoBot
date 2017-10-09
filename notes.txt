@@ -27,6 +27,9 @@ RPi:
 pyment
   - pyment -w -q "'''" -o "google" <filename>
 
+pep8
+  - autopep8 --in-place --aggressive --aggressive *.py
+
 
 tf.Print()
 x = tf.get_variable('x', [10, 5])

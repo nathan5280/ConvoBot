@@ -10,78 +10,121 @@ Simple client to drive the camera around in the Blender simulated environment.
 '''
 
 def deg_2_rad(d):
-    '''
-    Convert between degrees and radians.
-
+    '''Convert between degrees and radians.
+    
     Input:
         d: Degrees to convert
-
+    
     Output:
         Radian representation of the input
+
+    Args:
+      d: 
+
+    Returns:
+
     '''
     return d/360*2*math.pi
 
 def rad_2_deg(r):
-    '''
-    Convert radians to degrees.
-
+    '''Convert radians to degrees.
+    
     Input:
         r: Radians to convert
-
+    
     Output:
         Degree representation of the input
+
+    Args:
+      r: 
+
+    Returns:
+
     '''
     return r*360/(2*math.pi)
 
 def direction(direction, distance):
-    '''
-    Calculate the change in x, y location based on a direction and distance
-
+    '''Calculate the change in x, y location based on a direction and distance
+    
     Input:
         direction: The direction to travel
         distance: The distance to travel
-
+    
     Output:
         delta_x: Change in the x direction
         delta_y: Change in the y direction
+
+    Args:
+      direction: 
+      distance: 
+
+    Returns:
+
     '''
     return distance * math.cos(direction), distance * math.sin(direction)
 
 def init_blender(env):
+    '''
+
+    Args:
+      env: 
+
+    Returns:
+
+    '''
     env.set_render_resolution(1024, 1024)
     env.set_camera(-2, -15, 0)
     return
 
 def main(stdscr):
-    '''
-    Simple curses based text UI to allow driving of the camera with arrow keys.
-
+    '''Simple curses based text UI to allow driving of the camera with arrow keys.
+    
     Size of the steps that the arrow keys drive the camera can be doubled by
     holding down the shift key.
-
+    
     Input:
         stdscr: Curses screen to write to
+
+    Args:
+      stdscr: 
+
+    Returns:
+
     '''
     def clear_screen(stdscr):
-        '''
-        Clear the screen and present the prompt.
-
+        '''Clear the screen and present the prompt.
+        
         Input:
             stdscr: Curses screen to write to
+
+        Args:
+          stdscr: 
+
+        Returns:
+
         '''
         stdscr.clear()
         stdscr.addstr('(q)uit Driver, (Q)uit Blender, (c)lear, (r)eset, arrows to move:\n')
 
     def show_move(stdscr, move_name, x, y, r):
-        '''
-        Display the direction/rotation and the new position.
-
+        '''Display the direction/rotation and the new position.
+        
         Input:
             stdscr: Curses screen to write to
             move_name: Name to display for the move
             x: New x location of the camera
             y: New y Location of the camera
             r: New direction of the camera
+
+        Args:
+          stdscr: 
+          move_name: 
+          x: 
+          y: 
+          r: 
+
+        Returns:
+
         '''
         clear_screen(stdscr)
         stdscr.addstr('{}: {}, {}, {}\n'.format(move_name, round(x,2), round(y,2), round(rad_2_deg(r),2)))

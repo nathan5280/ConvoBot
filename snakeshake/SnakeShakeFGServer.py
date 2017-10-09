@@ -7,17 +7,21 @@ from snakeshake.Env import Env
 Pyro4.config.SERVERTYPE="multiplex"
 
 class SnakeShakeFGServer(object):
-    '''
-    Pyro4 server implementation that runs in a foreground Blender environment.
+    '''Pyro4 server implementation that runs in a foreground Blender environment.
     This server integrates with the Blender event loop to keep the UI alive and
     responsive.  This is done by implementing a Blender Modal Operator.  This operator
     adds an periodic event to the Blender event queue.  When Blender processes
     the event it calls the process_events method in this Server.  The Server checks
     for any queued RPC requests on its socket and processes them before returning
     control back to the Blender event loop.
-
+    
     This script loads immediately when Blender starts.  It sets everything up and
     then returns control to Blender.
+
+    Args:
+
+    Returns:
+
     '''
     def __init__(self, modal_operator_cancel, env):
         """
@@ -53,10 +57,16 @@ class SnakeShakeFGServer(object):
         self._modal_operator_cancel = modal_operator_cancel
 
     def process_events(self, context, event):
-        """
-        Process all queued Pyro events and then return if nothing is available for
+        '''Process all queued Pyro events and then return if nothing is available for
         socket_wait time.   This keeps from blocking the Blender event loop.
-        """
+
+        Args:
+          context: 
+          event: 
+
+        Returns:
+
+        '''
         more_events = True
 
         while more_events:
@@ -86,18 +96,20 @@ class SnakeShakeFGServer(object):
             bpy.ops.wm.quit_blender()
 
     def _quit_request(self):
-        '''
-        Process the client generated request from the Env to shutdown.
-        '''
+        '''Process the client generated request from the Env to shutdown.'''
         print('SnakeShakeServer: Quit request')
         self._quit = True
 
 class PyroModalTimerOperator(bpy.types.Operator):
-    '''
-    Connect into the Blender event loop.  When the timer expires Blender
+    '''Connect into the Blender event loop.  When the timer expires Blender
     calls the modal() method which processes Pyro events and then returns
     control back to Blender event loop.   Control from this script needs
     to be returned to Blender to keep the user inteface active.
+
+    Args:
+
+    Returns:
+
     '''
     bl_idname = "wm.modal_timer_operator"
     bl_label = "Pyro Modal Timer Operator"
@@ -115,8 +127,14 @@ class PyroModalTimerOperator(bpy.types.Operator):
         self._pyro_event_processor = SnakeShakeFGServer(self._cancel, Env())
 
     def modal(self, context, event):
-        '''
-        Method called by Blender when the timer expires.
+        '''Method called by Blender when the timer expires.
+
+        Args:
+          context: 
+          event: 
+
+        Returns:
+
         '''
         if event.type == 'TIMER':
             # Pass control to the server so it can process RPC requests.
@@ -126,8 +144,13 @@ class PyroModalTimerOperator(bpy.types.Operator):
         return {'PASS_THROUGH'}
 
     def execute(self, context):
-        '''
-        Method called by Blender to setup the operator.
+        '''Method called by Blender to setup the operator.
+
+        Args:
+          context: 
+
+        Returns:
+
         '''
         print('PyroModalTimerOperator: Setting up modal timmer')
         wm = context.window_manager
@@ -136,22 +159,26 @@ class PyroModalTimerOperator(bpy.types.Operator):
         return {'RUNNING_MODAL'}
 
     def _cancel(self, context):
+        '''
+
+        Args:
+          context: 
+
+        Returns:
+
+        '''
         # Clean things up as the operator exits.
         wm = context.window_manager
         wm.event_timer_remove(self._timer)
 
 
 def register():
-    '''
-    Register the timer with Blender.
-    '''
+    '''Register the timer with Blender.'''
     bpy.utils.register_class(PyroModalTimerOperator)
 
 
 def unregister():
-    '''
-    Unregister the timer with Blender.
-    '''
+    '''Unregister the timer with Blender.'''
     bpy.utils.unregister_class(PyroModalTimerOperator)
 
 if __name__ == '__main__':
