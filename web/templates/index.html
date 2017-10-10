@@ -22,21 +22,69 @@
     </nav>
     <div class = "mainDiv">
       <h1>Overview</h1>
-      <img width="100%" src="{{url_for('static', filename='images/header.jpg')}}" />
-      <br>
-      <p>
-      <b>Provide navigational robot control in the real world using a
-      convolutional neural network trained in a simulated virtual enviornment.</b>
-    </p>
-      <p>
-      Simulated environment was rendered in Blender a leading open source animation studio.
-      120,000 64x64 pixel RGB images were rendered of the simple 3 block enviornment to
-      train the CNN.
-      </p>
-      <p>
-      The Robot is a mBot Ranger.  The mBot Ranger uses a Arduino Mega 2560 micro controller.
-      This is suplemented with a Raspberry Pi 3 and Raspberry Camera.
-    </p>
     </div>
+    <div  class = "mainDiv" style="text-align:center">
+      <table cellspacing="10" cellpadding="10">
+      <tr style="color: #ffffff">
+        <td>
+          <img height="64px" src="{{url_for('static', filename='images/rendered-blocks-no-background.png')}}" />
+        </td>
+        <td>
+          <b>Simulate:&nbsp;&nbsp;</b>Simulate 64x64 pixel RGB images using Blender, a leading
+          open source animation studio.  Simulation is driven remotely from Python
+          script integration with Blender, Pyro (Python Remote Object), and
+          SnakeShake a previous student project.
+        </td>
+      </tr>
+      <tr style="color: #ffffff">
+        <td>
+          <img height="64px" src="{{url_for('static', filename='images/labeled-data-table.png')}}" />
+        </td>
+        <td>
+          <b>Labeled Data:&nbsp;&nbsp;</b>Generate the labels for each image as part of the simulation
+          process.  Images are stored as files where the filename retains the label information.
+          The processing pipeline performs transforms on the images (RGBA, RGB, Grayscale),
+          size and stacking into single Numpy array.
+        </td>
+      </tr>
+      <tr style="color: #ffffff">
+        <td>
+          <img height="64px" src="{{url_for('static', filename='images/generic-neural-network.png')}}" />
+        </td>
+        <td>
+          <b>Train CNN:&nbsp;&nbsp;</b>Train the Keras / TensorFlow CNN with a Train, Test and Validation split
+          of the labeled images.   Trained on AWS K80 GPU.  Training takes 4-6 hours and is ~10x
+          faster than on MacBook Pro.  nVidia P100 processors are at least 10x faster than the K80.
+          It may be time to simulate more images with much more detail in them.
+        </td>
+      </tr>
+      <tr style="color: #ffffff">
+        <td>
+          <img height="64px" src="{{url_for('static', filename='images/mbot-ranger.png')}}" />
+        </td>
+        <td>
+          <b>Robot:&nbsp;&nbsp;</b>ConvoBot is based on a mBot-Ranger Robot.  The microcontroller for the mBot
+          is an Arduino based Mega 2560.  The navigation control and camera are implemented
+          with a Raspberry Pi piggy-backed on the robot technology stack.
+        </td>
+      </tr>
+      <tr style="color: #ffffff">
+        <td>
+          <img height="64px" src="{{url_for('static', filename='images/generic-neural-network.png')}}" />
+        </td>
+        <td>
+          <b>Predict:&nbsp;&nbsp;</b>Using an image captured from the robot, use the trained CNN to pridecit
+          the location of the robot in the real world.
+        </td>
+      </tr>
+      <tr style="color: #ffffff">
+        <td>
+          <img height="64px" src="{{url_for('static', filename='images/target-navigation.png')}}" />
+        </td>
+        <td>
+          <b>Navigate:&nbsp;&nbsp;</b>Using the predicted location and some target location,
+          plan a route to drive ConvoBot to the target location.
+        </td>
+      </tr>
   </body>
 </html>
