@@ -1,14 +1,13 @@
-import sys
 import json
 import logging
+import sys
 from logging.config import dictConfig
 
-from convobot.util.CmdLineCfgMgr import CmdLineCfgMgr
-from convobot.util.CfgMgr import CfgMgr
-from convobot.simulate.blender.SimulatorLoader import SimulatorLoader
+from convobot.environment.CfgMgr import CfgMgr
+from convobot.environment.CmdLineCfgMgr import CmdLineCfgMgr
 from convobot.manipulate.ManipulatorLoader import ManipulatorLoader
+from convobot.simulate.blender.SimulatorLoader import SimulatorLoader
 from convobot.train.TrainerLoader import TrainerLoader
-from convobot.train.ModelLoader import ModelLoader
 
 with open('logging-cfg.json', 'r') as f:
     logging_cfg = json.load(f)

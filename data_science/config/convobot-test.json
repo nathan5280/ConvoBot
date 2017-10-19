@@ -10,10 +10,9 @@
           "Channels": 3
         }
     },
-    "Simulate": {
-        "Name": "mono-simulator",
+    "Simulation": {
+        "Name": "stereo-simulator",
         "CameraHeight": 5,
-        "StereoOffset": 3,
         "Radius": {
             "Range": {
                 "Min": 15.0,
@@ -32,9 +31,7 @@
             "Range": {
                 "Min": -10.0,
                 "Max": 10.0,
-                "Step": 10,
-                "MinFactor": 1,
-                "MaxFactor": 1
+                "Step": 10
             }
         }
     },

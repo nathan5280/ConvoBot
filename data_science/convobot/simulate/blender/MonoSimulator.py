@@ -1,6 +1,6 @@
-import time, os, logging
+import logging
+
 from convobot.simulate.blender.LoopingSimulator import LoopingSimulator
-from convobot.util.CfgMgr import CfgMgr
 
 logger = logging.getLogger(__name__)
 
@@ -8,9 +8,9 @@ class MonoSimulator(LoopingSimulator):
     '''
     Simulate images with a mono (single) camera.
     '''
-    def __init__(self, cfg_mgr):
+    def __init__(self, global_cfg_mgr):
         logger.info("Initializing")
-        super(MonoSimulator, self).__init__(cfg_mgr)
+        super(MonoSimulator, self).__init__(global_cfg_mgr)
 
 
     def _render(self, file_path, theta, radius, alpha):

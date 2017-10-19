@@ -14,13 +14,13 @@ class StereoSimulator(LoopingSimulator):
     These images are then loaded, resized, stacked and saved to the simulate
     image tree as if they were a single generated image.
     '''
-    def __init__(self, cfg_mgr):
+    def __init__(self, global_cfg_mgr):
         '''
         Args:
-            cfg_mgr: Global configuration manager.
+            global_cfg_mgr: Global configuration manager.
         '''
         logger.debug('Initializing')
-        super(StereoSimulator, self).__init__(cfg_mgr)
+        super(StereoSimulator, self).__init__(global_cfg_mgr)
 
     def _render(self, file_path, theta, radius, alpha):
         '''
@@ -39,7 +39,8 @@ class StereoSimulator(LoopingSimulator):
         # Render the left and right images into a temporary directory.
         # Load and resize them to a stacked format and save to the filename
         # requested as if rendering a mono image.
-        tmp_dir_path = self._cfg_mgr.initialize_temporary_dir_path()
+        tmp_dir_path = self._global_cfg_mgr.tmp_dir_path
+        self._global_cfg_mgr.clear_tmp()
 
         omega = self._cfg['StereoOffset']
         # Don't render the image if it exists and has size > 0.
@@ -48,12 +49,12 @@ class StereoSimulator(LoopingSimulator):
         # existing dataset.
         right_file_path = os.path.join(tmp_dir_path, 'right.png')
         self._blender_env.set_camera_location(theta + omega, radius, round(alpha - omega, 1))
-        render_time = self._blender_env.render(right_file_path)
+        self._blender_env.render(right_file_path)
 
         # Left Image
         left_file_path = os.path.join(tmp_dir_path, 'left.png')
         self._blender_env.set_camera_location(theta - omega, radius, round(alpha + omega, 1))
-        render_time = self._blender_env.render(left_file_path)
+        self._blender_env.render(left_file_path)
 
         img_l = Image.open(left_file_path)
         img_r = Image.open(right_file_path)

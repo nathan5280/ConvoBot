@@ -10,8 +10,8 @@
           "Channels": 3
         }
     },
-    "Simulate": {
-        "ClassName": "animation-simulator",
+    "Simulation": {
+        "Name": "animation-simulator",
         "MovieName": "theta-view.gif",
         "Reverse": false,
         "CameraHeight": 2,

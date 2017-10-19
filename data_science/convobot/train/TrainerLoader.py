@@ -1,5 +1,5 @@
 import logging
-from convobot.util.CfgMgr import CfgMgr
+
 from convobot.train.TrackingTrainer import TrackingTrainer
 
 logger = logging.getLogger(__name__)

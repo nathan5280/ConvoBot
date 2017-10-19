@@ -10,8 +10,8 @@
           "Channels": 3
         }
     },
-    "Simulate": {
-        "ClassName": "animation-simulator",
+    "Simulation": {
+        "Name": "animation-simulator",
         "MovieName": "radius-view.gif",
         "Reverse": true,
         "CameraHeight": 2,

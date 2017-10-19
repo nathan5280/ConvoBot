@@ -10,8 +10,8 @@
           "Channels": 3
         }
     },
-    "Simulate": {
-        "ClassName": "animation-simulator",
+    "Simulation": {
+        "Name": "animation-simulator",
         "MovieName": "alpha-view.gif",
         "Reverse": true,
         "CameraHeight": 2,

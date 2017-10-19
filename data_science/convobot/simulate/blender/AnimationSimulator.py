@@ -1,13 +1,9 @@
-import time, sys, os, logging, shutil, subprocess
+import logging, os, shutil, subprocess, time
 import numpy as np
+
 from convobot.simulate.blender.Simulator import Simulator
-from convobot.util.FilenameManager import FilenameManager
-from convobot.util.CfgMgr import CfgMgr
 
 logger = logging.getLogger(__name__)
-
-# TODO: Make this an abstract base class
-# TODO: Put the abstract method Render in this class to make sure subclasses implement it.
 
 class AnimationSimulator(Simulator):
     '''
@@ -19,9 +15,9 @@ class AnimationSimulator(Simulator):
     The images are named with a monotonically increasing id starting a 000 to
     support ffmpeg.
     '''
-    def __init__(self, cfg_mgr):
+    def __init__(self, global_cfg_mgr):
         logger.debug('Initializing')
-        super(AnimationSimulator, self).__init__(cfg_mgr)
+        super(AnimationSimulator, self).__init__(global_cfg_mgr)
 
     def _make_movie(self, tmp_dir_path, index):
         '''
@@ -55,9 +51,9 @@ class AnimationSimulator(Simulator):
         cmd_arr = ['ffmpeg', '-i', src_file_pattern, dst_file_path]
         subprocess.run(cmd_arr)
 
-        # Copy the movie to to the movies directory.
+        # Copy the movie to to the animation directory.
         src_file_path = dst_file_path
-        dst_dir_path = os.path.join(self._cfg['MovieDirPath'], self._cfg['MovieName'])
+        dst_dir_path = os.path.join(self._global_cfg_mgr.animation_dir_path, self._cfg['MovieName'])
         shutil.copyfile(src_file_path, dst_dir_path)
 
 
@@ -80,7 +76,8 @@ class AnimationSimulator(Simulator):
         # Generate a sequence of images in the temporary directory.
         # Run ffmpeg on them to create the move and store it in
         # the movies directory.
-        tmp_dir_path = self._cfg_mgr.initialize_temporary_dir_path()
+        tmp_dir_path = self._global_cfg_mgr.tmp_dir_path
+        self._global_cfg_mgr.clear_tmp()
         index = 0
 
         # Based on the configuraiton either generate a Range or Fixed set of

@@ -1,5 +1,5 @@
 import logging
-from convobot.util.CfgMgr import CfgMgr
+
 from convobot.manipulate.CountManipulator import CountManipulator
 from convobot.manipulate.NumpyManipulator import NumpyManipulator
 

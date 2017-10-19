@@ -14,7 +14,6 @@ class GlobalCfgMgr(metaclass=Singleton):
     data-dir
         tmp
         simulation
-        animation
         manipulation
         training
         prediction
@@ -46,23 +45,17 @@ class GlobalCfgMgr(metaclass=Singleton):
         # Create the root directory for the simulation.
         # Expand the user directory if it is specified with ~
         self._app_cfg['DataDirPath'] = os.path.expanduser(self._app_cfg['DataDirPath'])
-        self._path_creator(self._data_dir_path, self._build_dirs)
+        self.path_creator(self._data_dir_path, self._build_dirs)
 
         # Create the temporary directory and clear it in case it already existed.
         self._app_cfg['TmpDirPath'] = os.path.join(self._data_dir_path, 'tmp')
-        self._path_creator(self.tmp_dir_path, self._build_dirs)
+        self.path_creator(self.tmp_dir_path, self._build_dirs)
         self.clear_tmp()
 
-        # Add the simulation directory path if run simulation is configured.
+        # Setup the directories to support the stages that will be run.
         self._add_simulation()
-
-        # Add the animation directory path if run animation is configured.
         self._add_animation()
-
-        # Add the manipulation directory paths if run manipulation is configured.
         self._add_manipulation()
-
-        # Add the training directory paths if run training is configured.
         self._add_training()
 
     def get_stage_cfg(self, stage_name):
@@ -93,7 +86,7 @@ class GlobalCfgMgr(metaclass=Singleton):
             return
 
         self._app_cfg['SimulationDirPath'] = os.path.join(self._data_dir_path, 'simulation')
-        self._path_creator(self.simulation_dir_path, self._build_dirs)
+        self.path_creator(self.simulation_dir_path, self._build_dirs)
 
     def _add_animation(self):
         '''
@@ -102,11 +95,11 @@ class GlobalCfgMgr(metaclass=Singleton):
         Returns: None or exception if directory doesn't exist and build_dir is False
 
         '''
-        if not self.run_animation:
+        if not self.run_simulation:
             return
 
         self._app_cfg['AnimationDirPath'] = os.path.join(self._data_dir_path, 'animation')
-        self._path_creator(self.animation_dir_path, self._build_dirs)
+        self.path_creator(self.animation_dir_path, self._build_dirs)
 
     def _add_manipulation(self):
         '''
@@ -120,11 +113,11 @@ class GlobalCfgMgr(metaclass=Singleton):
 
         # Add the simulation directory as the source of the data files.
         self._app_cfg['SimulationDirPath'] = os.path.join(self._data_dir_path, 'simulation')
-        self._path_creator(self.simulation_dir_path, self._build_dirs)
+        self.path_creator(self.simulation_dir_path, self._build_dirs)
 
         # Add the manipulation directory as the target of the data files.
         self._app_cfg['ManipulationDirPath'] = os.path.join(self._data_dir_path, 'manipulation')
-        self._path_creator(self.manipulation_dir_path, self._build_dirs)
+        self.path_creator(self.manipulation_dir_path, self._build_dirs)
 
     def _add_training(self):
         '''
@@ -138,15 +131,15 @@ class GlobalCfgMgr(metaclass=Singleton):
 
         # Add the manipluation directory as the source of the data files.
         self._app_cfg['ManipulationDirPath'] = os.path.join(self._data_dir_path, 'manipulation')
-        self._path_creator(self.manipulation_dir_path, self._build_dirs)
+        self.path_creator(self.manipulation_dir_path, self._build_dirs)
 
         # Target for training model and trace files.
         self._app_cfg['TrainingDirPath'] = os.path.join(self._data_dir_path, 'training')
-        self._path_creator(self.training_dir_path, self._build_dirs)
+        self.path_creator(self.training_dir_path, self._build_dirs)
 
         # Target for prediction traces.
         self._app_cfg['PredictionDirPath'] = os.path.join(self._data_dir_path, 'prediction')
-        self._path_creator(self.prediction_dir_path, self._build_dirs)
+        self.path_creator(self.prediction_dir_path, self._build_dirs)
 
     @property
     def _data_dir_path(self):
@@ -170,7 +163,7 @@ class GlobalCfgMgr(metaclass=Singleton):
     def animation_dir_path(self):
         '''
 
-        Returns: Animation directory path.
+        Returns: Simulation directory path.
 
         '''
         return self._app_cfg['AnimationDirPath']
@@ -248,15 +241,6 @@ class GlobalCfgMgr(metaclass=Singleton):
         return self._app_cfg['RunSimulation']
 
     @property
-    def run_animation(self):
-        '''
-
-        Returns: True if animation should be run.
-
-        '''
-        return self._app_cfg['RunAnimation']
-
-    @property
     def run_manipulation(self):
         '''
 
@@ -286,7 +270,7 @@ class GlobalCfgMgr(metaclass=Singleton):
             os.remove(file)
 
     @classmethod
-    def _path_creator(cls, dir_path, build_dirs):
+    def path_creator(cls, dir_path, build_dirs):
         '''
         Check to see if a directory exists.  If it doesn't and auto_create is true
         then create the directory.  Otherwise generate an exception.

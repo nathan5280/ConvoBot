@@ -1,8 +1,7 @@
-import json, logging, sys, os
-from logging.config import dictConfig
+import logging, sys
 
-from convobot.environment.CmdLineCfgMgr import CmdLineCfgMgr
 from convobot.environment.GlobalCfgMgr import GlobalCfgMgr
+from convobot.simulate.blender.SimulatorLoader import SimulatorLoader
 from convobot.util.load_logging_cfg import load_logging_cfg
 
 load_logging_cfg('./logging-cfg.json')
@@ -22,35 +21,18 @@ def main(argv):
     global_cfg_mgr = GlobalCfgMgr()
     global_cfg_mgr.configure(argv)
 
+    # Simulate images based on the Simulate parameters loaded from the configuration
+    # file.   Note that to attach to Blender using Pyro the SnakeShake package
+    # https://github.com/nathan5280/SnakeShake
+    # The Pyro Name Server and Blender must also be started before this stages
+    # can render images.
+    if global_cfg_mgr.run_simulation:
+        logger.debug('Loading simulator')
+        simulator_loader = SimulatorLoader(global_cfg_mgr)
+        simulator = simulator_loader.get_simulator()
+        logger.debug('Running simulator')
+        simulator.process()
 
-    # # In general convobot is designed be configurable and extensible through the
-    # # configuration file.  All of the *Loader classes dynamicall load the
-    # # actual processing classes based on names specified in the configuration
-    # # file.
-    #
-    # # TODO: Replace the loaders with dynamic module loading so the Exampler lookup
-    # # in the Loader classes isn't required.  This will truely make the applicaation
-    # # configurable and dynamically extensible.
-    #
-    # # Parse the command line arguments and pass the results to the CfgMgr.
-    # # The CfgMgr will load the json configuration file with all of the remaining
-    # # parameters for each of the stages.
-    # cmd_cfg_mgr = CmdLineCfgMgr(args)
-    # cmd_cfg = cmd_cfg_mgr.get_cfg_dict()
-    # cfg_mgr = CfgMgr(cmd_cfg)
-    #
-    # # Simulate images based on the Simulate parameters loaded from the configuration
-    # # file.   Note that to attach to Blender using Pyro the SnakeShake package
-    # # https://github.com/nathan5280/SnakeShake
-    # # The Pyro Name Server and Blender must also be started before this stages
-    # # can render images.
-    # if cmd_cfg['RunSimulate']:
-    #     logger.debug('Loading simulator')
-    #     simulator_loader = SimulatorLoader(cfg_mgr)
-    #     simulator = simulator_loader.get_simulator()
-    #     logger.debug('Running simulator')
-    #     simulator.process()
-    #
     # # Manipulate images to get them from the rendered format of individual files
     # # on disk to large consolidated Numpy arrays.
     # # Currently this manipulation only includes conversion from RGBA to RGB and
