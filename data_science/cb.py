@@ -21,12 +21,19 @@ def main(argv):
     global_cfg_mgr = GlobalCfgMgr()
     global_cfg_mgr.configure(argv)
 
-    # Simulate images based on the Simulate parameters loaded from the configuration
+    # Simulate/Animate images based on the Simulate/Animate parameters loaded from the configuration
     # file.   Note that to attach to Blender using Pyro the SnakeShake package
     # https://github.com/nathan5280/SnakeShake
     # The Pyro Name Server and Blender must also be started before this stages
     # can render images.
     if global_cfg_mgr.run_simulation:
+        logger.debug('Loading simulator')
+        simulator_loader = SimulatorLoader(global_cfg_mgr)
+        simulator = simulator_loader.get_simulator()
+        logger.debug('Running simulator')
+        simulator.process()
+
+    if global_cfg_mgr.run_animation:
         logger.debug('Loading simulator')
         simulator_loader = SimulatorLoader(global_cfg_mgr)
         simulator = simulator_loader.get_simulator()

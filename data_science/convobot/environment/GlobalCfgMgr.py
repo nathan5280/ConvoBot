@@ -95,7 +95,7 @@ class GlobalCfgMgr(metaclass=Singleton):
         Returns: None or exception if directory doesn't exist and build_dir is False
 
         '''
-        if not self.run_simulation:
+        if not self.run_animation:
             return
 
         self._app_cfg['AnimationDirPath'] = os.path.join(self._data_dir_path, 'animation')
@@ -239,6 +239,15 @@ class GlobalCfgMgr(metaclass=Singleton):
 
         '''
         return self._app_cfg['RunSimulation']
+
+    @property
+    def run_animation(self):
+        '''
+
+        Returns: True if animation should be run.
+
+        '''
+        return self._app_cfg['RunAnimation']
 
     @property
     def run_manipulation(self):
