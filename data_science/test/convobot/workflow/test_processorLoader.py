@@ -2,7 +2,6 @@ from unittest import TestCase
 from convobot.processor.Processor import Processor
 from convobot.processor.ProcessorLoader import ProcessorLoader
 
-import os
 
 class SubProcessor(Processor):
     """
@@ -41,4 +40,4 @@ class TestProcessorLoader(TestCase):
         """
         processor = ProcessorLoader.load('processor1', self.sim_cfg)
 
-        self. assertEqual('SubProcessor', processor.__class__.__name__, 'name')
+        self.assertEqual('SubProcessor', processor.__class__.__name__, 'name')

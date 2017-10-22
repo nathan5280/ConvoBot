@@ -7,21 +7,39 @@ from convobot.configuration.GlobalCfgMgr import GlobalCfgMgr
 from convobot.processor.Processor import Processor
 from convobot.workflow.Pipeline import Pipeline
 
+
 class SubProcessor1(Processor):
     """
     Dummy Processor subclass to test the ProcessorLoader.
     """
 
     def __init__(self, name, cfg) -> None:
+        """
+        Construct the SubProcessor
+        :param name: Name of the Processor stage
+        :param cfg: Processor configuration
+        """
         super().__init__(name, cfg)
+
+        # Get a dummy variable out of the configuration that can be checked in the test.
         self._index = cfg['config']['start-idx']
 
     def process(self):
+        """
+        Concrete implementation of the process method.  Do something simple that
+        can be check in the test.
+        :return: None
+        """
         self._index += 1
 
     @property
     def index(self):
+        """
+        Access the internal state for a check in the test.
+        :return: The current index of the class.
+        """
         return self._index
+
 
 class SubProcessor2(Processor):
     """
@@ -29,15 +47,30 @@ class SubProcessor2(Processor):
     """
 
     def __init__(self, name, cfg) -> None:
+        """
+        Construct the SubProcessor
+        :param name: Name of the Processor stage
+        :param cfg: Processor configuration
+        """
         super().__init__(name, cfg)
 
+        # Get a dummy variable out of the configuration that can be checked in the test.
         self._index = cfg['config']['start-idx']
 
     def process(self):
+        """
+        Concrete implementation of the process method.  Do something simple that
+        can be check in the test.
+        :return: None
+        """
         self._index += 1
 
     @property
     def index(self):
+        """
+        Access the internal state for a check in the test.
+        :return: The current index of the class.
+        """
         return self._index
 
 
@@ -61,10 +94,10 @@ class TestPipeline(TestCase):
             "stages": {
                 "stage1": {
                     "processor": {
-                      "type": "generator",
-                      "module": "test.convobot.workflow.test_pipeline",
-                      "class": "SubProcessor1",
-                      "dst-id": "simulated"
+                        "type": "generator",
+                        "module": "test.convobot.workflow.test_pipeline",
+                        "class": "SubProcessor1",
+                        "dst-id": "simulated"
                     },
                     "config": {
                         "start-idx": 100
@@ -72,11 +105,11 @@ class TestPipeline(TestCase):
                 },
                 "stage2": {
                     "processor": {
-                      "type": "transformer",
-                      "module": "test.convobot.workflow.test_pipeline",
-                      "class": "SubProcessor2",
-                      "src-id": "simulated",
-                      "dst-id": "manipulated"
+                        "type": "transformer",
+                        "module": "test.convobot.workflow.test_pipeline",
+                        "class": "SubProcessor2",
+                        "src-id": "simulated",
+                        "dst-id": "manipulated"
                     },
                     "config": {
                         "start-idx": 200

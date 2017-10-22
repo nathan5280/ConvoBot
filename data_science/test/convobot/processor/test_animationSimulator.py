@@ -8,6 +8,9 @@ from convobot.workflow.Pipeline import Pipeline
 
 
 class TestAnimationSimulator(TestCase):
+    """
+    Smoke tests for the AnimationSimulator.
+    """
     _tmp_dir_path = 'tmp'
     _data_dir_path = os.path.join(_tmp_dir_path, 'data')
     _cfg_file_path = os.path.join(_tmp_dir_path, 'config.json')
@@ -147,7 +150,7 @@ class TestAnimationSimulator(TestCase):
 
     def test_process(self):
         """
-        Test that the pipeline can load the
+        Run animiation on Theta, Radius, Alpha and insure that the gif files are created.
         :return:
         """
         argv = ['-d', self._data_dir_path,
@@ -160,9 +163,11 @@ class TestAnimationSimulator(TestCase):
 
         global_cfg_mgr = GlobalCfgMgr(argv)
 
+        # Create the pipeline of the three animation processors and execute them.
         pipeline = Pipeline(global_cfg_mgr)
         pipeline.process()
 
+        # Simple test to see if the three gif files were creates.
         animated_files = os.listdir(os.path.join(self._data_dir_path, 'animated'))
         self.assertTrue('alpha.gif' in animated_files, 'alpha.gif')
         self.assertTrue('theta.gif' in animated_files, 'theta.gif')
