@@ -22,7 +22,7 @@
         }
     },
     "loggers": {
-        "convobot.environment": {
+        "convobot.configuration": {
           "level": "INFO",
           "handlers": ["console"],
           "propagate": false
