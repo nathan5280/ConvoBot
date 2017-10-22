@@ -1,8 +1,11 @@
-import logging, os, time
+import logging
+import os
+import time
 from abc import ABCMeta, abstractmethod
+
 import numpy as np
 
-from convobot.simulate.blender.Simulator import Simulator
+from convobot.processor.Simulator import Simulator
 from convobot.util.FilenameManager import FilenameManager
 
 logger = logging.getLogger(__name__)
@@ -29,13 +32,13 @@ class LoopingSimulator(Simulator, metaclass=ABCMeta):
         logging.debug('Processing')
         image_dir_path = self._global_cfg_mgr.simulation_dir_path
 
-        radius_cfg = self._cfg['Radius']['Range']
+        radius_cfg = self.stage_cfg['Radius']['Range']
         radius_range = np.arange(radius_cfg['Min'],
                                 radius_cfg['Max'] + radius_cfg['Step'],
                                 radius_cfg['Step'])
 
         for radius in radius_range:
-            alpha_cfg = self._cfg['Alpha']['Range']
+            alpha_cfg = self.stage_cfg['Alpha']['Range']
             alpha_range = np.arange(alpha_cfg['Min'],
                                     alpha_cfg['Max'] + alpha_cfg['Step'],
                                     alpha_cfg['Step'])
@@ -45,7 +48,7 @@ class LoopingSimulator(Simulator, metaclass=ABCMeta):
             self._global_cfg_mgr.path_creator(output_dir_path, True)
 
             for alpha in alpha_range:
-                theta_cfg = self._cfg['Theta']['Range']
+                theta_cfg = self.stage_cfg['Theta']['Range']
                 theta_range = np.arange(theta_cfg['Min'],
                                         theta_cfg['Max'] + theta_cfg['Step'],
                                         theta_cfg['Step'])

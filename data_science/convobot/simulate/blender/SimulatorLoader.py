@@ -1,6 +1,6 @@
 import logging
 
-from convobot.simulate.blender.AnimationSimulator import AnimationSimulator
+from convobot.processor.AnimationSimulator import AnimationSimulator
 from convobot.simulate.blender.MonoSimulator import MonoSimulator
 from convobot.simulate.blender.StereoSimulator import StereoSimulator
 

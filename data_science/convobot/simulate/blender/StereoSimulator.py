@@ -42,7 +42,7 @@ class StereoSimulator(LoopingSimulator):
         tmp_dir_path = self._global_cfg_mgr.tmp_dir_path
         self._global_cfg_mgr.clear_tmp()
 
-        omega = self._cfg['StereoOffset']
+        omega = self.stage_cfg['StereoOffset']
         # Don't render the image if it exists and has size > 0.
         # This allows for breaking a simulation and restarting it without
         # having to recreate all the image.   This is helpful when filling in an
