@@ -1,55 +1,159 @@
 {
-    "Global": {
-        "Description": "Convobot Test",
-        "Date": "Fri Oct  6 17:58:51 MDT 2017",
-        "Image": {
-          "Size": [
-              32,
-              32
-          ],
-          "Channels": 3
-        }
+  "global": {
+    "description": "Convobot Test",
+    "date": "Sat Oct 21 08:53:36 MDT 2017",
+    "image": {
+      "size": [
+        32,
+        32
+      ],
+      "channels": 3
     },
-    "Simulation": {
-        "Name": "stereo-simulator",
-        "CameraHeight": 5,
-        "Radius": {
-            "Range": {
-                "Min": 15.0,
-                "Max": 25.0,
-                "Step": 10
-            }
+    "camera-height": 5
+  },
+  "dir-paths": {
+    "simulated": "simulated",
+    "manipulated": "manipulated",
+    "trained": "trained",
+    "animated": "animated"
+  },
+  "stages": {
+    "simulate": {
+      "processor": {
+        "type": "generator",
+        "module": "convobot.processor.MonoSimulator",
+        "class": "MonoSimulator",
+        "dst-id": "simulated"
+      },
+      "config": {
+        "radius": {
+          "range": {
+            "min": 15.0,
+            "max": 25.0,
+            "step": 10
+          }
         },
-        "Theta": {
-            "Range": {
-                "Min": 0.0,
-                "Max": 360.0,
-                "Step": 30
-            }
+        "theta": {
+          "range": {
+            "min": 0.0,
+            "max": 360.0,
+            "step": 30
+          }
         },
-        "Alpha": {
-            "Range": {
-                "Min": -10.0,
-                "Max": 10.0,
-                "Step": 10
-            }
+        "alpha": {
+          "range": {
+            "min": -10.0,
+            "max": 10.0,
+            "step": 10
+          }
         }
+      }
     },
-    "Manipulate": {
-        "Name": "numpy-manipulator"
+    "manipulate": {
+      "processor": {
+        "type": "transformer",
+        "module": "convobot.processor.NumpyManipulator",
+        "class": "NumpyManipulator",
+        "src-id": "simulated",
+        "dst-id": "manipulated"
+      },
+      "config": {}
     },
-    "Train": {
-        "Model": {
-            "Name": "convobot1"
+    "train": {
+      "processor": {
+        "type": "transformer",
+        "module": "convobot.processor.TrackingTrainer",
+        "class": "TrackingTrainer",
+        "src-id": "manipulated",
+        "dst-id": "trained"
+      },
+      "config": {
+        "model": {
+          "module": "convobot.processor.ConvoBot1Model",
+          "class": "ConvoBot1Model"
         },
-        "Trainer": {
-            "Name": "tracking-trainer",
-            "ValidationSplit": 0.25,
-            "TestSplit": 0.1,
-            "Sessions": 2,
-            "Epochs": 2,
-            "BatchSize": 100,
-            "LearningRate": 0.001
+        "validation-split": 0.25,
+        "test-split": 0.1,
+        "sessions": 2,
+        "epochs": 2,
+        "batch-size": 100,
+        "learning-rate": 0.001
+      }
+    },
+    "animate-theta": {
+      "processor": {
+        "type": "generator",
+        "module": "convobot.processor.AnimationSimulator",
+        "class": "AnimationSimulator",
+        "dst-id": "animated"
+      },
+      "config": {
+        "movie-name": "theta.gif",
+        "reverse": false,
+        "radius": {
+          "fixed": 15.0
+        },
+        "theta": {
+          "range": {
+            "min": 0.0,
+            "max": 360.0,
+            "step": 1.0
+          }
+        },
+        "alpha": {
+          "fixed": 0.0
         }
+      }
+    },
+    "animate-radius": {
+      "processor": {
+        "type": "generator",
+        "module": "convobot.processor.AnimationSimulator",
+        "class": "AnimationSimulator",
+        "dst-id": "animated"
+      },
+      "config": {
+        "movie-name": "radius.gif",
+        "reverse": true,
+        "radius": {
+          "range": {
+            "min": 15.0,
+            "max": 30.0,
+            "step": 0.1
+          }
+        },
+        "theta": {
+          "fixed": 45.0
+        },
+        "alpha": {
+          "fixed": 0.0
+        }
+      }
+    },
+    "animate-alpha": {
+      "processor": {
+        "type": "generator",
+        "module": "convobot.processor.AnimationSimulator",
+        "class": "AnimationSimulator",
+        "dst-id": "animated"
+      },
+      "config": {
+        "movie-name": "alpha.gif",
+        "reverse": true,
+        "radius": {
+          "fixed": 15.0
+        },
+        "theta": {
+          "fixed": 45.0
+        },
+        "alpha": {
+          "range": {
+            "min": -10.0,
+            "max": 10.0,
+            "step": 0.2
+          }
+        }
+      }
     }
+  }
 }
