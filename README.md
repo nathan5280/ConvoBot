@@ -1,4 +1,10 @@
-# Convolutional Neural Network + Robotics = ConvoBot
+# ConvoBot = Convolutional Neural Network + Robotics 
+
+<p align="center">
+    <img alt="Generic Neural Network" src="documentation/images/generic-neural-network.png" height='200px'>
+    <img alt="mBot-Ranger Robot Platform" src="documentation/images/mbot-ranger.png" height='200px'>
+</p>
+
 ConvoBot brings together a number of related areas of interest for me in Robotics _(Hobby)_; engineering, software development _(Work Experience)_; solving problems using data _(Data Science)_.  The overarching goal of the project is to enable autonomous location and control of a robot relative to it's environment using Convolutional Neural Networks (CNN).  My Capstone work during the Galvanize Data Science Immersive Program provided an opportunity to get the Data Science side of the project kicked off.  It also opened up a very interesting opportunity to explore how simulated environments can be used to explore feature space, develop a better understand of the dynamics of neural networks, and decouple knowledge and skills learning from the constraints and slow pace of the physical world.
 
 <p align="center">
@@ -17,6 +23,8 @@ ConvoBot brings together a number of related areas of interest for me in Robotic
 4. [ConvoBot Simulation](convobot-simulation)
 5. [Simulation Examples](simulation-examples)
    * [Stereoscopic Vision](stereoscopic-vision)
+6. [Error Plots](error-plots)
+7. [Capstone](capstone-poster)
 
 
 ## Overview
@@ -70,7 +78,7 @@ Successful NN projects are dependent on three key capabilities.
 </p>
 Through the use of simulations, we are able to generate new and interesting labeled datasets to train NN.  Simulations do have their limitations, but they do have their uses, particularly in the individual education and learning environments.
 
-#### limitations
+#### Limitations
 * Fidelity with the real world
   * Artifacts in images
   * Level of details
@@ -201,3 +209,11 @@ There are two dimensions (not the same 2D operations of ConvoBot) that are used 
     * There are two ways to deal with this moving foward.
         a. Learn more about TensorFlow and fix the error function to calculate the 360-0 as only one degree of error.
         b. Convert the labels to X & Y coordinates and train on those as they are continuous in the 2D space of ConvoBot's operation.
+        
+#Capstone Poster
+<p align="center">
+    <img alt="Capstone Poster" src="documentation/images/2mx-ConvoBot.png" width="800px">  
+</p>
+<p align="center">
+    <sub> <b> Figure 13: </b>Capstone Poster</sub>
+</p>
