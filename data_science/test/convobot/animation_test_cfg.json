@@ -12,56 +12,9 @@
     "camera-height": 5
   },
   "dir-paths": {
-    "animated": "animated",
-    "simulated": "simulated",
-    "manipulated": "manipulated"
+    "animated": "animated"
   },
   "stages": {
-    "simulate": {
-      "configuration": {
-        "module": "convobot.processor.simulator.MonoSimulator",
-        "class": "MonoSimulator",
-        "dirs": {
-          "dst-dir-id": "simulated"
-        }
-      },
-      "parameters": {
-        "movie-name": "theta.gif",
-        "reverse": false,
-        "radius": {
-          "range": {
-            "min": 15.0,
-            "max": 16.0,
-            "step": 1.0
-          }
-        },
-        "theta": {
-          "range": {
-            "min": 0.0,
-            "max": 360.0,
-            "step": 30.0
-          }
-        },
-        "alpha": {
-          "range": {
-            "min": -10.0,
-            "max": 10.0,
-            "step": 10.0
-          }
-        }
-      }
-    },
-    "manipulate": {
-      "configuration": {
-        "module": "convobot.processor.manipulator.NumpyManipulator",
-        "class": "NumpyManipulator",
-        "dirs": {
-          "src-dir-id": "simulated",
-          "dst-dir-id": "manipulated"
-        }
-      },
-      "parameters": {}
-    },
     "animate-theta": {
       "configuration": {
         "module": "convobot.processor.simulator.AnimationSimulator",

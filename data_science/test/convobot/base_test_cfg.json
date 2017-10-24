@@ -1,0 +1,65 @@
+{
+  "global": {
+    "description": "Convobot Test",
+    "date": "Sat Oct 21 08:53:36 MDT 2017",
+    "image": {
+      "size": [
+        32,
+        32
+      ],
+      "channels": 3
+    },
+    "camera-height": 5
+  },
+  "dir-paths": {
+    "simulated": "simulated",
+    "manipulated": "manipulated"
+  },
+  "stages": {
+    "simulate": {
+      "configuration": {
+        "module": "convobot.processor.simulator.MonoSimulator",
+        "class": "MonoSimulator",
+        "dirs": {
+          "dst-dir-id": "simulated"
+        }
+      },
+      "parameters": {
+        "movie-name": "theta.gif",
+        "reverse": false,
+        "radius": {
+          "range": {
+            "min": 15.0,
+            "max": 16.0,
+            "step": 1.0
+          }
+        },
+        "theta": {
+          "range": {
+            "min": 0.0,
+            "max": 360.0,
+            "step": 30.0
+          }
+        },
+        "alpha": {
+          "range": {
+            "min": -10.0,
+            "max": 10.0,
+            "step": 10.0
+          }
+        }
+      }
+    },
+    "manipulate": {
+      "configuration": {
+        "module": "convobot.processor.manipulator.NumpyManipulator",
+        "class": "NumpyManipulator",
+        "dirs": {
+          "src-dir-id": "simulated",
+          "dst-dir-id": "manipulated"
+        }
+      },
+      "parameters": {}
+    }
+  }
+}

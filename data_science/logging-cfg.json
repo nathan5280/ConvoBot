@@ -37,6 +37,11 @@
           "handlers": ["console"],
           "propagate": false
         },
+        "convobot.processor.simulator": {
+          "level": "DEBUG",
+          "handlers": ["console"],
+          "propagate": false
+        },
         "convobot.workflow": {
           "level": "INFO",
           "handlers": ["console"],

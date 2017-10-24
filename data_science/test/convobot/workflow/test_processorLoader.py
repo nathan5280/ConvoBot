@@ -25,7 +25,6 @@ class TestProcessorLoader(TestCase):
     _cfg = \
         {
             "configuration": {
-                "type": "transformer",
                 "module": "test.convobot.workflow.test_processorLoader",
                 "class": "SubProcessor",
                 "src-id": "simulated",

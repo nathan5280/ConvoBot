@@ -75,7 +75,8 @@ class LoopingSimulator(Simulator):
 
                     if logger.isEnabledFor(logging.DEBUG):
                         logger.debug(
-                            'Radius: %s, Theta: %s, Alpha: %s, Time: %s' % (theta, radius, 180 + alpha, process_time))
+                            'Radius: %s, Theta: %s, Alpha: %s, Time: %s' %
+                                (radius, theta, 180 + alpha, round(process_time, 3)))
 
     @abstractmethod
     def _render(self, theta, radius, alpha):

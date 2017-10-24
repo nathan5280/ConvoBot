@@ -119,7 +119,7 @@ class GlobalCfgMgr(object):
         """
 
         if self._all_stages:
-            for stage in self._process_stages:
+            for stage in self._all_stages:
                 stage_cfg = self._app_cfg['stages'][stage]
                 processor_cfg = stage_cfg['configuration']
 

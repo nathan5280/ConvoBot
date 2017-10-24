@@ -1,5 +1,7 @@
 import logging
 import os
+import glob
+import shutil
 
 from convobot.processor.simulator.LoopingSimulator import LoopingSimulator
 from convobot.util.FilenameMgr import FilenameMgr
@@ -21,6 +23,15 @@ class MonoSimulator(LoopingSimulator):
         logger.debug('Constructing: %s', self.__class__.__name__)
         super().__init__(name, cfg)
         self._filename_mgr = FilenameMgr()
+
+    def reset(self):
+        """
+        Remove all the simulated image files.
+        :return: None
+        """
+        dirs = glob.glob(os.path.join(self.dst_dir_path, '*'))
+        for dir in dirs:
+            shutil.rmtree(dir)
 
     def _render(self, theta: float, radius: float, alpha: float) -> None:
         """
