@@ -3,7 +3,7 @@ import os
 import shutil
 import subprocess
 
-from convobot.processor.LoopingSimulator import LoopingSimulator
+from convobot.processor.simulator.LoopingSimulator import LoopingSimulator
 
 logger = logging.getLogger(__name__)
 

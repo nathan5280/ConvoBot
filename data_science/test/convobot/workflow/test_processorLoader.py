@@ -22,7 +22,7 @@ class TestProcessorLoader(TestCase):
     """
     Smoke test the dynamic processor loader.
     """
-    sim_cfg = \
+    _cfg = \
         {
             "configuration": {
                 "type": "transformer",
@@ -41,6 +41,6 @@ class TestProcessorLoader(TestCase):
         """
         Dynamically load a SubProcessor class
         """
-        processor = ProcessorLoader.load('processor1', self.sim_cfg)
+        processor = ProcessorLoader.load('processor1', self._cfg)
 
         self.assertEqual('SubProcessor', processor.__class__.__name__, 'name')

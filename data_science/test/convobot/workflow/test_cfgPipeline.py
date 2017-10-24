@@ -107,7 +107,7 @@ class TestPipeline(TestCase):
     _cfg_file_path = os.path.join(_tmp_dir_path, 'config.json')
 
     # Partial configuration to test with.
-    _sim_cfg = \
+    _cfg = \
         {
             "global": {},
             "dir-paths": {
@@ -117,7 +117,6 @@ class TestPipeline(TestCase):
             "stages": {
                 "stage1": {
                     "configuration": {
-                        "type": "generator",
                         "module": "test.convobot.workflow.test_cfgPipeline",
                         "class": "SubProcessor1",
                         "dirs": {
@@ -130,7 +129,6 @@ class TestPipeline(TestCase):
                 },
                 "stage2": {
                     "configuration": {
-                        "type": "transformer",
                         "module": "test.convobot.workflow.test_cfgPipeline",
                         "class": "SubProcessor2",
                         "dirs": {
@@ -164,7 +162,7 @@ class TestPipeline(TestCase):
             shutil.rmtree(cls._tmp_dir_path)
 
     def setUp(self):
-        pass
+        self._write_cfg(self._cfg)
 
     def tearDown(self):
         """
@@ -191,8 +189,6 @@ class TestPipeline(TestCase):
                 '-s', 'stage1',
                 '-r', 'stage1']
 
-        self._write_cfg(self._sim_cfg)
-
         global_cfg_mgr = GlobalCfgMgr(argv)
 
         pipeline = CfgPipeline(global_cfg_mgr)
@@ -212,8 +208,6 @@ class TestPipeline(TestCase):
                 '-c', self._cfg_file_path,
                 '-p', 'stage1',
                 '-p', 'stage2']
-
-        self._write_cfg(self._sim_cfg)
 
         global_cfg_mgr = GlobalCfgMgr(argv)
 

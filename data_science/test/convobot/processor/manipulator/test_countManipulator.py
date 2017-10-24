@@ -5,21 +5,22 @@ import json
 from unittest import TestCase
 
 from convobot.configuration.GlobalCfgMgr import GlobalCfgMgr
+from convobot.processor.manipulator.CountManipulator import CountManipulator
 from convobot.util.load_logging_cfg import load_logging_cfg
 from convobot.workflow.CfgPipeline import CfgPipeline
 
 load_logging_cfg('./logging-cfg.json')
 
-class TestMonoSimulator(TestCase):
+class TestCountManipulator(TestCase):
     """
-    Smoke tests for the MonoSimulator.
+    Smoke tests for the CountSimulator.
     """
     _tmp_dir_path = 'tmp'
     _data_dir_path = os.path.join(_tmp_dir_path, 'data')
     _cfg_file_path = os.path.join(_tmp_dir_path, 'config.json')
 
     # Partial configuration to test with.
-    _sim_cfg = \
+    _cfg = \
         {
             "global": {
                 "description": "Convobot Test",
@@ -39,8 +40,7 @@ class TestMonoSimulator(TestCase):
             "stages": {
                 "simulate": {
                     "configuration": {
-                        "type": "generator",
-                        "module": "convobot.processor.MonoSimulator",
+                        "module": "convobot.processor.simulator.MonoSimulator",
                         "class": "MonoSimulator",
                         "dirs": {
                             "dst-dir-id": "simulated"
@@ -82,6 +82,7 @@ class TestMonoSimulator(TestCase):
         :return: None
         """
         if not os.path.exists(cls._tmp_dir_path):
+            print('Creating tmp')
             os.mkdir(cls._tmp_dir_path)
 
     @classmethod
@@ -91,10 +92,11 @@ class TestMonoSimulator(TestCase):
         :return: None
         """
         if os.path.exists(cls._tmp_dir_path):
+            print('Removing tmp')
             shutil.rmtree(cls._tmp_dir_path)
 
     def setUp(self):
-        pass
+        self._write_cfg(self._cfg)
 
     def tearDown(self):
         """
@@ -120,16 +122,14 @@ class TestMonoSimulator(TestCase):
                 '-c', self._cfg_file_path,
                 '-p', 'simulate']
 
-        self._write_cfg(self._sim_cfg)
-
         global_cfg_mgr = GlobalCfgMgr(argv)
 
         # Create the pipeline of the three animation processors and execute them.
         pipeline = CfgPipeline(global_cfg_mgr)
         pipeline.process()
 
-        dst_dir_path = os.path.join(self._data_dir_path, 'simulated', '15.0', '*')
-        self.assertEqual(39, len(glob.glob(dst_dir_path)), '15.0')
+        src_dir_path = os.path.join(self._data_dir_path, 'simulated')
+        counter = CountManipulator(src_dir_path, '*.png')
+        counter.process()
 
-        dst_dir_path = os.path.join(self._data_dir_path, 'simulated', '16.0', '*')
-        self.assertEqual(39, len(glob.glob(dst_dir_path)), '16.0')
+        self.assertEqual(78, counter.get_count(), 'count')

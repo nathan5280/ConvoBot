@@ -19,7 +19,7 @@ class TestAnimationSimulator(TestCase):
     _cfg_file_path = os.path.join(_tmp_dir_path, 'config.json')
 
     # Partial configuration to test with.
-    _sim_cfg = \
+    _cfg = \
         {
             "global": {
                 "description": "Convobot Test",
@@ -39,8 +39,7 @@ class TestAnimationSimulator(TestCase):
             "stages": {
                 "animate-theta": {
                     "configuration": {
-                        "type": "generator",
-                        "module": "convobot.processor.AnimationSimulator",
+                        "module": "convobot.processor.simulator.AnimationSimulator",
                         "class": "AnimationSimulator",
                         "dirs": {
                             "dst-dir-id": "animated"
@@ -66,8 +65,7 @@ class TestAnimationSimulator(TestCase):
                 },
                 "animate-radius": {
                     "configuration": {
-                        "type": "generator",
-                        "module": "convobot.processor.AnimationSimulator",
+                        "module": "convobot.processor.simulator.AnimationSimulator",
                         "class": "AnimationSimulator",
                         "dirs": {
                             "dst-dir-id": "animated"
@@ -93,8 +91,7 @@ class TestAnimationSimulator(TestCase):
                 },
                 "animate-alpha": {
                     "configuration": {
-                        "type": "generator",
-                        "module": "convobot.processor.AnimationSimulator",
+                        "module": "convobot.processor.simulator.AnimationSimulator",
                         "class": "AnimationSimulator",
                         "dirs": {
                             "dst-dir-id": "animated"
@@ -140,7 +137,7 @@ class TestAnimationSimulator(TestCase):
             shutil.rmtree(cls._tmp_dir_path)
 
     def setUp(self):
-        pass
+        self._write_cfg(self._cfg)
 
     def tearDown(self):
         """
@@ -167,8 +164,6 @@ class TestAnimationSimulator(TestCase):
                 '-p', 'animate-theta',
                 '-p', 'animate-radius',
                 '-p', 'animate-alpha']
-
-        self._write_cfg(self._sim_cfg)
 
         global_cfg_mgr = GlobalCfgMgr(argv)
 

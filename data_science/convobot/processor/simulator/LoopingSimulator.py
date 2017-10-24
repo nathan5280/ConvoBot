@@ -4,7 +4,7 @@ from abc import abstractmethod
 
 import numpy as np
 
-from convobot.processor.Simulator import Simulator
+from convobot.processor.simulator.Simulator import Simulator
 
 logger = logging.getLogger(__name__)
 

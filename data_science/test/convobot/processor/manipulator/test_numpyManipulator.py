@@ -1,20 +1,19 @@
-import json
-import shutil
-import logging
+import glob
 import os
-import unittest
+import shutil
+import json
+from unittest import TestCase
 
 from convobot.configuration.GlobalCfgMgr import GlobalCfgMgr
+from convobot.processor.manipulator.CountManipulator import CountManipulator
 from convobot.util.load_logging_cfg import load_logging_cfg
+from convobot.workflow.CfgPipeline import CfgPipeline
 
 load_logging_cfg('./logging-cfg.json')
-logger = logging.getLogger(__name__)
 
-
-class TestGlobalCfgMgr(unittest.TestCase):
+class TestNumpyManipulator(TestCase):
     """
-    Smoke tests for GlobalCfgMgr.  Creates a tmp directory to create configuration files
-    in for the different test cases.
+    Smoke tests for the NumpySimulator.
     """
     _tmp_dir_path = 'tmp'
     _data_dir_path = os.path.join(_tmp_dir_path, 'data')
@@ -37,33 +36,53 @@ class TestGlobalCfgMgr(unittest.TestCase):
             },
             "dir-paths": {
                 "simulated": "simulated",
-                "manipulated": "manipulated",
-                "trained": "trained",
-                "animated": "animated"
+                "manipulated": "manipulated"
             },
             "stages": {
-                "stage1": {
+                "simulate": {
                     "configuration": {
-                        "module": "convobot.processor.MonoSimulator",
+                        "module": "convobot.processor.simulator.MonoSimulator",
                         "class": "MonoSimulator",
                         "dirs": {
                             "dst-dir-id": "simulated"
                         },
                     },
-                    "parameters": {}
+                    "parameters": {
+                        "movie-name": "theta.gif",
+                        "reverse": False,
+                        "radius": {
+                            "range": {
+                                "min": 15.0,
+                                "max": 16.0,
+                                "step": 1.0
+                            },
+                        },
+                        "theta": {
+                            "range": {
+                                "min": 0.0,
+                                "max": 360.0,
+                                "step": 30.0
+                            },
+                        },
+                        "alpha": {
+                            "range": {
+                                "min": -10.0,
+                                "max": 10.0,
+                                "step": 10.0
+                            }
+                        }
+                    }
                 },
-                "stage2": {
+                "manipulate": {
                     "configuration": {
-                        "module": "convobot.processor.NumpyManipulator",
+                        "module": "convobot.processor.manipulator.NumpyManipulator",
                         "class": "NumpyManipulator",
                         "dirs": {
                             "src-dir-id": "simulated",
                             "dst-dir-id": "manipulated"
                         },
                     },
-                    "parameters": {
-                        "processor-cfg-item1": "item1"
-                    }
+                    "parameters": {}
                 }
             }
         }
@@ -75,6 +94,7 @@ class TestGlobalCfgMgr(unittest.TestCase):
         :return: None
         """
         if not os.path.exists(cls._tmp_dir_path):
+            print('Creating tmp')
             os.mkdir(cls._tmp_dir_path)
 
     @classmethod
@@ -84,6 +104,7 @@ class TestGlobalCfgMgr(unittest.TestCase):
         :return: None
         """
         if os.path.exists(cls._tmp_dir_path):
+            print('Removing tmp')
             shutil.rmtree(cls._tmp_dir_path)
 
     def setUp(self):
@@ -104,39 +125,26 @@ class TestGlobalCfgMgr(unittest.TestCase):
         with open(self._cfg_file_path, 'w') as cfg_file:
             json.dump(cfg, cfg_file)
 
-    def test_root_dir(self):
+    def test_process(self):
         """
-        Test the most basic configuration.  Load the Global configuration section.
-
-        :return: None
-        """
-        argv = ['-d', self._data_dir_path,
-                '-c', self._cfg_file_path]
-
-        GlobalCfgMgr(argv)
-        self.assertTrue(os.path.exists(self._data_dir_path), 'data-dir-path')
-
-    def test_stage_cfg(self):
-        """
-        Test to see if configuration contains the directory paths..
-
-        :return: None
+        Run simulation.
+        :return:
         """
         argv = ['-d', self._data_dir_path,
                 '-c', self._cfg_file_path,
-                '-p', 'stage2']
+                '-p', 'simulate',
+                '-p', 'manipulate']
 
         global_cfg_mgr = GlobalCfgMgr(argv)
-        stage_cfg = global_cfg_mgr.stage_cfg('stage2')
 
-        self.assertEqual(os.path.join(self._data_dir_path, 'simulated'), stage_cfg['configuration']['src-dir-path'],
-                         'simulated')
-        self.assertEqual(os.path.join(self._data_dir_path, 'manipulated'), stage_cfg['configuration']['dst-dir-path'],
-                         'manipulated')
-        self.assertEqual(os.path.join(self._data_dir_path, 'tmp'), stage_cfg['configuration']['tmp-dir-path'],
-                         'temporary')
-        self.assertEqual('item1', stage_cfg['parameters']['processor-cfg-item1'], 'item1')
-        self.assertEqual(5, stage_cfg['parameters']['camera-height'])
+        # Create the pipeline of the three animation processors and execute them.
+        pipeline = CfgPipeline(global_cfg_mgr)
+        pipeline.process()
 
-        if __name__ == '__main__':
-            unittest.main()
+        image_file_path = os.path.join(self._data_dir_path, 'manipulated', 'image.npy')
+        self.assertTrue(os.path.exists(image_file_path), 'image exists')
+        self.assertTrue(os.stat(image_file_path).st_size>0, 'image size')
+
+        label_file_path = os.path.join(self._data_dir_path, 'manipulated', 'label.npy')
+        self.assertTrue(os.path.exists(label_file_path), 'label exists')
+        self.assertTrue(os.stat(label_file_path).st_size>0, 'label size')

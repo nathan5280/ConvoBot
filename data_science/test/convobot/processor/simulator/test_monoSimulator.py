@@ -10,17 +10,16 @@ from convobot.workflow.CfgPipeline import CfgPipeline
 
 load_logging_cfg('./logging-cfg.json')
 
-
-class TestStereoSimulator(TestCase):
+class TestMonoSimulator(TestCase):
     """
-    Smoke tests for the StereoSimulator.
+    Smoke tests for the MonoSimulator.
     """
     _tmp_dir_path = 'tmp'
     _data_dir_path = os.path.join(_tmp_dir_path, 'data')
     _cfg_file_path = os.path.join(_tmp_dir_path, 'config.json')
 
     # Partial configuration to test with.
-    _sim_cfg = \
+    _cfg = \
         {
             "global": {
                 "description": "Convobot Test",
@@ -32,8 +31,7 @@ class TestStereoSimulator(TestCase):
                     ],
                     "channels": 3
                 },
-                "camera-height": 5,
-                "stereo-offset": 3
+                "camera-height": 5
             },
             "dir-paths": {
                 "simulated": "simulated"
@@ -41,9 +39,8 @@ class TestStereoSimulator(TestCase):
             "stages": {
                 "simulate": {
                     "configuration": {
-                        "type": "generator",
-                        "module": "convobot.processor.StereoSimulator",
-                        "class": "StereoSimulator",
+                        "module": "convobot.processor.simulator.MonoSimulator",
+                        "class": "MonoSimulator",
                         "dirs": {
                             "dst-dir-id": "simulated"
                         },
@@ -96,7 +93,7 @@ class TestStereoSimulator(TestCase):
             shutil.rmtree(cls._tmp_dir_path)
 
     def setUp(self):
-        pass
+        self._write_cfg(self._cfg)
 
     def tearDown(self):
         """
@@ -122,7 +119,7 @@ class TestStereoSimulator(TestCase):
                 '-c', self._cfg_file_path,
                 '-p', 'simulate']
 
-        self._write_cfg(self._sim_cfg)
+        self._write_cfg(self._cfg)
 
         global_cfg_mgr = GlobalCfgMgr(argv)
 

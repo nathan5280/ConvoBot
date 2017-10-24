@@ -13,14 +13,14 @@ class Processor(metaclass=ABCMeta):
     def __init__(self, name: str, cfg):
         """
         Construct the processor.
-        :param name:
-        :param cfg:
+        :param name: Name of the processor.
+        :param cfg: Configuration for the processor.
         """
         logger.debug('Constructing: %s', self.__class__.__name__)
         self._name = name
         self._stage_cfg = cfg  # Overall stage configuration including the processor configuration items.
-        self._parameters = self.stage_cfg['parameters']  # Processor instantiation and directories
-        self._configuration = self.stage_cfg['configuration']  # Processor parameters
+        self._parameters = self.stage_cfg.get('parameters', None)  # Processor instantiation and directories
+        self._configuration = self.stage_cfg.get('configuration', None)  # Processor parameters
 
     @property
     def stage_cfg(self):

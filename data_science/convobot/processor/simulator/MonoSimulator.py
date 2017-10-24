@@ -1,7 +1,7 @@
 import logging
 import os
 
-from convobot.processor.LoopingSimulator import LoopingSimulator
+from convobot.processor.simulator.LoopingSimulator import LoopingSimulator
 from convobot.util.FilenameMgr import FilenameMgr
 
 logger = logging.getLogger(__name__)
@@ -31,10 +31,13 @@ class MonoSimulator(LoopingSimulator):
         :return: None
         """
         file_path = self._filename_mgr.label_to_radius_path(self.dst_dir_path, theta, radius, alpha)
-        # Make sure the path exists to write the file.  They are chucked up by radius.
-        dir_path = os.path.split(file_path)[0]
-        if not os.path.exists(dir_path):
-            os.mkdir(dir_path)
+        if os.path.exists(file_path) and os.stat(file_path).st_size > 0:
+            return
+        else:
+            # Make sure the path exists to write the file.  They are chunked up by radius.
+            dir_path = os.path.split(file_path)[0]
+            if not os.path.exists(dir_path):
+                os.mkdir(dir_path)
 
-        self._blender_env.set_camera_location(theta, radius, round(alpha, 1))
-        self._blender_env.render(file_path)
+            self._blender_env.set_camera_location(theta, radius, round(alpha, 1))
+            self._blender_env.render(file_path)
