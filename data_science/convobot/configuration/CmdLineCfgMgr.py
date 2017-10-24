@@ -16,14 +16,20 @@ class CmdLineCfgMgr(object):
         logger.debug('Constructor: %s', self.__class__.__name__)
 
         self._parser = argparse.ArgumentParser(description='Run ConvoBot CNN stages.')
-        self._parser.add_argument('-d', dest='data-dir-path', required=True,
+        self._parser.add_argument('-d', '--data-root-path', dest='data-dir-path', required=True,
                                   help='Root path for data storage')
 
-        self._parser.add_argument('-c', dest='cfg-file-path', required=True,
+        self._parser.add_argument('-c', '--config-file-path', dest='cfg-file-path', required=True,
                                   help='Path to configuration file relative application run directory.')
 
-        self._parser.add_argument('-s', dest='stage-ids', action='append',
-                                  help='Specify if the simulation stage should be run.')
+        self._parser.add_argument('-s', '--sweep', dest='sweep-stage-ids', action='append',
+                                  help='Stages to sweep log files not needed for next stage.')
+
+        self._parser.add_argument('-r', '--reset', dest='reset-stage-ids', action='append',
+                                  help='Stages to reset output files needed for next stage.')
+
+        self._parser.add_argument('-p', dest='process-stage-ids', action='append',
+                                  help='Stages to process')
 
     def parse(self, argv: List[str]) -> Dict[str, str]:
         """

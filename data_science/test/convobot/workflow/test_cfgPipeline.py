@@ -5,13 +5,15 @@ from unittest import TestCase
 
 from convobot.configuration.GlobalCfgMgr import GlobalCfgMgr
 from convobot.processor.Processor import Processor
-from convobot.workflow.Pipeline import Pipeline
+from convobot.workflow.CfgPipeline import CfgPipeline
 
 
 class SubProcessor1(Processor):
     """
     Dummy Processor subclass to test the ProcessorLoader.
     """
+    _swept = False
+    _reset = False
 
     def __init__(self, name, cfg) -> None:
         """
@@ -23,6 +25,22 @@ class SubProcessor1(Processor):
 
         # Get a dummy variable out of the configuration that can be checked in the test.
         self._index = cfg['config']['start-idx']
+
+    @classmethod
+    def sweep(cls):
+        """
+        Sweep the files that aren't needed for the next stage.
+        :return: None
+        """
+        cls._swept = True
+
+    @classmethod
+    def reset(cls):
+        """
+        Reset the files that aren't needed for the next stage.
+        :return: None
+        """
+        cls._reset = True
 
     def process(self):
         """
@@ -95,9 +113,11 @@ class TestPipeline(TestCase):
                 "stage1": {
                     "processor": {
                         "type": "generator",
-                        "module": "test.convobot.workflow.test_pipeline",
+                        "module": "test.convobot.workflow.test_cfgPipeline",
                         "class": "SubProcessor1",
-                        "dst-id": "simulated"
+                        "dirs": {
+                            "dst-id": "simulated"
+                        },
                     },
                     "config": {
                         "start-idx": 100
@@ -106,10 +126,12 @@ class TestPipeline(TestCase):
                 "stage2": {
                     "processor": {
                         "type": "transformer",
-                        "module": "test.convobot.workflow.test_pipeline",
+                        "module": "test.convobot.workflow.test_cfgPipeline",
                         "class": "SubProcessor2",
-                        "src-id": "simulated",
-                        "dst-id": "manipulated"
+                        "dirs": {
+                            "src-id": "simulated",
+                            "dst-id": "manipulated"
+                        },
                     },
                     "config": {
                         "start-idx": 200
@@ -154,7 +176,7 @@ class TestPipeline(TestCase):
         with open(self._cfg_file_path, 'w') as cfg_file:
             json.dump(cfg, cfg_file)
 
-    def test_process(self):
+    def test_sweep_reset(self):
         """
         Test that the pipeline can load the SubProcessors
         :return:
@@ -162,13 +184,33 @@ class TestPipeline(TestCase):
         argv = ['-d', self._data_dir_path,
                 '-c', self._cfg_file_path,
                 '-s', 'stage1',
-                '-s', 'stage2']
+                '-r', 'stage1']
 
         self._write_cfg(self._sim_cfg)
 
         global_cfg_mgr = GlobalCfgMgr(argv)
 
-        pipeline = Pipeline(global_cfg_mgr)
+        pipeline = CfgPipeline(global_cfg_mgr)
+        pipeline.process()
+
+        self.assertTrue(SubProcessor1._swept, 'Swept')
+        self.assertTrue(SubProcessor1._reset, 'Reset')
+
+    def test_process(self):
+        """
+        Test that the pipeline can load the SubProcessors
+        :return:
+        """
+        argv = ['-d', self._data_dir_path,
+                '-c', self._cfg_file_path,
+                '-p', 'stage1',
+                '-p', 'stage2']
+
+        self._write_cfg(self._sim_cfg)
+
+        global_cfg_mgr = GlobalCfgMgr(argv)
+
+        pipeline = CfgPipeline(global_cfg_mgr)
         pipeline.process()
 
         self.assertEqual(101, pipeline._pipeline[0].index, 'SubProcessor1')
