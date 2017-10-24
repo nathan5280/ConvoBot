@@ -4,7 +4,7 @@ import json
 from unittest import TestCase
 
 from convobot.configuration.GlobalCfgMgr import GlobalCfgMgr
-from convobot.workflow.Pipeline import Pipeline
+from convobot.workflow.CfgPipeline import CfgPipeline
 
 
 class TestAnimationSimulator(TestCase):
@@ -39,7 +39,9 @@ class TestAnimationSimulator(TestCase):
                         "type": "generator",
                         "module": "convobot.processor.AnimationSimulator",
                         "class": "AnimationSimulator",
-                        "dst-id": "animated"
+                        "dirs": {
+                            "dst-dir-id": "animated"
+                        },
                     },
                     "config": {
                         "movie-name": "theta.gif",
@@ -64,7 +66,9 @@ class TestAnimationSimulator(TestCase):
                         "type": "generator",
                         "module": "convobot.processor.AnimationSimulator",
                         "class": "AnimationSimulator",
-                        "dst-id": "animated"
+                        "dirs": {
+                            "dst-dir-id": "animated"
+                        },
                     },
                     "config": {
                         "movie-name": "radius.gif",
@@ -89,7 +93,9 @@ class TestAnimationSimulator(TestCase):
                         "type": "generator",
                         "module": "convobot.processor.AnimationSimulator",
                         "class": "AnimationSimulator",
-                        "dst-id": "animated"
+                        "dirs": {
+                            "dst-dir-id": "animated"
+                        },
                     },
                     "config": {
                         "movie-name": "alpha.gif",
@@ -155,16 +161,16 @@ class TestAnimationSimulator(TestCase):
         """
         argv = ['-d', self._data_dir_path,
                 '-c', self._cfg_file_path,
-                '-s', 'animate-theta',
-                '-s', 'animate-radius',
-                '-s', 'animate-alpha']
+                '-p', 'animate-theta',
+                '-p', 'animate-radius',
+                '-p', 'animate-alpha']
 
         self._write_cfg(self._sim_cfg)
 
         global_cfg_mgr = GlobalCfgMgr(argv)
 
         # Create the pipeline of the three animation processors and execute them.
-        pipeline = Pipeline(global_cfg_mgr)
+        pipeline = CfgPipeline(global_cfg_mgr)
         pipeline.process()
 
         # Simple test to see if the three gif files were creates.

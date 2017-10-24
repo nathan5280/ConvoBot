@@ -1,7 +1,6 @@
 import json
 import os
 import logging
-import glob
 from typing import List, Dict
 
 from convobot.configuration.CmdLineCfgMgr import CmdLineCfgMgr
@@ -50,13 +49,30 @@ class GlobalCfgMgr(object):
         self._data_dir_path: str = os.path.expanduser(cmd_cfg['data-dir-path'])
         self._validate_path(self._data_dir_path)
 
-        # Create the temporary directory and clear it in case it already existed.
-        self._tmp_dir_path: str = os.path.join(self._data_dir_path, 'tmp')
+        # Create the temporary directory.
+        self._tmp_dir_path = os.path.join(self._data_dir_path, 'tmp')
         self._validate_path(self._tmp_dir_path)
-        self.clear_tmp()
 
-        # Add the list of stages to run to the configuration.
-        self._process_stages: List[str] = cmd_cfg['stage-ids']
+        # Add the list of stages to sweep, reset, and process to the configuration.
+        # Test to see if there were any ids specified on the command line first.
+        # If none were specified the key is still in the dictionary, but has a value of None.
+        if cmd_cfg['sweep-stage-ids']:
+            self._sweep_stages: List[str] = cmd_cfg['sweep-stage-ids']
+        else:
+            self._sweep_stages: List[str] = []
+
+        if cmd_cfg['reset-stage-ids']:
+            self._reset_stages: List[str] = cmd_cfg['reset-stage-ids']
+        else:
+            self._reset_stages: List[str] = []
+
+        if cmd_cfg['process-stage-ids']:
+            self._process_stages: List[str] = cmd_cfg['process-stage-ids']
+        else:
+            self._process_stages: List[str] = []
+
+        # Explode all the lists into a set.
+        self._all_stages = {*[*self._sweep_stages, *self._reset_stages, *self._process_stages]}
         self._check_required_directories()
 
     def stage_cfg(self, stage_name: str):
@@ -73,7 +89,23 @@ class GlobalCfgMgr(object):
         return stage_cfg
 
     @property
-    def stage_names(self) -> List[str]:
+    def sweep_stages(self) -> List[str]:
+        """
+        Get the list of stages to sweep.
+        :return: Names of the stages to sweep.
+        """
+        return self._process_stages
+
+    @property
+    def reset_stages(self) -> List[str]:
+        """
+        Get the list of stages to reset.
+        :return: Names of the stages to reset.
+        """
+        return self._process_stages
+
+    @property
+    def process_stages(self) -> List[str]:
         """
         Get the list of stages to process.
         :return: Names of the stages to process.
@@ -86,33 +118,25 @@ class GlobalCfgMgr(object):
         :return: None
         """
 
-        if self._process_stages:
+        if self._all_stages:
             for stage in self._process_stages:
                 stage_cfg = self._app_cfg['stages'][stage]
                 processor_cfg = stage_cfg['processor']
 
-                # determine if the stage is a generator or transformer.
-                # Generators only have destination directory.
-                # Transformers have both destination and source.
-                if processor_cfg['type'] == 'transformer':
-                    source_id = processor_cfg['src-id']
-                    source_rel_path = self._app_cfg['dir-paths'][source_id]
+                # Populate all the directories requested in the configuration.
+                for dir_key, dir_id in processor_cfg['dirs'].items():
+                    dir_path_value = os.path.join(self._data_dir_path, self._app_cfg['dir-paths'][dir_id])
+                    # Rebuild the key by replacing 'id' with 'path'
+                    dir_path_key = dir_key.replace('id', 'path')
+                    processor_cfg[dir_path_key] = dir_path_value
 
-                    # Add the source directory to the configuration.
-                    processor_cfg['src-dir-path'] = os.path.join(self._data_dir_path, source_rel_path)
-                    self._validate_path(processor_cfg['src-dir-path'])
+                    # Create the directory if it doesn't exist.
+                    self._validate_path(dir_path_value)
 
-                destination_id = processor_cfg['dst-id']
-                destination_rel_path = self._app_cfg['dir-paths'][destination_id]
-
-                # Add the destination directory to the configuration.
-                processor_cfg['dst-dir-path'] = os.path.join(self._data_dir_path, destination_rel_path)
-                self._validate_path(processor_cfg['dst-dir-path'])
-
-                # Add the temporary directory in case the stage needs it.
+                # Add the temporary directory.
                 processor_cfg['tmp-dir-path'] = self._tmp_dir_path
 
-                logger.debug('Directory validate: stage: %s\n%s', stage, json.dumps(stage_cfg, indent=2))
+                del processor_cfg['dirs']
 
     @staticmethod
     def _validate_path(dir_path: str) -> None:
@@ -127,11 +151,10 @@ class GlobalCfgMgr(object):
         logger.info('Creating directory: %s', dir_path)
         os.mkdir(dir_path)
 
-    def clear_tmp(self) -> None:
+    @property
+    def tmp_dir_path(self) -> str:
         """
-        Recursively remove any files and directories in the temporary directory.
-        :return: None
+        Path to the temporary directory
+        :return: Path
         """
-        files = glob.glob(os.path.join(self._tmp_dir_path, '*'))
-        for file in files:
-            os.remove(file)
+        return self._tmp_dir_path

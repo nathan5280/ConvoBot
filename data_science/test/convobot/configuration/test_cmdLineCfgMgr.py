@@ -21,16 +21,16 @@ class TestCmdLineCfgMgr(unittest.TestCase):
         """
         argv = ['-d', 'data-dir-path',
                 '-c', 'cfg-file-path',
-                '-s', 'simulate',
-                '-s', 'manipulate']
+                '-p', 'simulate',
+                '-p', 'manipulate']
         parser = CmdLineCfgMgr()
         config: Dict[str, str] = parser.parse(argv)
 
         self.assertEqual('data-dir-path', config['data-dir-path'], 'data-dir-path')
         self.assertEqual('cfg-file-path', config['cfg-file-path'], 'cfg-file-path')
-        self.assertEqual(2, len(config['stage-ids']), 'len stage-ids')
-        self.assertEqual('simulate', config['stage-ids'][0], 'stage-id[0]')
-        self.assertEqual('manipulate', config['stage-ids'][1], 'stage-id[1]')
+        self.assertEqual(2, len(config['process-stage-ids']), 'len process-stage-ids')
+        self.assertEqual('simulate', config['process-stage-ids'][0], 'process-stage-id[0]')
+        self.assertEqual('manipulate', config['process-stage-ids'][1], 'process-stage-id[1]')
 
 
 if __name__ == '__main__':

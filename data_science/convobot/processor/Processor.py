@@ -76,3 +76,26 @@ class Processor(metaclass=ABCMeta):
         :return: None
         """
         pass
+
+    def reset(self) -> None:
+        """
+        Remove output files that are required for future stages to process.  Removing these
+        files will require this stage to be rerun to generate the replacement files.  Examples
+        include simulated or manipulated image files or trained models.  Some processors will
+        skip regenerating these files if the file exists by name and has a size > 0.  Without
+        a call to reset the processor will incrementally add to the output files, but not replace
+        them.  Reset clears these files and forces them to be recreated.
+        :return: None
+        """
+        logger.info('Resetting: %s', self._name)
+
+    def sweep(self) -> None:
+        """
+        Remove any nonessential files that are generated during normal processing.
+        Examples include log files and intermediate prediction results used for generating
+        reports, but aren't required for future stages to process.
+
+        Subclasses only need to implement this if they have unique requirements.
+        :return: None
+        """
+        logger.info('Sweeping: %s', self._name)

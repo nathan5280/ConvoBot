@@ -10,12 +10,13 @@
       "channels": 3
     },
     "camera-height": 5
-  },
+},
   "dir-paths": {
     "simulated": "simulated",
     "manipulated": "manipulated",
     "trained": "trained",
-    "animated": "animated"
+    "animated": "animated",
+    "temporary": "tmp"
   },
   "stages": {
     "simulate": {
@@ -85,7 +86,8 @@
         "type": "generator",
         "module": "convobot.processor.AnimationSimulator",
         "class": "AnimationSimulator",
-        "dst-id": "animated"
+        "dst-id": "animated",
+        "tmp-id": "temporary"
       },
       "config": {
         "movie-name": "theta.gif",
@@ -110,7 +112,8 @@
         "type": "generator",
         "module": "convobot.processor.AnimationSimulator",
         "class": "AnimationSimulator",
-        "dst-id": "animated"
+        "dst-id": "animated",
+        "tmp-id": "temporary"
       },
       "config": {
         "movie-name": "radius.gif",
@@ -135,7 +138,8 @@
         "type": "generator",
         "module": "convobot.processor.AnimationSimulator",
         "class": "AnimationSimulator",
-        "dst-id": "animated"
+        "dst-id": "animated",
+        "tmp-id": "temporary"
       },
       "config": {
         "movie-name": "alpha.gif",

@@ -42,24 +42,30 @@ class TestGlobalCfgMgr(unittest.TestCase):
                 "animated": "animated"
             },
             "stages": {
-                "simulate": {
+                "stage1": {
                     "processor": {
-                      "type": "generator",
-                      "module": "convobot.processor.MonoSimulator",
-                      "class": "MonoSimulator",
-                      "dst-id": "simulated"
+                        "type": "generator",
+                        "module": "convobot.processor.MonoSimulator",
+                        "class": "MonoSimulator",
+                        "dirs": {
+                            "dst-dir-id": "simulated"
+                        },
                     },
                     "config": {}
                 },
-                "manipulate": {
+                "stage2": {
                     "processor": {
-                      "type": "transformer",
-                      "module": "convobot.processor.NumpyManipulator",
-                      "class": "NumpyManipulator",
-                      "src-id": "simulated",
-                      "dst-id": "manipulated"
+                        "type": "transformer",
+                        "module": "convobot.processor.NumpyManipulator",
+                        "class": "NumpyManipulator",
+                        "dirs": {
+                            "src-dir-id": "simulated",
+                            "dst-dir-id": "manipulated"
+                        },
                     },
-                    "config": {}
+                    "config": {
+                        "processor-cfg-item1": "item1"
+                    }
                 }
             }
         }
@@ -112,24 +118,6 @@ class TestGlobalCfgMgr(unittest.TestCase):
 
         GlobalCfgMgr(argv)
         self.assertTrue(os.path.exists(self._data_dir_path), 'data-dir-path')
-        self.assertTrue(os.path.exists(os.path.join(self._data_dir_path, 'tmp')), 'tmp-dir-path')
-
-    def test_dir_build(self):
-        """
-        Test to see if all the required directories are correctly created.
-
-        :return: None
-        """
-        argv = ['-d', self._data_dir_path,
-                '-c', self._cfg_file_path,
-                '-s', 'simulate',
-                '-s', 'manipulate']
-
-        self._write_cfg(self._sim_cfg)
-
-        GlobalCfgMgr(argv)
-        self.assertTrue(os.path.exists(os.path.join(self._data_dir_path, 'simulated')), 'simulated')
-        self.assertTrue(os.path.exists(os.path.join(self._data_dir_path, 'manipulated')), 'manipulated')
 
     def test_stage_cfg(self):
         """
@@ -139,19 +127,23 @@ class TestGlobalCfgMgr(unittest.TestCase):
         """
         argv = ['-d', self._data_dir_path,
                 '-c', self._cfg_file_path,
-                '-s', 'manipulate']
+                '-p', 'stage2']
 
         self._write_cfg(self._sim_cfg)
 
         global_cfg_mgr = GlobalCfgMgr(argv)
-        stage_cfg = global_cfg_mgr.stage_cfg('manipulate')
+        stage_cfg = global_cfg_mgr.stage_cfg('stage2')
+
+        print(json.dumps(stage_cfg, indent=2))
 
         self.assertEqual(os.path.join(self._data_dir_path, 'simulated'), stage_cfg['processor']['src-dir-path'],
                          'simulated')
         self.assertEqual(os.path.join(self._data_dir_path, 'manipulated'), stage_cfg['processor']['dst-dir-path'],
-                         'simulated')
+                         'manipulated')
         self.assertEqual(os.path.join(self._data_dir_path, 'tmp'), stage_cfg['processor']['tmp-dir-path'],
-                         'simulated')
+                         'temporary')
+        self.assertEqual('item1', stage_cfg['config']['processor-cfg-item1'], 'item1')
+        self.assertEqual(5, stage_cfg['config']['camera-height'])
 
         if __name__ == '__main__':
             unittest.main()
