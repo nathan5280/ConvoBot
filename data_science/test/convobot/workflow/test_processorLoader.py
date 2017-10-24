@@ -1,6 +1,9 @@
 from unittest import TestCase
 from convobot.processor.Processor import Processor
 from convobot.processor.ProcessorLoader import ProcessorLoader
+from convobot.util.load_logging_cfg import load_logging_cfg
+
+load_logging_cfg('./logging-cfg.json')
 
 
 class SubProcessor(Processor):
@@ -21,7 +24,7 @@ class TestProcessorLoader(TestCase):
     """
     sim_cfg = \
         {
-            "processor": {
+            "configuration": {
                 "type": "transformer",
                 "module": "test.convobot.workflow.test_processorLoader",
                 "class": "SubProcessor",
@@ -31,7 +34,7 @@ class TestProcessorLoader(TestCase):
                 "dst-dir-path": "tmp/data/manipulated",
                 "tmp-dir-path": "tmp/data/tmp"
             },
-            "config": {}
+            "parameters": {}
         }
 
     def test_loader(self):

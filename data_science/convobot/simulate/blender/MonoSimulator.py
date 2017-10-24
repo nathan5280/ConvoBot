@@ -25,5 +25,6 @@ class MonoSimulator(LoopingSimulator):
         Returns: None
 
         '''
-        self._blender_env.set_camera_location(theta, radius, round(alpha, 1))
+        file_path = self._filename_mgr.label_to_radius_path(self.dst_dir_path, theta, radius, alpha)
+        self._blender_env.set_camera_location(theta, radius, alpha)
         render_time = self._blender_env.render(file_path)

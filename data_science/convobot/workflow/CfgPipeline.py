@@ -26,9 +26,11 @@ class CfgPipeline(ProcessorPipeline):
         # Build all the processors that have some action.
         processors = dict()
         for stage_name in self._global_cfg_mgr.sweep_stages:
+            print('Sweeping: ', stage_name)
             self._get_processor(processors, stage_name).sweep()
 
         for stage_name in self._global_cfg_mgr.reset_stages:
+            print('Resetting: ', stage_name)
             self._get_processor(processors, stage_name).reset()
 
         # Build the processor pipeline.

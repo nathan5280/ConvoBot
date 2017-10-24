@@ -1,3 +1,4 @@
+import json
 import logging
 from abc import ABCMeta, abstractmethod
 
@@ -18,7 +19,8 @@ class Processor(metaclass=ABCMeta):
         logger.debug('Constructing: %s', self.__class__.__name__)
         self._name = name
         self._stage_cfg = cfg  # Overall stage configuration including the processor configuration items.
-        self._process_cfg = self.stage_cfg['config']  # Just the configuration that is required for the process method.
+        self._parameters = self.stage_cfg['parameters']  # Processor instantiation and directories
+        self._configuration = self.stage_cfg['configuration']  # Processor parameters
 
     @property
     def stage_cfg(self):
@@ -29,12 +31,20 @@ class Processor(metaclass=ABCMeta):
         return self._stage_cfg
 
     @property
-    def process_cfg(self):
+    def configuration(self):
         """
-        Access the process configuration
-        :return: Process configuration dictionary
+        Access the configuration portion of the stage configuration.
+        :return:
         """
-        return self._process_cfg
+        return self._configuration
+
+    @property
+    def parameters(self):
+        """
+        Access the parameters portion of the stage configuration
+        :return: Parameters configuration dictionary
+        """
+        return self._parameters
 
     @property
     def tmp_dir_path(self) -> str:
@@ -42,7 +52,7 @@ class Processor(metaclass=ABCMeta):
         Access the path to the temporary directory.
         :return: Temporary directory path.
         """
-        return self.stage_cfg['processor']['tmp-dir-path']
+        return self.configuration['tmp-dir-path']
 
     @property
     def src_dir_path(self) -> str:
@@ -50,7 +60,7 @@ class Processor(metaclass=ABCMeta):
         Access the path to the source directory.
         :return: Source directory path
         """
-        return self.stage_cfg['processor'].get('src-dir-path', None)
+        return self.configuration.get('src-dir-path', None)
 
     @property
     def dst_dir_path(self) -> str:
@@ -58,7 +68,7 @@ class Processor(metaclass=ABCMeta):
         Access th
         :return:
         """
-        return self.stage_cfg['processor'].get('dst-dir-path', None)
+        return self.configuration.get('dst-dir-path', None)
 
     @property
     def name(self) -> str:

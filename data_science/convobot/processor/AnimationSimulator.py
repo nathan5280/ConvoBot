@@ -2,24 +2,15 @@ import logging
 import os
 import shutil
 import subprocess
-import time
 
-import numpy as np
-
-from convobot.processor.Simulator import Simulator
+from convobot.processor.LoopingSimulator import LoopingSimulator
 
 logger = logging.getLogger(__name__)
 
 
-class AnimationSimulator(Simulator):
+class AnimationSimulator(LoopingSimulator):
     """
-    Drive the simulation where only one of the 3 features varies and convert the
-    still images to a gif.  If the configuration specifies that the image sequence
-    needs to run forward and backwards (reverse) then read all the images back in
-    and copy them out in reverse order.
-
-    The images are named with a monotonically increasing id starting a 000 to
-    support ffmpeg.
+    Simulate images and then post process into a movie.
     """
 
     def __init__(self, name: str, cfg):
@@ -30,84 +21,44 @@ class AnimationSimulator(Simulator):
         """
         logger.debug('Constructing: %s', self.__class__.__name__)
         super().__init__(name, cfg)
+        self._index = 0
 
     def process(self) -> None:
         """
-        Simulate the images where two features are held constant and the
-        third is varied.  This is the current configuration.  This could be
-        combined with the LoopingSimulator as the functionality has a fair
-        amount of overlap.
-
-        Write the images to files in a tree where images are in directories
-        based on the radius feature.  Use FilenameManager to convert from
-        radius, theta, alpha to a unique filename.
-
-        Use the 'fixed' configuration format to specify which features should
-        be held constant.
+        Run the processor to complete the configured action.
 
         :return: None
         """
 
-        logger.info('Processing stage: %s', self._name)
-
-        # Generate a sequence of images in the temporary directory.
-        # Run ffmpeg on them to create the move and store it in
-        # the movies directory.
-        index = 0
-
-        # Based on the configuration either generate a range or fixed set of
-        # indexes for the simulation.
-        if 'range' in self._process_cfg['radius']:
-            radius_cfg = self._process_cfg['radius']['range']
-            radius_range = np.arange(radius_cfg['min'],
-                                     radius_cfg['max'] + radius_cfg['step'],
-                                     radius_cfg['step'])
-        else:
-            radius_range = [self._process_cfg['radius']['fixed']]
-
-        for radius in radius_range:
-            if 'range' in self._process_cfg['alpha']:
-                alpha_cfg = self._process_cfg['alpha']['range']
-                alpha_range = np.arange(alpha_cfg['min'],
-                                        alpha_cfg['max'] + alpha_cfg['step'],
-                                        alpha_cfg['step'])
-            else:
-                alpha_range = [self._process_cfg['alpha']['fixed']]
-
-            for alpha in alpha_range:
-                if 'range' in self._process_cfg['theta']:
-                    theta_cfg = self._process_cfg['theta']['range']
-                    theta_range = np.arange(theta_cfg['min'],
-                                            theta_cfg['max'] + theta_cfg['step'],
-                                            theta_cfg['step'])
-                else:
-                    theta_range = [self._process_cfg['theta']['fixed']]
-
-                for theta in theta_range:
-                    t0 = time.time()
-
-                    file_path = os.path.join(self.tmp_dir_path, '{0:03d}'.format(index) + '.png')
-
-                    # Don't render the image if it exists and has size > 0.
-                    # This allows for breaking a simulation and restarting it without
-                    # having to recreate all the image.   This is helpful when filling in an
-                    # existing dataset.
-                    if not os.path.exists(file_path) or os.stat(file_path).st_size == 0:
-                        self._blender_env.set_camera_location(float(theta), float(radius),
-                                                              180 + float(round(alpha, 1)))
-                        self._blender_env.render(file_path)
-
-                    process_time = time.time() - t0
-
-                    if logger.isEnabledFor(logging.DEBUG):
-                        file_path_parts = file_path.split('/')
-                        logger.debug('File: {}, Process Time: {:.2f}'.format(file_path_parts[-1], process_time))
-
-                    index += 1
+        # Call the LoopingSimulator to loop through Theta, Radius and Alpha
+        # For this simulator the images are stored to the temporary directory for
+        # post processing into the movies.
+        super().process()
 
         # Create the movie from the rendered images.  If reverse is specified
         # let the make_movie method handle the duplication of the images.
-        self._make_movie(index)
+        self._make_movie(self._index)
+
+    def _render(self, theta: float, radius: float, alpha: float) -> None:
+        """
+        Render the images into the temporary directory for the given Theta, Radius, Alpha
+        :param theta: Theta for camera location
+        :param radius: Radius for camera location
+        :param alpha: Alpha for camera location
+        :return: None
+        """
+        file_path = os.path.join(self.tmp_dir_path, '{0:03d}'.format(self._index) + '.png')
+
+        # Don't render the image if it exists and has size > 0.
+        # This allows for breaking a simulation and restarting it without
+        # having to recreate all the image.   This is helpful when filling in an
+        # existing dataset.
+        if not os.path.exists(file_path) or os.stat(file_path).st_size == 0:
+            self._blender_env.set_camera_location(float(theta), float(radius),
+                                                  180 + float(round(alpha, 1)))
+            self._blender_env.render(file_path)
+
+        self._index += 1
 
     def _make_movie(self, index: int):
         """
@@ -120,7 +71,7 @@ class AnimationSimulator(Simulator):
 
         # If the movie plays forward and backwards then make copies of the
         # forward frames in reverse order with continuing indexes.
-        if self._process_cfg['reverse']:
+        if self._parameters['reverse']:
             frame_names = os.listdir(self.tmp_dir_path)
             frame_names.reverse()
             for frame_name in frame_names:
@@ -130,9 +81,12 @@ class AnimationSimulator(Simulator):
                 index += 1
 
         # Create the movie using ffmpeg.
-        dst_file_path = os.path.join(self.dst_dir_path, '{}'.format(self._process_cfg['movie-name']))
+        dst_file_path = os.path.join(self.dst_dir_path, '{}'.format(self._parameters['movie-name']))
         src_file_pattern = os.path.join(self.tmp_dir_path, '%03d.png')
 
         # Run ffmpeg to convert the still png files to a movie.
         cmd_arr = ['ffmpeg', '-i', src_file_pattern, dst_file_path]
-        subprocess.run(cmd_arr)
+        proc = subprocess.Popen(cmd_arr, stderr=subprocess.PIPE)
+        proc.wait()
+        proc.stderr.read()
+        proc.stderr.close()

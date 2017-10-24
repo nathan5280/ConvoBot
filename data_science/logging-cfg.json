@@ -22,7 +22,22 @@
         }
     },
     "loggers": {
+        "convobot": {
+          "level": "INFO",
+          "handlers": ["console"],
+          "propagate": false
+        },
         "convobot.configuration": {
+          "level": "WARN",
+          "handlers": ["console"],
+          "propagate": false
+        },
+        "convobot.processor": {
+          "level": "INFO",
+          "handlers": ["console"],
+          "propagate": false
+        },
+        "convobot.workflow": {
           "level": "INFO",
           "handlers": ["console"],
           "propagate": false
@@ -32,18 +47,8 @@
           "handlers": ["console"],
           "propagate": false
         },
-        "convobot.simulate": {
+        "test": {
           "level": "INFO",
-          "handlers": ["console"],
-          "propagate": false
-        },
-        "convobot.manipulate": {
-          "level": "INFO",
-          "handlers": ["console"],
-          "propagate": false
-        },
-        "convobot.train": {
-          "level": "DEBUG",
           "handlers": ["console"],
           "propagate": false
         }

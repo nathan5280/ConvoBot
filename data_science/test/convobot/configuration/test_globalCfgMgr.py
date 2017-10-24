@@ -43,7 +43,7 @@ class TestGlobalCfgMgr(unittest.TestCase):
             },
             "stages": {
                 "stage1": {
-                    "processor": {
+                    "configuration": {
                         "type": "generator",
                         "module": "convobot.processor.MonoSimulator",
                         "class": "MonoSimulator",
@@ -51,10 +51,10 @@ class TestGlobalCfgMgr(unittest.TestCase):
                             "dst-dir-id": "simulated"
                         },
                     },
-                    "config": {}
+                    "parameters": {}
                 },
                 "stage2": {
-                    "processor": {
+                    "configuration": {
                         "type": "transformer",
                         "module": "convobot.processor.NumpyManipulator",
                         "class": "NumpyManipulator",
@@ -63,7 +63,7 @@ class TestGlobalCfgMgr(unittest.TestCase):
                             "dst-dir-id": "manipulated"
                         },
                     },
-                    "config": {
+                    "parameters": {
                         "processor-cfg-item1": "item1"
                     }
                 }
@@ -134,16 +134,14 @@ class TestGlobalCfgMgr(unittest.TestCase):
         global_cfg_mgr = GlobalCfgMgr(argv)
         stage_cfg = global_cfg_mgr.stage_cfg('stage2')
 
-        print(json.dumps(stage_cfg, indent=2))
-
-        self.assertEqual(os.path.join(self._data_dir_path, 'simulated'), stage_cfg['processor']['src-dir-path'],
+        self.assertEqual(os.path.join(self._data_dir_path, 'simulated'), stage_cfg['configuration']['src-dir-path'],
                          'simulated')
-        self.assertEqual(os.path.join(self._data_dir_path, 'manipulated'), stage_cfg['processor']['dst-dir-path'],
+        self.assertEqual(os.path.join(self._data_dir_path, 'manipulated'), stage_cfg['configuration']['dst-dir-path'],
                          'manipulated')
-        self.assertEqual(os.path.join(self._data_dir_path, 'tmp'), stage_cfg['processor']['tmp-dir-path'],
+        self.assertEqual(os.path.join(self._data_dir_path, 'tmp'), stage_cfg['configuration']['tmp-dir-path'],
                          'temporary')
-        self.assertEqual('item1', stage_cfg['config']['processor-cfg-item1'], 'item1')
-        self.assertEqual(5, stage_cfg['config']['camera-height'])
+        self.assertEqual('item1', stage_cfg['parameters']['processor-cfg-item1'], 'item1')
+        self.assertEqual(5, stage_cfg['parameters']['camera-height'])
 
         if __name__ == '__main__':
             unittest.main()
