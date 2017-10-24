@@ -1,6 +1,9 @@
 from unittest import TestCase
 from convobot.processor.Processor import Processor
 from convobot.processor.ProcessorLoader import ProcessorLoader
+from convobot.util.load_logging_cfg import load_logging_cfg
+
+load_logging_cfg('./logging-cfg.json')
 
 
 class SubProcessor(Processor):

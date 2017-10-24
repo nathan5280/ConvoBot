@@ -5,15 +5,18 @@ from unittest import TestCase
 
 from convobot.configuration.GlobalCfgMgr import GlobalCfgMgr
 from convobot.processor.Processor import Processor
+from convobot.util.load_logging_cfg import load_logging_cfg
 from convobot.workflow.CfgPipeline import CfgPipeline
 
+load_logging_cfg('./logging-cfg.json')
+
+swept = False
+reset = False
 
 class SubProcessor1(Processor):
     """
     Dummy Processor subclass to test the ProcessorLoader.
     """
-    _swept = False
-    _reset = False
 
     def __init__(self, name, cfg) -> None:
         """
@@ -26,21 +29,23 @@ class SubProcessor1(Processor):
         # Get a dummy variable out of the configuration that can be checked in the test.
         self._index = cfg['parameters']['start-idx']
 
-    @classmethod
-    def sweep(cls):
+    def sweep(self):
         """
         Sweep the files that aren't needed for the next stage.
         :return: None
         """
-        cls._swept = True
+        super().sweep()
+        global swept
+        swept = True
 
-    @classmethod
-    def reset(cls):
+    def reset(self):
         """
         Reset the files that aren't needed for the next stage.
         :return: None
         """
-        cls._reset = True
+        super().reset()
+        global reset
+        reset = True
 
     def process(self):
         """
@@ -193,8 +198,10 @@ class TestPipeline(TestCase):
         pipeline = CfgPipeline(global_cfg_mgr)
         pipeline.process()
 
-        self.assertTrue(SubProcessor1._swept, 'Swept')
-        self.assertTrue(SubProcessor1._reset, 'Reset')
+        global swept
+        self.assertTrue(swept, 'Swept')
+        global reset
+        self.assertTrue(reset, 'Reset')
 
     def test_process(self):
         """

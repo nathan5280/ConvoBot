@@ -85,7 +85,7 @@ class GlobalCfgMgr(object):
         global_cfg = self._app_cfg['global']
 
         # Copy all of the global configuration items into the stage config section
-        stage_cfg['config'].update(**global_cfg)
+        stage_cfg['parameters'].update(**global_cfg)
         return stage_cfg
 
     @property
@@ -94,7 +94,7 @@ class GlobalCfgMgr(object):
         Get the list of stages to sweep.
         :return: Names of the stages to sweep.
         """
-        return self._process_stages
+        return self._sweep_stages
 
     @property
     def reset_stages(self) -> List[str]:
@@ -102,7 +102,7 @@ class GlobalCfgMgr(object):
         Get the list of stages to reset.
         :return: Names of the stages to reset.
         """
-        return self._process_stages
+        return self._reset_stages
 
     @property
     def process_stages(self) -> List[str]:
@@ -121,7 +121,7 @@ class GlobalCfgMgr(object):
         if self._all_stages:
             for stage in self._process_stages:
                 stage_cfg = self._app_cfg['stages'][stage]
-                processor_cfg = stage_cfg['processor']
+                processor_cfg = stage_cfg['configuration']
 
                 # Populate all the directories requested in the configuration.
                 for dir_key, dir_id in processor_cfg['dirs'].items():

@@ -134,8 +134,6 @@ class TestGlobalCfgMgr(unittest.TestCase):
         global_cfg_mgr = GlobalCfgMgr(argv)
         stage_cfg = global_cfg_mgr.stage_cfg('stage2')
 
-        print(json.dumps(stage_cfg, indent=2))
-
         self.assertEqual(os.path.join(self._data_dir_path, 'simulated'), stage_cfg['configuration']['src-dir-path'],
                          'simulated')
         self.assertEqual(os.path.join(self._data_dir_path, 'manipulated'), stage_cfg['configuration']['dst-dir-path'],

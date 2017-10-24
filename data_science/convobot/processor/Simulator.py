@@ -33,8 +33,8 @@ class Simulator(Processor, metaclass=ABCMeta):
         # Get the Blender environment to some known state based on the
         # Simulation configuration.
         camera_direction = 180
-        self._blender_env.set_render_resolution(self.process_cfg['image']['size'][0],
-                                                self.process_cfg['image']['size'][1])
-        self._blender_env.set_camera_height(self.process_cfg['camera-height'])
+        self._blender_env.set_render_resolution(self._parameters['image']['size'][0],
+                                                self._parameters['image']['size'][1])
+        self._blender_env.set_camera_height(self._parameters['camera-height'])
         self._blender_env.set_camera_focal_length(30)
         self._blender_env.set_camera_location(0, 15, camera_direction)

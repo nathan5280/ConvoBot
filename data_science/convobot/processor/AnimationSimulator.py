@@ -86,4 +86,7 @@ class AnimationSimulator(LoopingSimulator):
 
         # Run ffmpeg to convert the still png files to a movie.
         cmd_arr = ['ffmpeg', '-i', src_file_pattern, dst_file_path]
-        subprocess.run(cmd_arr)
+        proc = subprocess.Popen(cmd_arr, stderr=subprocess.PIPE)
+        proc.wait()
+        proc.stderr.read()
+        proc.stderr.close()

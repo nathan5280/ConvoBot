@@ -5,12 +5,14 @@ import json
 from unittest import TestCase
 
 from convobot.configuration.GlobalCfgMgr import GlobalCfgMgr
+from convobot.util.load_logging_cfg import load_logging_cfg
 from convobot.workflow.CfgPipeline import CfgPipeline
 
+load_logging_cfg('./logging-cfg.json')
 
-class TestAnimationSimulator(TestCase):
+class TestMonoSimulator(TestCase):
     """
-    Smoke tests for the AnimationSimulator.
+    Smoke tests for the MonoSimulator.
     """
     _tmp_dir_path = 'tmp'
     _data_dir_path = os.path.join(_tmp_dir_path, 'data')

@@ -8,12 +8,14 @@ from convobot.util.load_logging_cfg import load_logging_cfg
 load_logging_cfg('./logging-cfg.json')
 logger = logging.getLogger(__name__)
 
+
 class TestCmdLineCfgMgr(unittest.TestCase):
     """
     Test cases for the command configuration manager.  Objective is to
     insure that the parser is populating the correct fields in the configuration
     dictionary.
     """
+
     def test_all_parse(self):
         """
         Check to make sure that passing multiple stage-ids generates a list.
@@ -35,4 +37,3 @@ class TestCmdLineCfgMgr(unittest.TestCase):
 
 if __name__ == '__main__':
     unittest.main()
-

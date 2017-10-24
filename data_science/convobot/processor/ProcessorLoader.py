@@ -20,7 +20,7 @@ class ProcessorLoader(object):
         """
 
         # Load the module by name
-        print(cfg['configuration']['module'])
+        logger.debug('Loading Processor: %s',cfg['configuration']['module'])
         mod = importlib.import_module(cfg['configuration']['module'])
 
         # Get the class definition
