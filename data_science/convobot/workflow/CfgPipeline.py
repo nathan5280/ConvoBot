@@ -1,8 +1,6 @@
 import logging
-from typing import List
 
 from convobot.configuration.GlobalCfgMgr import GlobalCfgMgr
-from convobot.processor.Processor import Processor
 from convobot.processor.ProcessorLoader import ProcessorLoader
 from convobot.workflow.ProcessorPipeline import ProcessorPipeline
 
