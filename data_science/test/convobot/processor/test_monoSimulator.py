@@ -1,3 +1,4 @@
+import glob
 import os
 import shutil
 import json
@@ -31,86 +32,40 @@ class TestAnimationSimulator(TestCase):
                 "camera-height": 5
             },
             "dir-paths": {
-                "animated": "animated"
+                "simulated": "simulated"
             },
             "stages": {
-                "animate-theta": {
+                "simulate": {
                     "configuration": {
                         "type": "generator",
-                        "module": "convobot.processor.AnimationSimulator",
-                        "class": "AnimationSimulator",
+                        "module": "convobot.processor.MonoSimulator",
+                        "class": "MonoSimulator",
                         "dirs": {
-                            "dst-dir-id": "animated"
+                            "dst-dir-id": "simulated"
                         },
                     },
                     "parameters": {
                         "movie-name": "theta.gif",
                         "reverse": False,
                         "radius": {
-                            "fixed": 15.0
+                            "range": {
+                                "min": 15.0,
+                                "max": 16.0,
+                                "step": 1.0
+                            },
                         },
                         "theta": {
                             "range": {
                                 "min": 0.0,
                                 "max": 360.0,
                                 "step": 30.0
-                            }
-                        },
-                        "alpha": {
-                            "fixed": 0.0
-                        }
-                    }
-                },
-                "animate-radius": {
-                    "configuration": {
-                        "type": "generator",
-                        "module": "convobot.processor.AnimationSimulator",
-                        "class": "AnimationSimulator",
-                        "dirs": {
-                            "dst-dir-id": "animated"
-                        },
-                    },
-                    "parameters": {
-                        "movie-name": "radius.gif",
-                        "reverse": True,
-                        "radius": {
-                            "range": {
-                                "min": 15.0,
-                                "max": 30.0,
-                                "step": 1.0
-                            }
-                        },
-                        "theta": {
-                            "fixed": 45.0
-                        },
-                        "alpha": {
-                            "fixed": 0.0
-                        }
-                    }
-                },
-                "animate-alpha": {
-                    "configuration": {
-                        "type": "generator",
-                        "module": "convobot.processor.AnimationSimulator",
-                        "class": "AnimationSimulator",
-                        "dirs": {
-                            "dst-dir-id": "animated"
-                        },
-                    },
-                    "parameters": {
-                        "movie-name": "alpha.gif",
-                        "reverse": True,
-                        "radius": {
-                            "fixed": 15.0
-                        },
-                        "theta": {
-                            "fixed": 45.0
+                            },
                         },
                         "alpha": {
                             "range": {
                                 "min": -10.0,
                                 "max": 10.0,
-                                "step": 5.0
+                                "step": 10.0
                             }
                         }
                     }
@@ -156,14 +111,12 @@ class TestAnimationSimulator(TestCase):
 
     def test_process(self):
         """
-        Run animiation on Theta, Radius, Alpha and insure that the gif files are created.
+        Run simulation.
         :return:
         """
         argv = ['-d', self._data_dir_path,
                 '-c', self._cfg_file_path,
-                '-p', 'animate-theta',
-                '-p', 'animate-radius',
-                '-p', 'animate-alpha']
+                '-p', 'simulate']
 
         self._write_cfg(self._sim_cfg)
 
@@ -173,8 +126,8 @@ class TestAnimationSimulator(TestCase):
         pipeline = CfgPipeline(global_cfg_mgr)
         pipeline.process()
 
-        # Simple test to see if the three gif files were creates.
-        animated_files = os.listdir(os.path.join(self._data_dir_path, 'animated'))
-        self.assertTrue('alpha.gif' in animated_files, 'alpha.gif')
-        self.assertTrue('theta.gif' in animated_files, 'theta.gif')
-        self.assertTrue('radius.gif' in animated_files, 'radius.gif')
+        dst_dir_path = os.path.join(self._data_dir_path, 'simulated', '15.0', '*')
+        self.assertEqual(39, len(glob.glob(dst_dir_path)), '15.0')
+
+        dst_dir_path = os.path.join(self._data_dir_path, 'simulated', '16.0', '*')
+        self.assertEqual(39, len(glob.glob(dst_dir_path)), '16.0')

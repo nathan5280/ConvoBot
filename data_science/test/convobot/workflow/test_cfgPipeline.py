@@ -24,7 +24,7 @@ class SubProcessor1(Processor):
         super().__init__(name, cfg)
 
         # Get a dummy variable out of the configuration that can be checked in the test.
-        self._index = cfg['config']['start-idx']
+        self._index = cfg['parameters']['start-idx']
 
     @classmethod
     def sweep(cls):
@@ -73,7 +73,7 @@ class SubProcessor2(Processor):
         super().__init__(name, cfg)
 
         # Get a dummy variable out of the configuration that can be checked in the test.
-        self._index = cfg['config']['start-idx']
+        self._index = cfg['parameters']['start-idx']
 
     def process(self):
         """
@@ -111,7 +111,7 @@ class TestPipeline(TestCase):
             },
             "stages": {
                 "stage1": {
-                    "processor": {
+                    "configuration": {
                         "type": "generator",
                         "module": "test.convobot.workflow.test_cfgPipeline",
                         "class": "SubProcessor1",
@@ -119,12 +119,12 @@ class TestPipeline(TestCase):
                             "dst-id": "simulated"
                         },
                     },
-                    "config": {
+                    "parameters": {
                         "start-idx": 100
                     }
                 },
                 "stage2": {
-                    "processor": {
+                    "configuration": {
                         "type": "transformer",
                         "module": "test.convobot.workflow.test_cfgPipeline",
                         "class": "SubProcessor2",
@@ -133,7 +133,7 @@ class TestPipeline(TestCase):
                             "dst-id": "manipulated"
                         },
                     },
-                    "config": {
+                    "parameters": {
                         "start-idx": 200
                     }
                 }

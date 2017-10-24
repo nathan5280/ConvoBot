@@ -1,6 +1,6 @@
 import os
 
-class FilenameManager(object):
+class FilenameMgr(object):
     '''Consistently handle the conversion of labels and filenames across ConvoBot modules'''
     def __init__(self, separator='_', extension='png'):
         self._separator = separator

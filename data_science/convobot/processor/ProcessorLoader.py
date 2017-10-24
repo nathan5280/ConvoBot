@@ -20,11 +20,11 @@ class ProcessorLoader(object):
         """
 
         # Load the module by name
-        print(cfg['processor']['module'])
-        mod = importlib.import_module(cfg['processor']['module'])
+        print(cfg['configuration']['module'])
+        mod = importlib.import_module(cfg['configuration']['module'])
 
         # Get the class definition
-        cls = getattr(mod, cfg['processor']['class'])
+        cls = getattr(mod, cfg['configuration']['class'])
 
         # Instantiate the class
         processor = cls(name, cfg)

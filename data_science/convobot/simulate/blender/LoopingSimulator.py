@@ -6,7 +6,7 @@ from abc import ABCMeta, abstractmethod
 import numpy as np
 
 from convobot.processor.Simulator import Simulator
-from convobot.util.FilenameManager import FilenameManager
+from convobot.util.FilenameMgr import FilenameMgr
 
 logger = logging.getLogger(__name__)
 
@@ -19,7 +19,7 @@ class LoopingSimulator(Simulator, metaclass=ABCMeta):
         logger.debug('Initializing')
         super(LoopingSimulator, self).__init__(global_cfg_mgr)
 
-        self._filename_mgr = FilenameManager()
+        self._filename_mgr = FilenameMgr()
 
 
     def process(self):

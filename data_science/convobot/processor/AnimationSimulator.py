@@ -10,13 +10,7 @@ logger = logging.getLogger(__name__)
 
 class AnimationSimulator(LoopingSimulator):
     """
-    Drive the simulation where only one of the 3 features varies and convert the
-    still images to a gif.  If the configuration specifies that the image sequence
-    needs to run forward and backwards (reverse) then read all the images back in
-    and copy them out in reverse order.
-
-    The images are named with a monotonically increasing id starting a 000 to
-    support ffmpeg.
+    Simulate images and then post process into a movie.
     """
 
     def __init__(self, name: str, cfg):
@@ -77,7 +71,7 @@ class AnimationSimulator(LoopingSimulator):
 
         # If the movie plays forward and backwards then make copies of the
         # forward frames in reverse order with continuing indexes.
-        if self._process_cfg['reverse']:
+        if self._parameters['reverse']:
             frame_names = os.listdir(self.tmp_dir_path)
             frame_names.reverse()
             for frame_name in frame_names:
@@ -87,7 +81,7 @@ class AnimationSimulator(LoopingSimulator):
                 index += 1
 
         # Create the movie using ffmpeg.
-        dst_file_path = os.path.join(self.dst_dir_path, '{}'.format(self._process_cfg['movie-name']))
+        dst_file_path = os.path.join(self.dst_dir_path, '{}'.format(self._parameters['movie-name']))
         src_file_pattern = os.path.join(self.tmp_dir_path, '%03d.png')
 
         # Run ffmpeg to convert the still png files to a movie.

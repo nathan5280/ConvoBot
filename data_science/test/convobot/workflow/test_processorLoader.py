@@ -21,7 +21,7 @@ class TestProcessorLoader(TestCase):
     """
     sim_cfg = \
         {
-            "processor": {
+            "configuration": {
                 "type": "transformer",
                 "module": "test.convobot.workflow.test_processorLoader",
                 "class": "SubProcessor",
@@ -31,7 +31,7 @@ class TestProcessorLoader(TestCase):
                 "dst-dir-path": "tmp/data/manipulated",
                 "tmp-dir-path": "tmp/data/tmp"
             },
-            "config": {}
+            "parameters": {}
         }
 
     def test_loader(self):

@@ -40,31 +40,31 @@ class LoopingSimulator(Simulator):
 
         # Based on the configuration either generate a range or fixed set of
         # indexes for the simulation.
-        if 'range' in self._process_cfg['radius']:
-            radius_cfg = self._process_cfg['radius']['range']
+        if 'range' in self._parameters['radius']:
+            radius_cfg = self._parameters['radius']['range']
             radius_range = np.arange(radius_cfg['min'],
                                      radius_cfg['max'] + radius_cfg['step'],
                                      radius_cfg['step'])
         else:
-            radius_range = [self._process_cfg['radius']['fixed']]
+            radius_range = [self._parameters['radius']['fixed']]
 
         for radius in radius_range:
-            if 'range' in self._process_cfg['alpha']:
-                alpha_cfg = self._process_cfg['alpha']['range']
+            if 'range' in self._parameters['alpha']:
+                alpha_cfg = self._parameters['alpha']['range']
                 alpha_range = np.arange(alpha_cfg['min'],
                                         alpha_cfg['max'] + alpha_cfg['step'],
                                         alpha_cfg['step'])
             else:
-                alpha_range = [self._process_cfg['alpha']['fixed']]
+                alpha_range = [self._parameters['alpha']['fixed']]
 
             for alpha in alpha_range:
-                if 'range' in self._process_cfg['theta']:
-                    theta_cfg = self._process_cfg['theta']['range']
+                if 'range' in self._parameters['theta']:
+                    theta_cfg = self._parameters['theta']['range']
                     theta_range = np.arange(theta_cfg['min'],
                                             theta_cfg['max'] + theta_cfg['step'],
                                             theta_cfg['step'])
                 else:
-                    theta_range = [self._process_cfg['theta']['fixed']]
+                    theta_range = [self._parameters['theta']['fixed']]
 
                 for theta in theta_range:
                     t0 = time.time()
