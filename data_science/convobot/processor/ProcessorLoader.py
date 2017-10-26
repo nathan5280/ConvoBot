@@ -15,13 +15,16 @@ class ProcessorLoader(object):
     def load(name, cfg) -> Processor:
         """
         Load the processor based on the configuration.
+        :param name: Name of the processor.
         :param cfg: Processor configuration.
         :return:
         """
 
         # Load the module by name
-        logger.debug('Loading Processor: %s',cfg['configuration']['module'])
-        mod = importlib.import_module(cfg['configuration']['module'])
+        logger.debug('Loading Processor: %s: %s',name, cfg['configuration']['module'])
+        mod_name = cfg['configuration']['module']
+        mod = importlib.import_module(mod_name)
+        logger.debug('Done Loading Processor: %s: %s',name, cfg['configuration']['module'])
 
         # Get the class definition
         cls = getattr(mod, cfg['configuration']['class'])

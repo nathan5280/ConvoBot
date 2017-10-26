@@ -1,3 +1,4 @@
+import glob
 import logging
 import os
 import shutil
@@ -32,8 +33,8 @@ class StereoSimulator(LoopingSimulator):
         :return: None
         """
         dirs = glob.glob(os.path.join(self.dst_dir_path, '*'))
-        for dir in dirs:
-            shutil.rmtree(dir)
+        for directory in dirs:
+            shutil.rmtree(directory)
 
     def _render(self, theta: float, radius: float, alpha: float) -> None:
         """
@@ -83,6 +84,3 @@ class StereoSimulator(LoopingSimulator):
 
             # Save the stereo stacked image.
             img.save(file_path)
-
-
-

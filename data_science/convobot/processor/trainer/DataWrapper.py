@@ -13,6 +13,7 @@ dataset_image = 'image'
 dataset_label = 'label'
 ext = '.npy'
 
+
 # TODO: Store all of the label and image data together in a single typed
 # numpy array.   This will make it simpler to keep the label and image data
 # together and in sync.

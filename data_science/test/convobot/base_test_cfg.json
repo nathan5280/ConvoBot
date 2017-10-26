@@ -4,8 +4,8 @@
     "date": "Sat Oct 21 08:53:36 MDT 2017",
     "image": {
       "size": [
-        32,
-        32
+        16,
+        16
       ],
       "channels": 3
     },
@@ -13,7 +13,8 @@
   },
   "dir-paths": {
     "simulated": "simulated",
-    "manipulated": "manipulated"
+    "manipulated": "manipulated",
+    "modeled": "modeled"
   },
   "stages": {
     "simulate": {
@@ -30,7 +31,7 @@
         "radius": {
           "range": {
             "min": 15.0,
-            "max": 16.0,
+            "max": 17.0,
             "step": 1.0
           }
         },
@@ -45,7 +46,7 @@
           "range": {
             "min": -10.0,
             "max": 10.0,
-            "step": 10.0
+            "step": 5.0
           }
         }
       }
@@ -59,7 +60,66 @@
           "dst-dir-id": "manipulated"
         }
       },
-      "parameters": {}
+      "parameters": {
+        "label-file-prefix": "full-",
+        "image-file-prefix": "full-"
+      }
+    },
+    "cartesian": {
+      "configuration": {
+        "module": "convobot.processor.manipulator.CartesianManipulator",
+        "class": "CartesianManipulator",
+        "dirs": {
+          "src-dir-id": "manipulated",
+          "dst-dir-id": "manipulated"
+        }
+      },
+      "parameters": {
+        "in-label-file-prefix": "full-",
+        "out-label-file-prefix": "full-xy-"
+      }
+    },
+    "split": {
+      "configuration": {
+        "module": "convobot.processor.manipulator.SplitManipulator",
+        "class": "SplitManipulator",
+        "dirs": {
+          "src-dir-id": "manipulated",
+          "dst-dir-id": "modeled"
+        }
+      },
+      "parameters": {
+        "in-image-file-prefix": "full-",
+        "in-label-file-prefix": "full-xy-",
+        "label-column-names": ["Theta", "Radius", "Alpha", "X", "Y"],
+        "filters": {
+          "full": {
+            "theta": {
+              "min": 20,
+              "max": 340
+            }
+          },
+          "predict": {
+            "radius": {
+              "amount": 0.5
+            },
+            "theta": {
+              "amount": 10.0
+            },
+            "alpha": {
+              "amount": 1.0
+            }
+          }
+        },
+        "splits": {
+          "train": 0.6,
+          "test": 0.05,
+          "validate": 0.05,
+          "max-predict-ratio": 0.80,
+          "max-train-ratio": 0.30,
+          "features": ["Theta", "Radius", "Alpha"]
+        }
+      }
     }
   }
 }

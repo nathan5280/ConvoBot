@@ -12,7 +12,7 @@ class CountManipulator(Manipulator):
     method across the tree of images.
     """
 
-    def __init__(self, root_dir_path, file_pattern):
+    def __init__(self, root_dir_path: str, file_pattern: str):
         """
         Construct the count manipulator.
 
@@ -42,7 +42,7 @@ class CountManipulator(Manipulator):
         :return: None
         """
 
-        def converter(src_path, dst_path, filename):
+        def converter(src_path: str, dst_path: str, filename: str):
             """
             The functional part of the manipulator that increments the count.
 
@@ -51,6 +51,10 @@ class CountManipulator(Manipulator):
             :param filename: Not used by this manipulator.
             :return: None
             """
+
+            # Ignore these parameters.  Assign them so they don't cause a static inspection warning.
+            _, _, _ = src_path, dst_path, filename
+
             self._count += 1
 
         # Create the TreeUtil to apply the convert function to the recursively to the

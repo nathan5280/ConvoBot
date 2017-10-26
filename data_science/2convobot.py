@@ -6,9 +6,9 @@ from logging.config import dictConfig
 from convobot.environment.CfgMgr import CfgMgr
 from convobot.environment.CmdLineCfgMgr import CmdLineCfgMgr
 from convobot.train.TrainerLoader import TrainerLoader
-
 from convobot.x.manipulate.ManipulatorLoader import ManipulatorLoader
-from convobot.x.simulate.blender.SimulatorLoader import SimulatorLoader
+
+from x.simulate.blender import SimulatorLoader
 
 with open('logging-cfg.json', 'r') as f:
     logging_cfg = json.load(f)

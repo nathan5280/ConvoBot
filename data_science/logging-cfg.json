@@ -33,12 +33,12 @@
           "propagate": false
         },
         "convobot.processor": {
-          "level": "INFO",
+          "level": "DEBUG",
           "handlers": ["console"],
           "propagate": false
         },
         "convobot.processor.simulator": {
-          "level": "DEBUG",
+          "level": "INFO",
           "handlers": ["console"],
           "propagate": false
         },

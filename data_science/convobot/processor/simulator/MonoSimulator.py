@@ -30,8 +30,8 @@ class MonoSimulator(LoopingSimulator):
         :return: None
         """
         dirs = glob.glob(os.path.join(self.dst_dir_path, '*'))
-        for dir in dirs:
-            shutil.rmtree(dir)
+        for directory in dirs:
+            shutil.rmtree(directory)
 
     def _render(self, theta: float, radius: float, alpha: float) -> None:
         """

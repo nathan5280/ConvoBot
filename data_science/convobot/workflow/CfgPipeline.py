@@ -1,6 +1,8 @@
 import logging
+from typing import List
 
 from convobot.configuration.GlobalCfgMgr import GlobalCfgMgr
+from convobot.processor.Processor import Processor
 from convobot.processor.ProcessorLoader import ProcessorLoader
 from convobot.workflow.ProcessorPipeline import ProcessorPipeline
 
@@ -40,7 +42,7 @@ class CfgPipeline(ProcessorPipeline):
             processor = self._get_processor(processors, stage_name)
             self.add_processor(processor)
 
-    def _get_processor(self, processors, stage_name):
+    def _get_processor(self, processors: List[Processor], stage_name: str) -> Processor:
         """
         Return the processor from the processors dictionary if it exists or create it.
 

@@ -30,6 +30,8 @@ class AnimationSimulator(LoopingSimulator):
         :return: None
         """
 
+        logger.info('Processing stage: %s', self._name)
+
         # Call the LoopingSimulator to loop through Theta, Radius and Alpha
         # For this simulator the images are stored to the temporary directory for
         # post processing into the movies.

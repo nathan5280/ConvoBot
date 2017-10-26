@@ -1,31 +1,29 @@
 import logging
-import pandas as pd
-import numpy as np
 import os
 
-from keras.optimizers import Adam
-from keras.utils import np_utils
+import numpy as np
+import pandas as pd
+from convobot.x.train import DataConditioner
+from convobot.x.train import ModelLoader
+from convobot.x.train import Trainer
 from keras.callbacks import TensorBoard
+from keras.optimizers import Adam
 
-from convobot.train.DataWrapper import DataWrapper
-from convobot.train.DataConditioner import DataConditioner
-from convobot.train.Trainer import Trainer
-from convobot.train.ModelLoader import ModelLoader
+from x.train import DataWrapper
 
 # Turn off TF warnings to recommend that we should compile for SSE4.2
 os.environ['TF_CPP_MIN_LOG_LEVEL'] = '2'
-import tensorflow as tf
 
 logger = logging.getLogger(__name__)
 
 
 class TrackingTrainer(Trainer):
-    '''
+    """
     Core class for training the model.  The TrackingTrainer also logs files for
-    review by TensorBoard.  The TrackingTrainer also uses the validation data
+    review by TensorBoard.  The TrackingTrainer uses the validation data
     set to make and save predictions for review and animation after training
     is complete.
-    '''
+    """
 
     def __init__(self, cfg_mgr):
         '''
