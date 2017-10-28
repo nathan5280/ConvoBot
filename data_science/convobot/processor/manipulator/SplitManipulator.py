@@ -5,6 +5,7 @@ import pandas as pd
 from sklearn.model_selection import train_test_split
 
 from convobot.processor.manipulator.Manipulator import Manipulator
+from convobot.processor.manipulator.SplitDataMgr import SplitDataMgr
 
 logger = logging.getLogger(__name__)
 
@@ -24,39 +25,24 @@ class SplitManipulator(Manipulator):
         logger.debug('Constructing: %s', self.__class__.__name__)
 
         super().__init__(name, cfg)
+        self._split_data_mgr = SplitDataMgr(self.dst_dir_path)
 
-        # build the split file names.
-        self._train_label_file_path = os.path.join(self.dst_dir_path, 'train-label.npy')
-        self._train_image_file_path = os.path.join(self.dst_dir_path, 'train-image.npy')
-
-        self._test_label_file_path = os.path.join(self.dst_dir_path, 'test-label.npy')
-        self._test_image_file_path = os.path.join(self.dst_dir_path, 'test-image.npy')
-
-        self._validation_label_file_path = os.path.join(self.dst_dir_path, 'validation-label.npy')
-        self._validation_image_file_path = os.path.join(self.dst_dir_path, 'validation-image.npy')
+        # # build the split file names.
+        # self._train_label_file_path = os.path.join(self.dst_dir_path, 'train-label.npy')
+        # self._train_image_file_path = os.path.join(self.dst_dir_path, 'train-image.npy')
+        #
+        # self._test_label_file_path = os.path.join(self.dst_dir_path, 'test-label.npy')
+        # self._test_image_file_path = os.path.join(self.dst_dir_path, 'test-image.npy')
+        #
+        # self._validation_label_file_path = os.path.join(self.dst_dir_path, 'validation-label.npy')
+        # self._validation_image_file_path = os.path.join(self.dst_dir_path, 'validation-image.npy')
 
     def reset(self):
         """
         Remove all the split files.
         :return: None
         """
-        if os.path.exists(self._train_label_file_path):
-            os.remove(self._train_label_file_path)
-
-        if os.path.exists(self._train_image_file_path):
-            os.remove(self._train_image_file_path)
-
-        if os.path.exists(self._test_label_file_path):
-            os.remove(self._test_label_file_path)
-
-        if os.path.exists(self._test_image_file_path):
-            os.remove(self._test_image_file_path)
-
-        if os.path.exists(self._validation_label_file_path):
-            os.remove(self._validation_label_file_path)
-
-        if os.path.exists(self._train_image_file_path):
-            os.remove(self._train_image_file_path)
+        self._split_data_mgr.reset()
 
     def process(self) -> None:
         """
@@ -66,13 +52,7 @@ class SplitManipulator(Manipulator):
 
         logger.info('Processing stage: %s', self._name)
 
-        # Check to see if the split files all exist.  If they do then just skip this processor.
-        if not os.path.exists(self._test_image_file_path) or \
-                not os.path.exists(self._test_label_file_path) or \
-                not os.path.exists(self._train_image_file_path) or \
-                not os.path.exists(self._train_label_file_path) or \
-                not os.path.exists(self._validation_image_file_path) or \
-                not os.path.exists(self._validation_label_file_path):
+        if not self._split_data_mgr.all_exist():
             # Something is missing.  Resplit the data files.
             self._split()
 
@@ -245,11 +225,11 @@ class SplitManipulator(Manipulator):
         logger.debug('Writing validation image split: %s', validation_image_arr.shape)
 
         # Write the files.
-        np.save(self._train_label_file_path, train_label_arr, allow_pickle=False)
-        np.save(self._train_image_file_path, train_image_arr, allow_pickle=False)
+        self._split_data_mgr.train_label = train_label_arr
+        self._split_data_mgr.train_image = train_image_arr
 
-        np.save(self._test_label_file_path, test_label_arr, allow_pickle=False)
-        np.save(self._test_image_file_path, test_image_arr, allow_pickle=False)
+        self._split_data_mgr.test_label = test_label_arr
+        self._split_data_mgr.test_image = test_image_arr
 
-        np.save(self._validation_label_file_path, validation_label_arr, allow_pickle=False)
-        np.save(self._validation_image_file_path, validation_image_arr, allow_pickle=False)
+        self._split_data_mgr.validation_label = validation_label_arr
+        self._split_data_mgr.validation_image = validation_image_arr

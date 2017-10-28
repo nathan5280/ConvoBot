@@ -17,7 +17,7 @@ class AnimationSimulator(LoopingSimulator):
         """
         Construct the Processor.
         :param name: Name of the processor stage
-        :param cfg: Processor configurtation.
+        :param cfg: Processor configuration.
         """
         logger.debug('Constructing: %s', self.__class__.__name__)
         super().__init__(name, cfg)

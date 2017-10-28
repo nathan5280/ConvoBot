@@ -23,6 +23,7 @@ class Model(CfgStage, metaclass=ABCMeta):
         logger.debug('Constructing: %s', self.__class__.__name__)
         super().__init__(name, cfg)
         self._model_file_path = os.path.join(self.dst_dir_path, self.parameters['model-file-name'])
+        self._model = None
 
     @property
     def model(self):
@@ -31,13 +32,14 @@ class Model(CfgStage, metaclass=ABCMeta):
 
         :return: Model
         """
-        if os.path.exists(self._model_file_path):
-            logger.info('Loading model: %s: %s', self._name, self._model_file_path)
-            self._model = load_model(self._model_file_path)
-        else:
-            # Build the model.
-            logger.info('Building model: %s: %s', self._name, self._model_file_path)
-            self._model = self._build_model()
+        if self._model is None:
+            if os.path.exists(self._model_file_path):
+                logger.info('Loading model: %s: %s', self._name, self._model_file_path)
+                self._model = load_model(self._model_file_path)
+            else:
+                # Build the model.
+                logger.info('Building model: %s: %s', self._name, self._model_file_path)
+                self._model = self._build_model()
 
         return self._model
 

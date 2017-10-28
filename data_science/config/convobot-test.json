@@ -15,7 +15,9 @@
     "animated": "animated",
     "simulated": "simulated",
     "manipulated": "manipulated",
-    "modeled": "modeled"
+    "modeled": "modeled",
+    "tf-graph": "tf-graph",
+    "predicted": "predicted"
   },
   "stages": {
     "simulate": {
@@ -90,7 +92,13 @@
       "parameters": {
         "in-image-file-prefix": "full-",
         "in-label-file-prefix": "full-xy-",
-        "label-column-names": ["Theta", "Radius", "Alpha", "X", "Y"],
+        "label-column-names": [
+          "Theta",
+          "Radius",
+          "Alpha",
+          "X",
+          "Y"
+        ],
         "filters": {
           "full": {
             "theta": {
@@ -116,8 +124,39 @@
           "validate": 0.2,
           "max-predict-ratio": 0.80,
           "max-train-ratio": 0.25,
-          "features": ["Theta", "Radius", "Alpha"]
+          "features": [
+            "Theta",
+            "Radius",
+            "Alpha"
+          ]
         }
+      }
+    },
+    "train": {
+      "configuration": {
+        "module": "convobot.processor.trainer.TrackingTrainer",
+        "class": "TrackingTrainer",
+        "dirs": {
+          "src-dir-id": "modeled",
+          "dst-dir-id": "modeled",
+          "tf-graph-dir-id": "tf-graph",
+          "pred-dir-id": "predicted"
+        }
+      },
+      "parameters": {
+        "model-module": "convobot.model.ConvoBot2Model",
+        "model-class": "ConvoBot2Model",
+        "model-name": "ConvoBot2",
+        "model": {
+          "model-file-name": "model.h5"
+        },
+        "predictor-name": "predictor",
+        "predictor": {},
+        "Sessions": 5,
+        "Epochs": 5,
+        "BatchSize": 100,
+        "LearningRate": 0.001,
+        "predict": true
       }
     },
     "animate-theta": {
