@@ -14,7 +14,10 @@
   "dir-paths": {
     "animated": "animated",
     "simulated": "simulated",
-    "manipulated": "manipulated"
+    "manipulated": "manipulated",
+    "modeled": "modeled",
+    "tf-graph": "tf-graph",
+    "predicted": "predicted"
   },
   "stages": {
     "simulate": {
@@ -149,10 +152,10 @@
         },
         "predictor-name": "predictor",
         "predictor": {},
-        "Sessions": 5,
-        "Epochs": 5,
-        "BatchSize": 100,
-        "LearningRate": 0.001,
+        "Sessions": 2,
+        "Epochs": 2,
+        "BatchSize": 500,
+        "LearningRate": 0.005,
         "predict": true
       }
     }
