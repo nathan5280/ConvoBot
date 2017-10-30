@@ -152,10 +152,10 @@
         },
         "predictor-name": "predictor",
         "predictor": {},
-        "Sessions": 2,
-        "Epochs": 2,
-        "BatchSize": 500,
-        "LearningRate": 0.005,
+        "Sessions": 10,
+        "Epochs": 1,
+        "BatchSize": 2500,
+        "LearningRate": 0.0025,
         "predict": true
       }
     }

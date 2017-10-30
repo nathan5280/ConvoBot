@@ -91,7 +91,13 @@
       "parameters": {
         "in-image-file-prefix": "full-",
         "in-label-file-prefix": "full-xy-",
-        "label-column-names": ["Theta", "Radius", "Alpha", "X", "Y"],
+        "label-column-names": [
+          "Theta",
+          "Radius",
+          "Alpha",
+          "X",
+          "Y"
+        ],
         "filters": {
           "full": {
             "theta": {
@@ -117,9 +123,35 @@
           "validate": 0.05,
           "max-predict-ratio": 0.80,
           "max-train-ratio": 0.30,
-          "features": ["Theta", "Radius", "Alpha"]
+          "features": [
+            "Theta",
+            "Radius",
+            "Alpha"
+          ]
         }
       }
+    }
+  },
+  "macros": {
+    "scratch-prepare": {
+      "sweeps": [
+        "simulate",
+        "manipulate",
+        "cartesian",
+        "split"
+      ],
+      "resets": [
+        "simulate",
+        "manipulate",
+        "cartesian",
+        "split"
+      ],
+      "processes": [
+        "simulate",
+        "manipulate",
+        "cartesian",
+        "split"
+      ]
     }
   }
 }

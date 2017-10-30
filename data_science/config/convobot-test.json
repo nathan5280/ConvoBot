@@ -237,5 +237,34 @@
         }
       }
     }
+  },
+  "macros": {
+    "animate": {
+      "stages": [
+        "animate-theta",
+        "animate-radius",
+        "animate-alpha"
+      ]
+    },
+    "scratch-prepare": {
+      "sweeps": [
+        "simulate",
+        "manipulate",
+        "cartesian",
+        "split"
+      ],
+      "resets": [
+        "simulate",
+        "manipulate",
+        "cartesian",
+        "split"
+      ],
+      "processes": [
+        "simulate",
+        "manipulate",
+        "cartesian",
+        "split"
+      ]
+    }
   }
 }

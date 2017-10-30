@@ -71,6 +71,9 @@ class GlobalCfgMgr(object):
         else:
             self._process_stages: List[str] = []
 
+        # If there are any macros defined, explode them into the lists of actions to execute.
+        self._expand_macros(cmd_cfg['macro-ids'])
+
         # Explode all the lists into a set.
         self._all_stages = {*[*self._sweep_stages, *self._reset_stages, *self._process_stages]}
         self._check_required_directories()
@@ -137,6 +140,25 @@ class GlobalCfgMgr(object):
                 processor_cfg['tmp-dir-path'] = self._tmp_dir_path
 
                 del processor_cfg['dirs']
+
+    def _expand_macros(self, macro_ids) -> None:
+        """
+        Expand the macros onto the action lists for the sweep, reset, and process.
+
+        :param macro_ids: List of macros from the command line to expand.
+
+        :return: None
+        """
+        if macro_ids is None:
+            return
+
+        for macro_id in macro_ids:
+            macro_cfg = self._app_cfg['macros'][macro_id]
+
+            self._sweep_stages.extend(macro_cfg.get('sweeps', []))
+            self._reset_stages.extend(macro_cfg.get('resets', []))
+            self._process_stages.extend(macro_cfg.get('processes', []))
+
 
     @staticmethod
     def _validate_path(dir_path: str) -> None:

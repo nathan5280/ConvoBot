@@ -28,6 +28,9 @@ class CmdLineCfgMgr(object):
         self._parser.add_argument('-r', '--reset', dest='reset-stage-ids', action='append',
                                   help='Stages to reset output files needed for next stage.')
 
+        self._parser.add_argument('-m', '--macro', dest='macro-ids', action='append',
+                                  help='Macros to run.')
+
         self._parser.add_argument('-p', dest='process-stage-ids', action='append',
                                   help='Stages to process')
 

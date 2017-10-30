@@ -65,6 +65,22 @@ class TestGlobalCfgMgr(unittest.TestCase):
                         "processor-cfg-item1": "item1"
                     }
                 }
+            },
+            "macros": {
+                "macro1": {
+                    "sweeps": [
+                        "stage1",
+                        "stage2"
+                    ],
+                    "resets": [
+                        "stage1",
+                        "stage2"
+                    ],
+                    "processes": [
+                        "stage1",
+                        "stage2"
+                    ]
+                }
             }
         }
 
@@ -137,6 +153,21 @@ class TestGlobalCfgMgr(unittest.TestCase):
                          'temporary')
         self.assertEqual('item1', stage_cfg['parameters']['processor-cfg-item1'], 'item1')
         self.assertEqual(5, stage_cfg['parameters']['camera-height'])
+
+    def test_macro_cfg(self):
+        """
+        Test to see if macros are correctly expanded.
+
+        :return: None
+        """
+        argv = ['-d', self._data_dir_path,
+                '-c', self._cfg_file_path,
+                '-m', 'macro1']
+
+        global_cfg_mgr = GlobalCfgMgr(argv)
+        self.assertEqual(['stage1', 'stage2'], global_cfg_mgr._sweep_stages)
+        self.assertEqual(['stage1', 'stage2'], global_cfg_mgr._reset_stages)
+        self.assertEqual(['stage1', 'stage2'], global_cfg_mgr._process_stages)
 
         if __name__ == '__main__':
             unittest.main()
