@@ -34,6 +34,14 @@ class Trainer(Processor, metaclass=ABCMeta):
 
     @property
     def model_mgr(self) -> ModelMgr:
+        """
+        Access the model defined in the configuration.  The process follows this hierarchy:
+        1) Model already loaded
+        2) Model stored on disk
+        3) Model constructed from script.
+
+        :return: ModelMgr
+        """
         if self._model_mgr is None:
             # Move any global or stage configuration data over to the model dictionary.
             model_cfg = {'configuration': {}, 'parameters': {}}
@@ -54,10 +62,21 @@ class Trainer(Processor, metaclass=ABCMeta):
 
     @property
     def split_data_mgr(self):
+        """
+        Access the data manager.
+
+        :return: SplitDataMgr
+        """
         return self._split_data_mgr
 
     @property
     def predictor(self) -> Predictor:
+        """
+        Access to a predictor that can run intermediate predictions against the model.
+        The predictor saves the results for reporting and charting of the training process.
+
+        :return: Predictor
+        """
 
         # Move any global or stage configuration data over to the prediction dictionary.
         if self._predictor is None:

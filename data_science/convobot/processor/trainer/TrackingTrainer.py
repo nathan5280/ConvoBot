@@ -29,46 +29,12 @@ class TrackingTrainer(Trainer):
         logger.debug('Constructing: %s', self.__class__.__name__)
         super().__init__(name, cfg)
 
-    # def _print_stats(self, num_pred, val, pred, last_pred):
-    #     '''
-    #     Calculate some basic stats to be shown with the predictions after
-    #     each epoch.  These don't influence the training or error calculations
-    #     of the models.  They are only to help understand what is happening with
-    #     the pregress of the model training.
-    #
-    #     Args:
-    #       num_pred: How many predictions were made.
-    #       val: Validataion dataset locations (labels).
-    #       pred: Predicted dataset locations (labels).
-    #       last_pred: The previous set of predictions to calculate deltas.
-    #
-    #     Returns: None
-    #
-    #     '''
-    #     last_pred = np.array(last_pred)
-    #
-    #     max_row = 'Max:'
-    #     mean_row = 'Mean:'
-    #     for i in range(3):
-    #         max_err = max(abs(val[:num_pred, i] - pred[:num_pred, i]))
-    #         mean_err = np.mean(val[:num_pred, i] - pred[:num_pred, i])
-    #         max_chg = max(abs(pred[:num_pred, i] - last_pred[:num_pred, i]))
-    #         mean_chg = np.mean(pred[:num_pred, i] - last_pred[:num_pred, i])
-    #
-    #         max_row += '\t\t{:5.1f}\t{:5.1f}\t'.format(max_err, max_chg)
-    #         mean_row += '\t\t{:5.1f}\t{:5.1f}\t'.format(mean_err, mean_chg)
-    #
-    #     print('----------------------------------------------------------------------------------------------')
-    #     print(max_row)
-    #     print(mean_row)
-    #
-
     def process(self) -> None:
         # Get the model that from the model manager created based on the configuration.
         # This may be a new model or a partially trained model that was loaded from disk.
         model = self.model_mgr.model
 
-        # Get the hyper and training parameters.
+        # Get the hyper parameters.
         sessions = self.parameters['Sessions']
         epochs = self.parameters['Epochs']
         batch_size = self.parameters['BatchSize']
@@ -116,60 +82,3 @@ class TrackingTrainer(Trainer):
 
             if self.parameters['predict']:
                 self.predictor.process()
-                #
-                #         # to make this prediction and then redo it when we predict the engire
-                #         # validation set for tracking of the training errors.
-                #         pred = self._model.predict(
-                #             self._X_val[:self._num_predictions], batch_size=1)
-                #
-                #         # Generate output to the screen to easily see what progress is being
-                #         # made from one training sesson to the next.
-                #         print('   Target | Prediction | Error | Change')
-                #         print('Theta\t\t\t\t Radius\t\t\t\tAlpha')
-                #
-                #         # Allocate the space for the theta, radius, alpha information to be
-                #         # displayed
-                #         results = [''] * 3
-                #
-                #         for i in range(self._num_predictions):
-                #             fmt = '{:5.1f}\t{:5.1f}\t{:5.1f}\t{:5.1f}'
-                #             for j in range(3):
-                #                 results[j] = fmt.format(
-                #                     self._y_val[i][j],
-                #                     pred[i][j],
-                #                     self._y_val[i][j] -
-                #                     pred[i][j],
-                #                     pred[i][j] -
-                #                     self._last_pred[i][j])
-                #             print('{}\t{}\t{}'.format(results[0], results[1], results[2]))
-                #
-                #         self._print_stats(
-                #             self._num_predictions,
-                #             self._y_val,
-                #             pred,
-                #             self._last_pred)
-                #
-                #         for i in range(self._num_predictions):
-                #             for j in range(3):
-                #                 self._last_pred[i][j] = pred[i][j]
-                #
-                #         # Run the model against the validation dataset and save the results
-                #         # to generate the training error animation.
-                #         pred = self._model.predict(self._X_val, batch_size=1)
-                #         pred_file_path = os.path.join(
-                #             self._cfg['PredDirPath'],
-                #             '{0:04d}'.format(session) + '.csv')
-                #
-                #         val_df = pd.DataFrame(self._y_val)
-                #         pred_df = pd.DataFrame(pred)
-                #         results_df = pd.concat((val_df, pred_df), axis=1)
-                #         results_df.columns = [
-                #             'vTheta',
-                #             'vRadius',
-                #             'vAlpha',
-                #             'pTheta',
-                #             'pRadius',
-                #             'pAlpha']
-                #
-                #         print('Saving prediction results: ', pred_file_path)
-                #         results_df.to_csv(pred_file_path, ',', index=False)
